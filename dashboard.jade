@@ -3,5 +3,6 @@ block templates
   include ./html/gallery
   include ./html/artwork
 block content
-  h1 Pravo!
-  div(data-root="gallery")
+  div.dashboard
+    h1(class="brand") Pravo!
+    div(data-root="gallery",class="gallery")

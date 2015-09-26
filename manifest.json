@@ -13,7 +13,7 @@
   }
   ,"browser_action": {
     "default_icon": {
-      "19": "img/icon/icon19.png"
+      // "19": "img/icon/icon19.png"
       // ,"38": "img/icon/icon38.png"
     }
     ,"default_popup": "popup.html"
@@ -23,6 +23,7 @@
     "activeTab"
     ,"https://ajax.googleapis.com/"
     ,"http://211.155.86.150:9999/*"
+    ,"storage"
   ]
   ,"content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
 }

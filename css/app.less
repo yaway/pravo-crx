@@ -1,1 +1,30 @@
-@import "../node_modules/normalize.css/normalize.css";
+@import "lib.less";
+@import "mixins.less";
+@import "artwork.less";
+@import "gallery.less";
+
+html, body {
+  height: 100%;
+  font-family: Helvetica, sans-serif;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+.dashboard {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  .artwork {
+    z-index: 0;
+  }
+  .brand {
+    z-index: 64;
+  }
+}
+
+.brand {
+  .pos-fixed(bottom);
+}  

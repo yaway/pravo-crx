@@ -1,5 +1,6 @@
-define ['jquery','lib/underscore'],()->
+define ['jquery','lib/underscore'],($,_)->
   TPL = {}
   TPL.getTpl = (tpl)->
-    return $("[data-tpl='#{tpl}']").html()
+    tplStr = _.unescape $("[data-tpl='#{tpl}']").html()
+    return tplStr
   return TPL

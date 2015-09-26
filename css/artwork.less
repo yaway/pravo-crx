@@ -1,0 +1,17 @@
+.artwork {
+  display: none;
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  .image {
+    min-height: 50%;
+    min-width: 50%;
+    margin: auto;
+    .pos-absolute(cover);
+  }
+  &.current {
+    display: block;
+  }
+}

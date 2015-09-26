@@ -3,22 +3,16 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
   hasProp = {}.hasOwnProperty;
 
 define(['lib/backbone'], function(Backbone) {
-  var C;
-  C = (function(superClass) {
-    extend(C, superClass);
+  var M;
+  M = (function(superClass) {
+    extend(M, superClass);
 
-    function C() {
-      return C.__super__.constructor.apply(this, arguments);
+    function M() {
+      return M.__super__.constructor.apply(this, arguments);
     }
 
-    C.prototype.initialize = function() {
-      return this.on({
-        "update": this.update
-      });
-    };
+    return M;
 
-    return C;
-
-  })(Backbone.Collection);
-  return C;
+  })(Backbone.Model);
+  return M;
 });

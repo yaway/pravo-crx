@@ -1,0 +1,39 @@
+.pos-fixed(@pos) when (@pos = bottom) {
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+.pos-fixed(@pos) when (@pos = top) {
+  left: 0;
+  right: 0;
+  top: 0;
+}
+.pos-fixed(@pos) when (@pos = cover) {
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+.pos-fixed(@pos) {
+  position: fixed;
+}
+
+.pos-absolute(@pos) when (@pos = bottom) {
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+.pos-absolute(@pos) when (@pos = top) {
+  left: 0;
+  right: 0;
+  top: 0;
+}
+.pos-absolute(@pos) when (@pos = cover) {
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+.pos-absolute(@pos) {
+  position: absolute;
+}

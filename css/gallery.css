@@ -1,0 +1,6 @@
+.gallery .artwork-group .artwork {
+  display: none;
+}
+.gallery .artwork-group .artwork.current {
+  display: block;
+}

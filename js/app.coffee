@@ -11,37 +11,35 @@ require.config
 require [
   'jquery'
   'lib/underscore'
-  'vcs/gallery'
-], ($,_,Gallery)->
+  'vcs/pravo'
+], ($,_,Pravo)->
   $ ()->
-    console.log 'Pravo!'
-    new Gallery {root: 'gallery',template: 'gallery'}
+    new Pravo
+  # $ ()->
+  #   console.log 'pravo!'
+    
+  #   App.artworkUrl = ''
 
-# $ ()->
-#   console.log 'pravo!'
-  
-#   App.artworkUrl = ''
+  #   API = App.API
 
-#   API = App.API
+  #   API.signIn {
+  #       email: 'yaway.v@gamil.com'
+  #       password: '848301'
+  #     },(err,data)->
+  #       console.log data
 
-#   API.signIn {
-#       email: 'yaway.v@gamil.com'
-#       password: '848301'
-#     },(err,data)->
-#       console.log data
+  # API.getArtworks {
+  #     email: 'yaway.v@gamil.com'
+  #     password: '848301'
+  #   },(err,data)=>
+  #     data = data.data
+  #     console.log data
 
-#   API.getArtworks {
-#       email: 'yaway.v@gamil.com'
-#       password: '848301'
-#     },(err,data)=>
-#       data = data.data
-#       console.log data
+  #     artworkUrl = data[0].src
 
-#       artworkUrl = data[0].src
+  #     console.log artworkUrl
 
-#       console.log artworkUrl
+  #     artworkUrlResolved = App.Util.resolveUrl API.root,artworkUrl
 
-#       artworkUrlResolved = App.Util.resolveUrl API.root,artworkUrl
-
-      # $artwork = $("<img src='#{artworkUrlResolved}' alt=''>")
-      # $('body').append $artwork
+  #     $artwork = $("<img src='#{artworkUrlResolved}' alt=''>")
+  #     $('body').append $artwork

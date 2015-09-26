@@ -1,3 +1,3 @@
-define ['lib/backbone'],()->
+define ['lib/backbone'],(Backbone)->
   class M extends Backbone.Model
   return M

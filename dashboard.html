@@ -6,15 +6,17 @@
     <link rel="stylesheet" href="css/app.css">
     <template data-tpl="gallery">
       <div class="gallery">
-        <ul data-root="artworkCollection" class="group"></ul>
+        <ul data-root="artworks" class="artwork-group"></ul>
       </div>
     </template>
     <template data-tpl="artwork">
-      <li class="item">here we go</li>
+      <li data-ui="artwork" class="artwork"><img src="&lt;%- src %&gt;" class="image"></li>
     </template>
   </head>
   <body>
-    <h1>Pravo!</h1>
-    <div data-root="gallery"></div>
+    <div class="dashboard">
+      <h1 class="brand">Pravo!</h1>
+      <div data-root="gallery" class="gallery"></div>
+    </div>
   </body>
 </html>

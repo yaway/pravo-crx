@@ -1,16 +1,44 @@
 define [
   'lib/underscore'
-  'found/tpl'
   'found/vc'
-],(_,TPL,VC)->
+],(_,VC)->
   class Artwork extends VC
-    constructor: (option)->
-      option ?= {}
-      @collection = option.collection or {}
+    initialize: (option)->
       super(option)
       @render()
+      @on {
+        "setCurrent": @onSetCurrent
+        "unsetCurrent": @onUnsetCurrent
+      }
+      @model.on {
+        "change:isCurrent": @onChangeIsCurrent
+      }
+
+    onChangeIsCurrent: ()=>
+      console.log 'Artwork Changed: isCurrent'
+      @updateStateCurrent()
+
     update: ()->
-      console.log "Artwork updated"
-      console.log @$root
-      console.log @block
+      console.log "ArtworkVC Updated"
+      @updateStateCurrent()
+
+    onSetCurrent: ()=>
+      console.debug "onSetCurrent"
+      @setCurrent()
+    onUnsetCurrent: ()=>
+      console.debug "onUnsetCurrent"
+      @unsetCurrent()
+
+    updateStateCurrent: ()->
+      if (@model.get 'isCurrent')
+        @setCurrent()
+      else
+        @unsetCurrent()
+
+    setCurrent: ()->
+      @$el.addClass 'current'
+      @model.set 'isCurrent',true
+    unsetCurrent: ()->
+      @$el.removeClass 'current'
+      @model.set 'isCurrent',false
   return Artwork

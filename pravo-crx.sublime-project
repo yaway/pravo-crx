@@ -1,0 +1,22 @@
+{
+	"folders":
+	[
+		{
+			"path": "."
+		}
+	],
+  "settings":
+  {
+      "CoffeeScript":
+      {
+          "noWrapper": true,
+          "compileOnSave": true,
+          "compileDir": "."
+      },
+      "less2css":
+      {
+          "autoCompile": true,
+          "minify": false
+      }
+  }
+}

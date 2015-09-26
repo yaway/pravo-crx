@@ -1,26 +1,24 @@
 define [
+  'lib/underscore'
   'lib/backbone'
   'found/tpl'
-],(Backbone,TPL)->
+],(_,Backbone,TPL)->
   class VC extends Backbone.View
-    constructor: (option)->
+    initialize: (option)->
       option ?= {}
+      @model = option.model
       @ui ?= {}
-      @block = option.block
+      @position = option.position
       @$root = $("[data-root='#{option.root or ''}']")
       if option.template
         @template = TPL.getTpl option.template
       else
         @template = @template or '<div></div>'
     update: ()->
-    getUi: (ui)->
+    getUI: (ui)->
       return @$el.find("[data-ui='#{ui}']")
-    getRenderData: ()->
-      if @model
-        return @model.toJSON()
-      return {}
     render: (data)->
-      data ?= @getRenderData()
+      data ?= @model?.attributes
       tpl = _.template @template
       elStr = tpl data
       $el = $(elStr)
@@ -29,10 +27,14 @@ define [
         vc.ui[(@getAttribute 'data-ui')] = this
         vc.ui["$#{(@getAttribute 'data-ui')}"] = $(this)
       @setElement $el[0]
-      if @block is 'ap'
+      if @position is 'append'
         @$root.append $el
-      else if @block is 'pre'
+      else if @position is 'prepend'
         @$root.prepend $el
+      else if @position is 'before'
+        @$root.before $el
+      else if @position is 'after'
+        @$root.after $el
       else
         @$root.replaceWith $el
       @update()
