@@ -14,8 +14,8 @@ require.config({
   }
 });
 
-require(['jquery', 'lib/underscore', 'vcs/pravo'], function($, _, Pravo) {
+require(['jquery', 'lib/underscore', 'vcs/dashboard'], function($, _, Dashboard) {
   return $(function() {
-    return new Pravo;
+    return new Dashboard;
   });
 });

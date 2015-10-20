@@ -20,7 +20,7 @@ define(['lib/underscore', 'lib/backbone', 'found/tpl'], function(_, Backbone, TP
         this.ui = {};
       }
       this.position = option.position;
-      this.$root = $("[data-root='" + (option.root || '') + "']");
+      this.$root = $("[data-ui='" + (option.root || '') + "']");
       if (option.template) {
         return this.template = TPL.getTpl(option.template);
       } else {

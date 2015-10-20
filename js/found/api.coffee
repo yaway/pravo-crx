@@ -1,12 +1,16 @@
-define ['found/api-factory'],(ApiFactory)->
+define [
+  'found/api-factory'
+],(ApiFactory)->
   
-  API = new ApiFactory {root: 'http://211.155.86.150:9999/'}
+  # flickr = new Flickr {api_key: "a745b3049b6cc2550348561bb53619df"}
+
+  # API = new ApiFactory {root: 'http://211.155.86.150:9999/'}
+  API = new ApiFactory {root: 'https://konachan.com/'}
 
   create = API.create.bind API
 
   GET = "GET"
   POST = "POST"
-
 
   API.signUp = create {
     method: POST
@@ -20,7 +24,6 @@ define ['found/api-factory'],(ApiFactory)->
 
   API.getArtworks = create {
     method: GET
-    path: 'artworks'
+    path: 'post.json?limit=5'
   }
-  
   return API

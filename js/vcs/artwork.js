@@ -9,9 +9,10 @@ define(['lib/underscore', 'found/vc'], function(_, VC) {
     extend(Artwork, superClass);
 
     function Artwork() {
-      this.onUnsetCurrent = bind(this.onUnsetCurrent, this);
-      this.onSetCurrent = bind(this.onSetCurrent, this);
+      this.onWillUnsetCurrent = bind(this.onWillUnsetCurrent, this);
+      this.onWillSetCurrent = bind(this.onWillSetCurrent, this);
       this.onChangeIsCurrent = bind(this.onChangeIsCurrent, this);
+      this.onChangeSrc = bind(this.onChangeSrc, this);
       return Artwork.__super__.constructor.apply(this, arguments);
     }
 
@@ -19,12 +20,17 @@ define(['lib/underscore', 'found/vc'], function(_, VC) {
       Artwork.__super__.initialize.call(this, option);
       this.render();
       this.on({
-        "setCurrent": this.onSetCurrent,
-        "unsetCurrent": this.onUnsetCurrent
+        "willSetCurrent": this.onWillSetCurrent,
+        "willUnSetCurrent": this.onWillUnsetCurrent
       });
       return this.model.on({
-        "change:isCurrent": this.onChangeIsCurrent
+        "change:isCurrent": this.onChangeIsCurrent,
+        "change:src": this.onChangeSrc
       });
+    };
+
+    Artwork.prototype.onChangeSrc = function() {
+      return this.ui.$img.attr('src', this.model.get('src'));
     };
 
     Artwork.prototype.onChangeIsCurrent = function() {
@@ -37,12 +43,12 @@ define(['lib/underscore', 'found/vc'], function(_, VC) {
       return this.updateStateCurrent();
     };
 
-    Artwork.prototype.onSetCurrent = function() {
+    Artwork.prototype.onWillSetCurrent = function() {
       console.debug("onSetCurrent");
       return this.setCurrent();
     };
 
-    Artwork.prototype.onUnsetCurrent = function() {
+    Artwork.prototype.onWillUnsetCurrent = function() {
       console.debug("onUnsetCurrent");
       return this.unsetCurrent();
     };

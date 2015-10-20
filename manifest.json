@@ -9,7 +9,7 @@
   //   ,"128": "img/icon128.png"
   // }
   ,"chrome_url_overrides": {
-    "newtab": "dashboard.html"
+    "newtab": "html/dashboard.html"
   }
   ,"browser_action": {
     "default_icon": {
@@ -22,7 +22,9 @@
   ,"permissions": [
     "activeTab"
     ,"https://ajax.googleapis.com/"
-    ,"http://211.155.86.150:9999/*"
+    ,"http://211.155.86.150:9999/"
+    ,"https://konachan.com/"
+    ,"http://konachan.com/"
     ,"storage"
   ]
   ,"content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"

@@ -31,29 +31,30 @@ define ['found/error'],(Errors)->
           type:method
           data:data
           url:url
-          timeout:timeout
-          dataType:'json'
-          contentType:contentType
+          # timeout:timeout
+          # dataType:'json'
+          # contentType:contentType
           success:(data) ->
             if data and data.error
               callback data,null
             else
               callback null,data
           error:(xhr,state) ->
-            console.debug 'fail'
-            if (state is 'timeout')
-              callback new Errors.Timeout
-            else if (state is 'abort')
-              callback new Errors.Abort
-            else
-              try
-                data = (JSON.parse xhr.responseText)
-              catch e
-                callback new Errors.UnkownError,xhr.responseText
-              return
-              callback {
-                code:data.code
-                message:data.error
-              }
-            }
+            # console.debug 'fail'
+            # if (state is 'timeout')
+            #   callback new Errors.Timeout
+            # else if (state is 'abort')
+            #   callback new Errors.Abort
+            # else
+            #   try
+            #     data = (JSON.parse xhr.responseText)
+            #   catch e
+            #     callback new Errors.UnkownError,xhr.responseText
+            #   return
+            #   callback {
+            #     code:data.code
+            #     message:data.error
+            #   }
+            callback state
+          }
   return ApiFactory

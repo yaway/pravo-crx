@@ -27,4 +27,19 @@ define [],()->
 
     return resolved
 
+  Util.getDataUrl = (src, callback)->
+    img = new Image()
+    img.crossOrigin = 'Anonymous'
+    img.onload = ()->
+      canvas = document.createElement 'canvas'
+      ctx = canvas.getContext '2d'
+      canvas.width = @naturalWidth
+      canvas.height = @naturalHeight
+      ctx.drawImage this,0,0
+      dataUrl = canvas.toDataURL 'image/png'
+      callback(dataUrl)
+      canvas = null
+    img.src = src
+ 
+
   return Util

@@ -9,7 +9,7 @@ define [
       @model = option.model
       @ui ?= {}
       @position = option.position
-      @$root = $("[data-root='#{option.root or ''}']")
+      @$root = $("[data-ui='#{option.root or ''}']")
       if option.template
         @template = TPL.getTpl option.template
       else

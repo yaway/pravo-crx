@@ -7,12 +7,15 @@ define [
       super(option)
       @render()
       @on {
-        "setCurrent": @onSetCurrent
-        "unsetCurrent": @onUnsetCurrent
+        "willSetCurrent": @onWillSetCurrent
+        "willUnSetCurrent": @onWillUnsetCurrent
       }
       @model.on {
         "change:isCurrent": @onChangeIsCurrent
+        "change:src": @onChangeSrc
       }
+    onChangeSrc: ()=>
+      @ui.$img.attr 'src',(@model.get 'src')
 
     onChangeIsCurrent: ()=>
       console.log 'Artwork Changed: isCurrent'
@@ -22,10 +25,10 @@ define [
       console.log "ArtworkVC Updated"
       @updateStateCurrent()
 
-    onSetCurrent: ()=>
+    onWillSetCurrent: ()=>
       console.debug "onSetCurrent"
       @setCurrent()
-    onUnsetCurrent: ()=>
+    onWillUnsetCurrent: ()=>
       console.debug "onUnsetCurrent"
       @unsetCurrent()
 

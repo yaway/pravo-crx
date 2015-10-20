@@ -9,8 +9,8 @@ define(['lib/underscore', 'found/vc', 'mcs/artwork', 'mcs/artworks', 'vcs/artwor
     extend(Gallery, superClass);
 
     function Gallery() {
-      this.onSettedLocalArtworks = bind(this.onSettedLocalArtworks, this);
-      this.onGotLocalArtworks = bind(this.onGotLocalArtworks, this);
+      this.initializeArtworks = bind(this.initializeArtworks, this);
+      this.onArtworksAllUpdate = bind(this.onArtworksAllUpdate, this);
       this.onClickArtwork = bind(this.onClickArtwork, this);
       return Gallery.__super__.constructor.apply(this, arguments);
     }
@@ -20,8 +20,8 @@ define(['lib/underscore', 'found/vc', 'mcs/artwork', 'mcs/artworks', 'vcs/artwor
     };
 
     Gallery.prototype.onClickArtwork = function() {
-      this.updateCurrentArtwork();
-      return this.setLocalArtworks();
+      console.error('Artwork Clicked');
+      return this.updateCurrentArtwork();
     };
 
     Gallery.prototype.initialize = function(option) {
@@ -32,25 +32,27 @@ define(['lib/underscore', 'found/vc', 'mcs/artwork', 'mcs/artworks', 'vcs/artwor
       if (this.artworkVCs == null) {
         this.artworkVCs = [];
       }
+      this.artworkRefs = [];
       this.currentArtworkIndex = 0;
-      this.render();
-      return this.on({
-        "gotLocalArtworks": this.onGotLocalArtworks,
-        "settedLocalArtworks": this.onSettedLocalArtworks
-      });
+      return this.render();
+    };
+
+    Gallery.prototype.onArtworksAllUpdate = function() {
+      console.error('Artworks All Updated');
+      return this.initializeArtworks();
     };
 
     Gallery.prototype.update = function() {
       console.log("GalleryVC Updated");
-      return this.getLocalArtworks();
+      return this.initializeArtworks();
     };
 
-    Gallery.prototype.onGotLocalArtworks = function() {
+    Gallery.prototype.initializeArtworks = function() {
       var artwork, artwork1, artwork2, artwork3, artwork4, i, j, len, ref;
-      console.log('Got LocalArtworks');
       if (_.isEmpty(this.artworks)) {
         artwork1 = new Artwork({
-          path: '1.png'
+          path: '1.png',
+          isCurrent: true
         });
         artwork2 = new Artwork({
           path: '2.png'
@@ -63,68 +65,23 @@ define(['lib/underscore', 'found/vc', 'mcs/artwork', 'mcs/artworks', 'vcs/artwor
         });
         this.artworks = new Artworks([artwork1, artwork2]);
         this.artworks.add([artwork3, artwork4]);
-        this.artworks.models[this.currentArtworkIndex].set('isCurrent', true);
-      } else {
         ref = this.artworks.models;
         for (i = j = 0, len = ref.length; j < len; i = ++j) {
           artwork = ref[i];
-          if (artwork.get('isCurrent')) {
+          if (artwork.isCurrent) {
             this.currentArtworkIndex = i;
-            console.log("Current Index is " + i);
           }
         }
       }
-      this.setLocalArtworks();
-      return this.renderArtworks();
-    };
-
-    Gallery.prototype.onSettedLocalArtworks = function() {
-      return console.log('Setted LocalArtworks');
-    };
-
-    Gallery.prototype.setLocalArtworks = function() {
-      var artworksJSON;
-      console.log('Setting LocalArtworks');
-      artworksJSON = JSON.stringify(this.artworks.models);
-      console.log(artworksJSON);
-      return chrome.storage.sync.set({
-        'artworks': artworksJSON
-      }, (function(_this) {
-        return function() {
-          _this.trigger("settedLocalArtworks");
-          console.log("Local Data Setted:");
-          return console.log(_this.artworks);
-        };
-      })(this));
-    };
-
-    Gallery.prototype.getLocalArtworks = function() {
-      this.artworks = {};
-      console.log('Getting LocalArtworks');
-      return chrome.storage.sync.get('artworks', (function(_this) {
-        return function(data) {
-          var artwork, j, len, rawArtwork, rawArtworks;
-          console.log("Local Data Got:");
-          console.log(data);
-          if (!data.artworks) {
-            console.log('No Local Artworks');
-          } else {
-            rawArtworks = JSON.parse(data.artworks || {});
-            _this.artworks = new Artworks;
-            for (j = 0, len = rawArtworks.length; j < len; j++) {
-              rawArtwork = rawArtworks[j];
-              console.log("New Artwork from Local");
-              artwork = new Artwork(rawArtwork);
-              _this.artworks.add(artwork);
-            }
-          }
-          return _this.trigger("gotLocalArtworks");
-        };
-      })(this));
+      this.renderArtworks();
+      return this.artworks.on({
+        'allUpdate': this.onArtworksAllUpdate
+      });
     };
 
     Gallery.prototype.renderArtworks = function() {
       var artwork, artworkVC, j, len, ref, results;
+      this.ui.$artworks.empty();
       if (!this.artworks) {
         console.log("No Artworks to Render");
         return;
@@ -145,7 +102,7 @@ define(['lib/underscore', 'found/vc', 'mcs/artwork', 'mcs/artworks', 'vcs/artwor
       return results;
     };
 
-    Gallery.prototype.updateCurrentArtwork = function(index) {
+    Gallery.prototype.updateCurrentArtwork = function() {
       this.toggleCurrentArtwork();
       if (this.currentArtworkIndex < this.artworks.length - 1) {
         this.currentArtworkIndex++;
@@ -162,6 +119,8 @@ define(['lib/underscore', 'found/vc', 'mcs/artwork', 'mcs/artworks', 'vcs/artwor
         return this.artworks.models[this.currentArtworkIndex].set('isCurrent', true);
       }
     };
+
+    Gallery.prototype.downloadArtworks = function() {};
 
     return Gallery;
 

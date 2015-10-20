@@ -1,0 +1,8 @@
+extends ./layout
+block templates
+  include ./gallery
+  include ./artwork
+block content
+  div.dashboard
+    h1(class="brand") Pravo!
+    div(data-ui="gallery",class="gallery")

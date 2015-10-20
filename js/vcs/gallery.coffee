@@ -9,29 +9,30 @@ define [
     events:
       "click [data-ui='artwork']": 'onClickArtwork'
     onClickArtwork: ()=>
+      console.error 'Artwork Clicked'
       @updateCurrentArtwork()
-      @setLocalArtworks()
 
     initialize: (option)->
       super(option)
       @artworks ?= option.artworks or {}
       @artworkVCs ?= []
+      @artworkRefs = []
       @currentArtworkIndex = 0
       @render()
-      @on {
-        "gotLocalArtworks": @onGotLocalArtworks
-        "settedLocalArtworks": @onSettedLocalArtworks
-      }
+
+    onArtworksAllUpdate: ()=>
+      console.error 'Artworks All Updated'
+      @initializeArtworks()
 
     update: ()->
       console.log "GalleryVC Updated"
-      @getLocalArtworks()
+      @initializeArtworks()
 
-    onGotLocalArtworks: ()=>
-      console.log 'Got LocalArtworks'
+    initializeArtworks: ()=>
       if _.isEmpty @artworks
         artwork1 = new Artwork {
           path: '1.png'
+          isCurrent: true
         }
         artwork2 = new Artwork {
           path: '2.png'
@@ -44,47 +45,15 @@ define [
         }
         @artworks = new Artworks [artwork1, artwork2]
         @artworks.add [artwork3,artwork4]
-        @artworks.models[@currentArtworkIndex].set 'isCurrent', true
-      else
-        for artwork,i in @artworks.models
-          if (artwork.get 'isCurrent')
-            @currentArtworkIndex = i
-            console.log "Current Index is #{i}"
-
-      @setLocalArtworks()
+        (@currentArtworkIndex = i) for artwork,i in @artworks.models when artwork.isCurrent
       @renderArtworks()
-
-    onSettedLocalArtworks: ()=>
-      console.log 'Setted LocalArtworks'
-
-    setLocalArtworks: ()->
-      console.log 'Setting LocalArtworks'
-      artworksJSON = JSON.stringify @artworks.models
-      console.log artworksJSON
-      chrome.storage.sync.set {'artworks':artworksJSON},()=>
-        @trigger "settedLocalArtworks"
-        console.log "Local Data Setted:"
-        console.log @artworks
-
-    getLocalArtworks: ()->
-      @artworks = {}
-      console.log 'Getting LocalArtworks'
-      chrome.storage.sync.get 'artworks',(data)=>
-        console.log "Local Data Got:"
-        console.log data
-        unless data.artworks
-          console.log 'No Local Artworks'
-        else
-          rawArtworks = JSON.parse (data.artworks or {})
-          @artworks = new Artworks
-          for rawArtwork in rawArtworks
-            console.log "New Artwork from Local"
-            artwork = new Artwork rawArtwork
-            @artworks.add artwork
-        @trigger "gotLocalArtworks"
+      @artworks.on {
+        'allUpdate': @onArtworksAllUpdate
+      }
 
 
     renderArtworks: ()->
+      @ui.$artworks.empty()
       if not @artworks
         console.log "No Artworks to Render"
         return
@@ -93,7 +62,7 @@ define [
         artworkVC = new ArtworkVC {root: 'artworks', position: 'append', template: 'artwork', model: artwork}
         @artworkVCs.push artworkVC
 
-    updateCurrentArtwork: (index)->
+    updateCurrentArtwork: ()->
       @toggleCurrentArtwork()
       if @currentArtworkIndex < @artworks.length-1
         @currentArtworkIndex++
@@ -106,6 +75,8 @@ define [
         @artworks.models[@currentArtworkIndex].set 'isCurrent',false
       else
         @artworks.models[@currentArtworkIndex].set 'isCurrent',true
+
+    downloadArtworks: ()->
 
 
   return Gallery

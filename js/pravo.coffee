@@ -11,10 +11,10 @@ require.config
 require [
   'jquery'
   'lib/underscore'
-  'vcs/pravo'
-], ($,_,Pravo)->
+  'vcs/dashboard'
+], ($,_,Dashboard)->
   $ ()->
-    new Pravo
+    new Dashboard
   # $ ()->
   #   console.log 'pravo!'
     
