@@ -10,47 +10,48 @@ define [
       "click [data-ui='artwork']": 'onClickArtwork'
     onClickArtwork: ()=>
       console.error 'Artwork Clicked'
-      @updateCurrentArtwork()
+      @artworks.loop()
+      if @artworks.isSettingLocal
+        console.error 'Is Setting Local Artworks'
+        @artworks.once 'setLocal',@artworks.setLocal
+      else
+        @artworks.setLocal()
 
     initialize: (option)->
       super(option)
-      @artworks ?= option.artworks or {}
-      @artworkVCs ?= []
-      @artworkRefs = []
-      @currentArtworkIndex = 0
+      @artworks = new Artworks
+      @artworks.currentIndex = 0
+      @isArtworksSetLocal = false
       @render()
 
-    onArtworksAllUpdate: ()=>
-      console.error 'Artworks All Updated'
-      @initializeArtworks()
-
-    update: ()->
-      console.log "GalleryVC Updated"
-      @initializeArtworks()
-
     initializeArtworks: ()=>
-      if _.isEmpty @artworks
-        artwork1 = new Artwork {
-          path: '1.png'
-          isCurrent: true
-        }
-        artwork2 = new Artwork {
-          path: '2.png'
-        }
-        artwork3 = new Artwork {
-          path: '3.png'
-        }
-        artwork4 = new Artwork {
-          path: '0.png'
-        }
-        @artworks = new Artworks [artwork1, artwork2]
-        @artworks.add [artwork3,artwork4]
-        (@currentArtworkIndex = i) for artwork,i in @artworks.models when artwork.isCurrent
+      @artworks.getLocal()
+      @artworks.getServer()
+      # newArtworks = new Artworks
+      # newArtworks.getServer()
       @renderArtworks()
       @artworks.on {
-        'allUpdate': @onArtworksAllUpdate
+        'gotLocal': @onArtworksGotLocal
+        'setLocal': @onArtworksSetLocal
+        'gotServer': @onArtworksGotServer
       }
+    onArtworksGotServer: ()=>
+      console.error 'Artworks Got Server'
+      @artworks.setLocal()
+      @renderArtworks()
+    onArtworksGotLocal: ()=>
+      console.error 'Artworks Got Local'
+      if @artworks.length > 0
+        @renderArtworks()
+      else
+        @artworks.getServer()
+    onArtworksSetLocal: ()=>
+      console.error 'Artworks Set Local'
+      @isArtworksSetLocal = true
 
+    update: ()->
+      console.log "Gallery Rendered"
+      @initializeArtworks()
 
     renderArtworks: ()->
       @ui.$artworks.empty()
@@ -60,21 +61,6 @@ define [
       console.log @artworks
       for artwork in @artworks.models
         artworkVC = new ArtworkVC {root: 'artworks', position: 'append', template: 'artwork', model: artwork}
-        @artworkVCs.push artworkVC
-
-    updateCurrentArtwork: ()->
-      @toggleCurrentArtwork()
-      if @currentArtworkIndex < @artworks.length-1
-        @currentArtworkIndex++
-      else
-        @currentArtworkIndex = 0
-      @toggleCurrentArtwork()
-
-    toggleCurrentArtwork: ()->
-      if (@artworks.models[@currentArtworkIndex].get 'isCurrent')
-        @artworks.models[@currentArtworkIndex].set 'isCurrent',false
-      else
-        @artworks.models[@currentArtworkIndex].set 'isCurrent',true
 
     downloadArtworks: ()->
 

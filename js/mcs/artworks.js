@@ -9,28 +9,22 @@ define(['lib/underscore', 'found/c', 'mcs/Artwork', 'found/api'], function(_, C,
     extend(Artworks, superClass);
 
     function Artworks() {
-      this.onGotLocal = bind(this.onGotLocal, this);
-      this.onGotServer = bind(this.onGotServer, this);
+      this.onChangeIsCurrent = bind(this.onChangeIsCurrent, this);
       return Artworks.__super__.constructor.apply(this, arguments);
     }
 
     Artworks.prototype.model = Artwork;
 
     Artworks.prototype.initialize = function() {
-      this.on({
-        "gotLocal": this.onGotLocal,
-        "gotServer": this.onGotServer
+      this.currentIndex = 0;
+      this.isSettingLocal = false;
+      return this.on({
+        "change:isCurrent": this.onChangeIsCurrent
       });
-      this.getLocal();
-      return this.getServer();
     };
 
-    Artworks.prototype.onGotServer = function() {
-      return this.trigger('allUpdate');
-    };
-
-    Artworks.prototype.onGotLocal = function() {
-      return this.trigger('allUpdate');
+    Artworks.prototype.onChangeIsCurrent = function() {
+      return this.updateCurrentIndex();
     };
 
     Artworks.prototype.update = function() {
@@ -38,24 +32,41 @@ define(['lib/underscore', 'found/c', 'mcs/Artwork', 'found/api'], function(_, C,
       return console.log(this.models);
     };
 
+    Artworks.prototype.getAlter = function() {
+      if (this.length === 0) {
+        return this.add([
+          {
+            path: '1.png',
+            isCurrent: true
+          }, {
+            path: '2.png'
+          }, {
+            path: '3.png'
+          }, {
+            path: '0.png'
+          }
+        ]);
+      }
+    };
+
     Artworks.prototype.getLocal = function() {
       console.debug("Getting Local Artworks");
-      return chrome.storage.sync.get('artworks', (function(_this) {
+      return chrome.storage.local.get('artworks', (function(_this) {
         return function(data) {
-          var i, len, rawArtwork, rawArtworks;
+          var j, len, rawArtwork, rawArtworks;
           if (!data.artworks) {
             console.log('No Local Artworks');
           } else {
             _this.reset();
             rawArtworks = JSON.parse(data.artworks || {});
-            for (i = 0, len = rawArtworks.length; i < len; i++) {
-              rawArtwork = rawArtworks[i];
+            for (j = 0, len = rawArtworks.length; j < len; j++) {
+              rawArtwork = rawArtworks[j];
               console.log("New Artwork from Local");
               _this.add(rawArtwork);
             }
           }
           _this.trigger("gotLocal");
-          console.debug("Local Artworks Get:");
+          console.debug("Local Artworks Got:");
           return console.log(_this.models);
         };
       })(this));
@@ -63,33 +74,35 @@ define(['lib/underscore', 'found/c', 'mcs/Artwork', 'found/api'], function(_, C,
 
     Artworks.prototype.setLocal = function() {
       var artworksJSON;
+      this.isSettingLocal = true;
       console.debug('Setting LocalArtworks');
       artworksJSON = JSON.stringify(this.models);
       console.log(artworksJSON);
-      return chrome.storage.sync.set({
+      chrome.storage.local.set({
         'artworks': artworksJSON
       }, (function(_this) {
         return function() {
           _this.trigger("setLocal");
-          console.log("Local Artworks Set:");
+          console.debug("Local Artworks Set:");
           return console.log(_this.models);
         };
       })(this));
+      return this.isSettingLocal = false;
     };
 
     Artworks.prototype.getServer = function() {
       console.debug("Getting Server Artworks");
       return API.getArtworks({}, (function(_this) {
         return function(err, data) {
-          var i, len, rawArtwork, refArtwork, refArtworks;
+          var j, len, rawArtwork, refArtwork, refArtworks;
           refArtworks = [];
           console.debug("Server Data:");
           console.log(data);
           if ((data != null ? data.length : void 0) > 0) {
             _this.reset();
             refArtworks = data;
-            for (i = 0, len = refArtworks.length; i < len; i++) {
-              refArtwork = refArtworks[i];
+            for (j = 0, len = refArtworks.length; j < len; j++) {
+              refArtwork = refArtworks[j];
               rawArtwork = {
                 id: refArtwork.id,
                 url: refArtwork.file_url
@@ -103,6 +116,42 @@ define(['lib/underscore', 'found/c', 'mcs/Artwork', 'found/api'], function(_, C,
           }
         };
       })(this));
+    };
+
+    Artworks.prototype.loop = function() {
+      this.toggleCurrent();
+      if (this.currentIndex < this.length - 1) {
+        this.currentIndex++;
+      } else {
+        this.currentIndex = 0;
+      }
+      return this.toggleCurrent();
+    };
+
+    Artworks.prototype.toggleCurrent = function() {
+      console.debug('Is Artworks C:');
+      console.log(this);
+      if ((this.at(this.currentIndex)).get('isCurrent')) {
+        return (this.at(this.currentIndex)).set('isCurrent', false);
+      } else {
+        return (this.at(this.currentIndex)).set('isCurrent', true);
+      }
+    };
+
+    Artworks.prototype.updateCurrentIndex = function() {
+      var artwork, i, j, len, ref, results;
+      ref = this.models;
+      results = [];
+      for (i = j = 0, len = ref.length; j < len; i = ++j) {
+        artwork = ref[i];
+        if (artwork.get('isCurrent')) {
+          this.currentIndex = i;
+          results.push(console.error(i));
+        } else {
+          results.push(void 0);
+        }
+      }
+      return results;
     };
 
     return Artworks;

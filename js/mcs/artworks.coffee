@@ -8,26 +8,41 @@ define [
     model: Artwork
 
     initialize: ()->
+      @currentIndex = 0
+      @isSettingLocal = false
       @on {
-        "gotLocal": @onGotLocal
-        "gotServer": @onGotServer
+        "change:isCurrent": @onChangeIsCurrent
       }
-      @getLocal()
-      @getServer()
 
-    onGotServer: ()=>
-      @trigger 'allUpdate'
-
-    onGotLocal: ()=>
-      @trigger 'allUpdate'
+    onChangeIsCurrent: ()=>
+      @updateCurrentIndex()
 
     update: ()->
       console.log "Updated to #{@length} Artworks"
       console.log @models
 
+
+    getAlter: ()->
+      if @length is 0
+        @add [
+          {
+            path: '1.png'
+            isCurrent: true
+          }
+          {
+            path: '2.png'
+          }
+          {
+            path: '3.png'
+          }
+          {
+            path: '0.png'
+          }
+        ]
+
     getLocal: ()->
       console.debug "Getting Local Artworks"
-      chrome.storage.sync.get 'artworks',(data)=>
+      chrome.storage.local.get 'artworks',(data)=>
         unless data.artworks
           console.log 'No Local Artworks'
         else
@@ -38,16 +53,18 @@ define [
             # artwork = new Artwork rawArtwork
             @add rawArtwork
         @trigger "gotLocal"
-        console.debug "Local Artworks Get:"
+        console.debug "Local Artworks Got:"
         console.log @models
     setLocal: ()->
+      @isSettingLocal = true
       console.debug 'Setting LocalArtworks'
       artworksJSON = JSON.stringify @models
       console.log artworksJSON
-      chrome.storage.sync.set {'artworks':artworksJSON},()=>
+      chrome.storage.local.set {'artworks':artworksJSON},()=>
         @trigger "setLocal"
-        console.log "Local Artworks Set:"
+        console.debug "Local Artworks Set:"
         console.log @models
+      @isSettingLocal = false
 
     getServer: ()->
       console.debug "Getting Server Artworks"
@@ -69,6 +86,28 @@ define [
           @trigger "gotServer"
           console.debug "Server Artworks Get:"
           console.log @models
+
+    loop: ()->
+      @toggleCurrent()
+      if @currentIndex < @length-1
+        @currentIndex++
+      else
+        @currentIndex = 0
+      @toggleCurrent()
+
+    toggleCurrent: ()->
+      console.debug 'Is Artworks C:'
+      console.log this
+      if (@at @currentIndex).get 'isCurrent'
+        (@at @currentIndex).set 'isCurrent',false
+      else
+        (@at @currentIndex).set 'isCurrent',true
+
+    updateCurrentIndex: ()->
+      for artwork,i in @models
+        if artwork.get 'isCurrent'
+          @currentIndex = i
+          console.error i
 
 
 
