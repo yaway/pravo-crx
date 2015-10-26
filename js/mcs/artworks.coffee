@@ -1,7 +1,7 @@
 define [
   'lib/underscore'
   'found/c'
-  'mcs/Artwork'
+  'mcs/artwork'
   'found/api'
 ],(_,C,Artwork,API)->
   class Artworks extends C
