@@ -3,12 +3,20 @@ define [
   'found/vc'
   'vcs/gallery'
 ],(_,VC,GalleryVC)->
-  class Pravo extends VC
+  class Dashboard extends VC
+    events:
+      "click [data-ui='pravo']": 'onClickPravo'
+
+    onClickPravo: ()=>
+      console.error 'Pravo!'
+
     initialize: (option)->
       super(option)
       @render()
+      console.log @ui.$gallery
     update: ()->
       console.log 'Pravo!'
-      new GalleryVC {root: 'gallery',template: 'gallery'}
+      console.log 'Dashboard'
+      @gallery = new GalleryVC {root: 'gallery',template: 'gallery'}
 
-  return Pravo
+  return Dashboard

@@ -13,10 +13,11 @@
           "compileOnSave": true,
           "compileDir": "."
       },
-      "less2css":
+      "Stylus":
       {
-          "autoCompile": true,
-          "minify": false
+          "compress": false,
+          "compileOnSave": true,
+          "compileDir": "."
       }
   }
 }

@@ -17,7 +17,7 @@ define(['found/api-factory'], function(ApiFactory) {
   });
   API.getArtworks = create({
     method: GET,
-    path: 'post.json?limit=5'
+    path: 'post.json?limit=5&tags=hatsune_miku'
   });
   return API;
 });

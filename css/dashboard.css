@@ -1,0 +1,16 @@
+.dashboard {
+  position: relative;
+  display: flex;
+  height: 100%;
+  overflow: hidden;
+  height: 100%;
+}
+.layer-pravo {
+  margin-bottom: 10px;
+}
+.btn,
+.btn-pravo {
+  padding: 10px;
+  cursor: pointer;
+  color: #eee;
+}

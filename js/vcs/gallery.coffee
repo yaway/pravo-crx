@@ -11,21 +11,21 @@ define [
     onClickArtwork: ()=>
       console.error 'Artwork Clicked'
       @artworks.loop()
-      if @artworks.isSettingLocal
-        console.error 'Is Setting Local Artworks'
-        @artworks.once 'setLocal',@artworks.setLocal
-      else
-        @artworks.setLocal()
+      # if @artworks.isSettingLocal
+      #   console.error 'Is Setting Local Artworks'
+      #   @artworks.once 'setLocal',@artworks.setLocal
+      # else
+      #   @artworks.setLocal()
 
     initialize: (option)->
       super(option)
       @artworks = new Artworks
       @artworks.currentIndex = 0
       @isArtworksSetLocal = false
-      @render()
+      @render()        
 
     initializeArtworks: ()=>
-      @artworks.getLocal()
+      # @artworks.getLocal()
       @artworks.getServer()
       # newArtworks = new Artworks
       # newArtworks.getServer()

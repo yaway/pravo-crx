@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Pravo!</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <script src="../js/lib/require.js" data-main="../js/pravo"></script>
+    <link rel="stylesheet" href="../css/pravo.css">
+    <template data-tpl="gallery">
+      <div class="gallery">
+        <ul data-ui="artworks" class="artwork-group"></ul>
+      </div>
+    </template>
+    <template data-tpl="artwork">
+      <li data-ui="artwork" class="artwork"><img data-ui="img" src="&lt;%- src %&gt;" class="img"></li>
+    </template>
+    <template data-tpl="dashboard">
+      <div data-ui="dashboard" class="dashboard">
+        <div class="layer-gallery">
+          <div data-ui="gallery" class="gallery"></div>
+        </div>
+        <div class="layer-pravo"><b data-ui="pravo" class="btn-pravo">Pravo!</b></div>
+      </div>
+    </template>
+  </head>
+  <body>
+    <div data-ui="dashboard" class="dashboard"></div>
+  </body>
+</html>

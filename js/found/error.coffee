@@ -20,7 +20,6 @@ define [],()->
                 meta = args[0]
         else
             BaseError = Error
-        console.debug BaseError,Error
         class CustomError extends BaseError
             @name = name
             constructor:(message,props)->

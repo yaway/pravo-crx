@@ -16,6 +16,14 @@ require.config({
 
 require(['jquery', 'lib/underscore', 'vcs/dashboard'], function($, _, Dashboard) {
   return $(function() {
-    return new Dashboard;
+    var dashboard;
+    dashboard = new Dashboard({
+      root: 'dashboard',
+      template: 'dashboard'
+    });
+    window.Pravo = {};
+    return Pravo.cleanLocalArtworks = function() {
+      return dashboard.gallery.artworks.cleanLocal();
+    };
   });
 });

@@ -6,14 +6,13 @@ define [
     initialize: (option)->
       super(option)
       @render()
-      @on {
+      @on
         "willSetCurrent": @onWillSetCurrent
         "willUnSetCurrent": @onWillUnsetCurrent
-      }
-      @model.on {
+      @model.on
         "change:isCurrent": @onChangeIsCurrent
         "change:src": @onChangeSrc
-      }
+        
     onChangeSrc: ()=>
       @ui.$img.attr 'src',(@model.get 'src')
 

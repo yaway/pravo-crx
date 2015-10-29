@@ -1,22 +1,9 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Pravo!</title>
-    <script src="../js/lib/require.js" data-main="../js/pravo"></script>
-    <link rel="stylesheet" href="../css/app.css">
-    <template data-tpl="gallery">
-      <div class="gallery">
-        <ul data-ui="artworks" class="artwork-group"></ul>
-      </div>
-    </template>
-    <template data-tpl="artwork">
-      <li data-ui="artwork" class="artwork"><img data-ui="img" src="&lt;%- src %&gt;" class="image"></li>
-    </template>
-  </head>
-  <body>
-    <div class="dashboard">
-      <h1 class="brand">Pravo!</h1>
+
+<template data-tpl="dashboard">
+  <div data-ui="dashboard" class="dashboard">
+    <div class="layer-gallery">
       <div data-ui="gallery" class="gallery"></div>
     </div>
-  </body>
-</html>
+    <div class="layer-pravo"><b data-ui="pravo" class="btn-pravo">Pravo!</b></div>
+  </div>
+</template>

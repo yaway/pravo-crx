@@ -90,6 +90,20 @@ define(['lib/underscore', 'found/c', 'mcs/artwork', 'found/api'], function(_, C,
       return this.isSettingLocal = false;
     };
 
+    Artworks.prototype.cleanLocal = function() {
+      this.isSettingLocal = true;
+      console.debug('Cleaning LocalArtworks');
+      chrome.storage.local.set({
+        'artworks': []
+      }, (function(_this) {
+        return function() {
+          _this.trigger("cleanLocal");
+          return console.debug("Local Artworks Cleaned");
+        };
+      })(this));
+      return this.isSettingLocal = false;
+    };
+
     Artworks.prototype.getServer = function() {
       console.debug("Getting Server Artworks");
       return API.getArtworks({}, (function(_this) {
@@ -145,8 +159,7 @@ define(['lib/underscore', 'found/c', 'mcs/artwork', 'found/api'], function(_, C,
       for (i = j = 0, len = ref.length; j < len; i = ++j) {
         artwork = ref[i];
         if (artwork.get('isCurrent')) {
-          this.currentIndex = i;
-          results.push(console.error(i));
+          results.push(this.currentIndex = i);
         } else {
           results.push(void 0);
         }

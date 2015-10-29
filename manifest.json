@@ -9,14 +9,14 @@
   //   ,"128": "img/icon128.png"
   // }
   ,"chrome_url_overrides": {
-    "newtab": "html/dashboard.html"
+    "newtab": "html/pravo.html"
   }
   ,"browser_action": {
     "default_icon": {
       // "19": "img/icon/icon19.png"
       // ,"38": "img/icon/icon38.png"
     }
-    ,"default_popup": "popup.html"
+    // ,"default_popup": "popup.html"
     ,"default_title": "Here we go"
   }
   ,"permissions": [

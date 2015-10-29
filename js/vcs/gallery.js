@@ -23,13 +23,7 @@ define(['lib/underscore', 'found/vc', 'mcs/artwork', 'mcs/artworks', 'vcs/artwor
 
     Gallery.prototype.onClickArtwork = function() {
       console.error('Artwork Clicked');
-      this.artworks.loop();
-      if (this.artworks.isSettingLocal) {
-        console.error('Is Setting Local Artworks');
-        return this.artworks.once('setLocal', this.artworks.setLocal);
-      } else {
-        return this.artworks.setLocal();
-      }
+      return this.artworks.loop();
     };
 
     Gallery.prototype.initialize = function(option) {
@@ -41,7 +35,6 @@ define(['lib/underscore', 'found/vc', 'mcs/artwork', 'mcs/artworks', 'vcs/artwor
     };
 
     Gallery.prototype.initializeArtworks = function() {
-      this.artworks.getLocal();
       this.artworks.getServer();
       this.renderArtworks();
       return this.artworks.on({

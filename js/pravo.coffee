@@ -14,7 +14,11 @@ require [
   'vcs/dashboard'
 ], ($,_,Dashboard)->
   $ ()->
-    new Dashboard
+    dashboard = new Dashboard {root: 'dashboard',template: 'dashboard'}
+
+    window.Pravo = {}
+    Pravo.cleanLocalArtworks = ()->
+      dashboard.gallery.artworks.cleanLocal()
   # $ ()->
   #   console.log 'pravo!'
     

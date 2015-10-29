@@ -10,9 +10,8 @@ define [
     initialize: ()->
       @currentIndex = 0
       @isSettingLocal = false
-      @on {
+      @on
         "change:isCurrent": @onChangeIsCurrent
-      }
 
     onChangeIsCurrent: ()=>
       @updateCurrentIndex()
@@ -65,6 +64,14 @@ define [
         console.debug "Local Artworks Set:"
         console.log @models
       @isSettingLocal = false
+    cleanLocal: ()->
+      @isSettingLocal = true
+      console.debug 'Cleaning LocalArtworks'
+      chrome.storage.local.set {'artworks':[]},()=>
+        @trigger "cleanLocal"
+        console.debug "Local Artworks Cleaned"
+      @isSettingLocal = false
+
 
     getServer: ()->
       console.debug "Getting Server Artworks"
@@ -107,8 +114,5 @@ define [
       for artwork,i in @models
         if artwork.get 'isCurrent'
           @currentIndex = i
-          console.error i
-
-
 
   return Artworks
