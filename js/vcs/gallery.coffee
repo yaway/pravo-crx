@@ -8,6 +8,7 @@ define [
   class Gallery extends VC
     events:
       "click [data-ui='artwork']": 'onClickArtwork'
+      "click [data-ui='btnFav']": 'onClickBtnFav'
     onClickArtwork: ()=>
       console.error 'Artwork Clicked'
       @artworks.loop()
@@ -16,6 +17,10 @@ define [
       #   @artworks.once 'setLocal',@artworks.setLocal
       # else
       #   @artworks.setLocal()
+      @updateStateFavorite()
+    onClickBtnFav: ()=>
+      console.error 'BtnFav Clicked'
+      @favCurrentArtwork()
 
     initialize: (option)->
       super(option)
@@ -34,6 +39,7 @@ define [
         'gotLocal': @onArtworksGotLocal
         'setLocal': @onArtworksSetLocal
         'gotServer': @onArtworksGotServer
+        'changeIsFavorite': @onArtworksChangeIsFavorite
       }
     onArtworksGotServer: ()=>
       console.error 'Artworks Got Server'
@@ -48,10 +54,25 @@ define [
     onArtworksSetLocal: ()=>
       console.error 'Artworks Set Local'
       @isArtworksSetLocal = true
+    onArtworksChangeIsFavorite: ()=>
+      @updateStateFavorite()
+
 
     update: ()->
       console.log "Gallery Rendered"
       @initializeArtworks()
+
+    updateStateFavorite: ()->
+      currentArtwork = @artworks.getCurrentArtwork()
+      if currentArtwork.getFav()
+        @$el.addClass 'favorite'
+        @ui.$btnFav.text 'Faved'
+      else
+        @$el.removeClass 'favorite'
+        @ui.$btnFav.text 'Fav'
+
+    favCurrentArtwork: ()->
+      @artworks.getCurrentArtwork().setFav()
 
     renderArtworks: ()->
       @ui.$artworks.empty()

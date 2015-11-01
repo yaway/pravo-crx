@@ -12,9 +12,13 @@ define [
       @isSettingLocal = false
       @on
         "change:isCurrent": @onChangeIsCurrent
+      @on
+        "change:isFavorite": @onChangeIsFavorite
 
     onChangeIsCurrent: ()=>
       @updateCurrentIndex()
+    onChangeIsFavorite: ()=>
+      @trigger 'changeIsFavorite'
 
     update: ()->
       console.log "Updated to #{@length} Artworks"
@@ -101,6 +105,10 @@ define [
       else
         @currentIndex = 0
       @toggleCurrent()
+
+    getCurrentArtwork: ()->
+      currentArtwork = @findWhere 'isCurrent'
+      return currentArtwork
 
     toggleCurrent: ()->
       console.debug 'Is Artworks C:'

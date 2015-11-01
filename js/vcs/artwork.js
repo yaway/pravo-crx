@@ -11,6 +11,7 @@ define(['lib/underscore', 'found/vc'], function(_, VC) {
     function Artwork() {
       this.onWillUnsetCurrent = bind(this.onWillUnsetCurrent, this);
       this.onWillSetCurrent = bind(this.onWillSetCurrent, this);
+      this.onChangeIsFavorite = bind(this.onChangeIsFavorite, this);
       this.onChangeIsCurrent = bind(this.onChangeIsCurrent, this);
       this.onChangeSrc = bind(this.onChangeSrc, this);
       return Artwork.__super__.constructor.apply(this, arguments);
@@ -24,8 +25,9 @@ define(['lib/underscore', 'found/vc'], function(_, VC) {
         "willUnSetCurrent": this.onWillUnsetCurrent
       });
       return this.model.on({
+        "change:src": this.onChangeSrc,
         "change:isCurrent": this.onChangeIsCurrent,
-        "change:src": this.onChangeSrc
+        "change:isFavorite": this.onChangeIsFavorite
       });
     };
 
@@ -35,6 +37,11 @@ define(['lib/underscore', 'found/vc'], function(_, VC) {
 
     Artwork.prototype.onChangeIsCurrent = function() {
       console.log('Artwork Changed: isCurrent');
+      return this.updateStateCurrent();
+    };
+
+    Artwork.prototype.onChangeIsFavorite = function() {
+      console.log('Artwork Changed: isFavorite');
       return this.updateStateCurrent();
     };
 
@@ -55,20 +62,12 @@ define(['lib/underscore', 'found/vc'], function(_, VC) {
 
     Artwork.prototype.updateStateCurrent = function() {
       if (this.model.get('isCurrent')) {
-        return this.setCurrent();
+        this.$el.addClass('current');
+        return this.model.set('isCurrent', true);
       } else {
-        return this.unsetCurrent();
+        this.$el.removeClass('current');
+        return this.model.set('isCurrent', false);
       }
-    };
-
-    Artwork.prototype.setCurrent = function() {
-      this.$el.addClass('current');
-      return this.model.set('isCurrent', true);
-    };
-
-    Artwork.prototype.unsetCurrent = function() {
-      this.$el.removeClass('current');
-      return this.model.set('isCurrent', false);
     };
 
     return Artwork;

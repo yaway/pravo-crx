@@ -9,6 +9,7 @@ define(['lib/underscore', 'found/c', 'mcs/artwork', 'found/api'], function(_, C,
     extend(Artworks, superClass);
 
     function Artworks() {
+      this.onChangeIsFavorite = bind(this.onChangeIsFavorite, this);
       this.onChangeIsCurrent = bind(this.onChangeIsCurrent, this);
       return Artworks.__super__.constructor.apply(this, arguments);
     }
@@ -18,13 +19,20 @@ define(['lib/underscore', 'found/c', 'mcs/artwork', 'found/api'], function(_, C,
     Artworks.prototype.initialize = function() {
       this.currentIndex = 0;
       this.isSettingLocal = false;
-      return this.on({
+      this.on({
         "change:isCurrent": this.onChangeIsCurrent
+      });
+      return this.on({
+        "change:isFavorite": this.onChangeIsFavorite
       });
     };
 
     Artworks.prototype.onChangeIsCurrent = function() {
       return this.updateCurrentIndex();
+    };
+
+    Artworks.prototype.onChangeIsFavorite = function() {
+      return this.trigger('changeIsFavorite');
     };
 
     Artworks.prototype.update = function() {
@@ -140,6 +148,12 @@ define(['lib/underscore', 'found/c', 'mcs/artwork', 'found/api'], function(_, C,
         this.currentIndex = 0;
       }
       return this.toggleCurrent();
+    };
+
+    Artworks.prototype.getCurrentArtwork = function() {
+      var currentArtwork;
+      currentArtwork = this.findWhere('isCurrent');
+      return currentArtwork;
     };
 
     Artworks.prototype.toggleCurrent = function() {

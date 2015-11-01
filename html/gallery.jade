@@ -1,3 +1,6 @@
 template(data-tpl="gallery")
   div.gallery
-    ul.artwork-group(data-ui="artworks")
+    div.layer-artworks
+      ul.artworks(data-ui="artworks")
+    div.layer-fav
+      b.btn-fav(data-ui="btnFav") Fav

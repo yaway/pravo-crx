@@ -13,6 +13,7 @@ define [
       "path": "0.png"
       "src": ''
       "isCurrent": false
+      "isFavorite": false
     }
     initialize: ()->
       console.log "New Artwork"
@@ -25,4 +26,17 @@ define [
           console.debug "Data URL:"
           console.log dataUrl
           @set 'src',dataUrl
+    getFav: ()->
+      fav = @get 'isFavorite'
+      return fav
+    setFav: ()->
+      @set 'isFavorite',true
+    unsetFav: ()->
+      @set 'isFavorite',false
+    toggleFav: ()->
+      if (@get 'isFavorite')
+        @unsetFav()
+      else
+        @setFav()
+
   return Artwork

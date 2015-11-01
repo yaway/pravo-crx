@@ -19,7 +19,8 @@ define(['lib/underscore', 'found/utl', 'found/m'], function(_, Utl, M) {
       "root": "../../img/artwork",
       "path": "0.png",
       "src": '',
-      "isCurrent": false
+      "isCurrent": false,
+      "isFavorite": false
     };
 
     Artwork.prototype.initialize = function() {
@@ -36,6 +37,28 @@ define(['lib/underscore', 'found/utl', 'found/m'], function(_, Utl, M) {
             return _this.set('src', dataUrl);
           };
         })(this));
+      }
+    };
+
+    Artwork.prototype.getFav = function() {
+      var fav;
+      fav = this.get('isFavorite');
+      return fav;
+    };
+
+    Artwork.prototype.setFav = function() {
+      return this.set('isFavorite', true);
+    };
+
+    Artwork.prototype.unsetFav = function() {
+      return this.set('isFavorite', false);
+    };
+
+    Artwork.prototype.toggleFav = function() {
+      if (this.get('isFavorite')) {
+        return this.unsetFav();
+      } else {
+        return this.setFav();
       }
     };
 

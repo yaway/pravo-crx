@@ -9,21 +9,30 @@ define(['lib/underscore', 'found/vc', 'mcs/artwork', 'mcs/artworks', 'vcs/artwor
     extend(Gallery, superClass);
 
     function Gallery() {
+      this.onArtworksChangeIsFavorite = bind(this.onArtworksChangeIsFavorite, this);
       this.onArtworksSetLocal = bind(this.onArtworksSetLocal, this);
       this.onArtworksGotLocal = bind(this.onArtworksGotLocal, this);
       this.onArtworksGotServer = bind(this.onArtworksGotServer, this);
       this.initializeArtworks = bind(this.initializeArtworks, this);
+      this.onClickBtnFav = bind(this.onClickBtnFav, this);
       this.onClickArtwork = bind(this.onClickArtwork, this);
       return Gallery.__super__.constructor.apply(this, arguments);
     }
 
     Gallery.prototype.events = {
-      "click [data-ui='artwork']": 'onClickArtwork'
+      "click [data-ui='artwork']": 'onClickArtwork',
+      "click [data-ui='btnFav']": 'onClickBtnFav'
     };
 
     Gallery.prototype.onClickArtwork = function() {
       console.error('Artwork Clicked');
-      return this.artworks.loop();
+      this.artworks.loop();
+      return this.updateStateFavorite();
+    };
+
+    Gallery.prototype.onClickBtnFav = function() {
+      console.error('BtnFav Clicked');
+      return this.favCurrentArtwork();
     };
 
     Gallery.prototype.initialize = function(option) {
@@ -40,7 +49,8 @@ define(['lib/underscore', 'found/vc', 'mcs/artwork', 'mcs/artworks', 'vcs/artwor
       return this.artworks.on({
         'gotLocal': this.onArtworksGotLocal,
         'setLocal': this.onArtworksSetLocal,
-        'gotServer': this.onArtworksGotServer
+        'gotServer': this.onArtworksGotServer,
+        'changeIsFavorite': this.onArtworksChangeIsFavorite
       });
     };
 
@@ -64,9 +74,29 @@ define(['lib/underscore', 'found/vc', 'mcs/artwork', 'mcs/artworks', 'vcs/artwor
       return this.isArtworksSetLocal = true;
     };
 
+    Gallery.prototype.onArtworksChangeIsFavorite = function() {
+      return this.updateStateFavorite();
+    };
+
     Gallery.prototype.update = function() {
       console.log("Gallery Rendered");
       return this.initializeArtworks();
+    };
+
+    Gallery.prototype.updateStateFavorite = function() {
+      var currentArtwork;
+      currentArtwork = this.artworks.getCurrentArtwork();
+      if (currentArtwork.getFav()) {
+        this.$el.addClass('favorite');
+        return this.ui.$btnFav.text('Faved');
+      } else {
+        this.$el.removeClass('favorite');
+        return this.ui.$btnFav.text('Fav');
+      }
+    };
+
+    Gallery.prototype.favCurrentArtwork = function() {
+      return this.artworks.getCurrentArtwork().setFav();
     };
 
     Gallery.prototype.renderArtworks = function() {

@@ -89,6 +89,17 @@ td {
 a img {
   border: none;
 }
+html,
+body {
+  height: 100%;
+  font-family: Helvetica, sans-serif;
+}
+.btn,
+.btn-fav {
+  padding: 10px;
+  cursor: pointer;
+  color: #eee;
+}
 .dashboard {
   position: relative;
   display: -webkit-box;
@@ -119,7 +130,28 @@ a img {
 .layer-gallery * {
   pointer-events: auto;
 }
-.layer-pravo {
+.gallery {
+  color: #666;
+}
+.layer-artworks {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: -ms-flexbox;
+  display: box;
+  display: flex;
+  z-index: 1;
+  pointer-events: none;
+}
+.layer-artworks * {
+  pointer-events: auto;
+}
+.layer-fav {
   display: -webkit-box;
   display: -moz-box;
   display: -webkit-flex;
@@ -153,21 +185,12 @@ a img {
   justify-content: flex-end;
   margin-bottom: 10px;
 }
-.layer-pravo * {
+.layer-fav * {
   pointer-events: auto;
-}
-.btn,
-.btn-pravo {
-  padding: 10px;
-  cursor: pointer;
-  color: #eee;
-}
-.gallery {
-  color: #666;
 }
 .artwork {
   display: none;
-  position: fixed;
+  position: absolute;
   top: -50%;
   left: -50%;
   width: 200%;
@@ -185,9 +208,4 @@ a img {
 }
 .artwork.current {
   display: block;
-}
-html,
-body {
-  height: 100%;
-  font-family: Helvetica, sans-serif;
 }

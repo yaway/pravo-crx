@@ -10,14 +10,19 @@ define [
         "willSetCurrent": @onWillSetCurrent
         "willUnSetCurrent": @onWillUnsetCurrent
       @model.on
-        "change:isCurrent": @onChangeIsCurrent
         "change:src": @onChangeSrc
-        
+        "change:isCurrent": @onChangeIsCurrent
+        "change:isFavorite": @onChangeIsFavorite
+
     onChangeSrc: ()=>
       @ui.$img.attr 'src',(@model.get 'src')
 
     onChangeIsCurrent: ()=>
       console.log 'Artwork Changed: isCurrent'
+      @updateStateCurrent()
+
+    onChangeIsFavorite: ()=>
+      console.log 'Artwork Changed: isFavorite'
       @updateStateCurrent()
 
     update: ()->
@@ -33,14 +38,12 @@ define [
 
     updateStateCurrent: ()->
       if (@model.get 'isCurrent')
-        @setCurrent()
+        @$el.addClass 'current'
+        @model.set 'isCurrent',true
       else
-        @unsetCurrent()
+        @$el.removeClass 'current'
+        @model.set 'isCurrent',false
 
-    setCurrent: ()->
-      @$el.addClass 'current'
-      @model.set 'isCurrent',true
-    unsetCurrent: ()->
-      @$el.removeClass 'current'
-      @model.set 'isCurrent',false
+
+
   return Artwork
