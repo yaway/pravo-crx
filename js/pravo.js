@@ -23,7 +23,9 @@ require(['jquery', 'lib/underscore', 'vcs/dashboard'], function($, _, Dashboard)
     });
     window.Pravo = {};
     return Pravo.cleanLocalArtworks = function() {
-      return dashboard.gallery.artworks.cleanLocal();
+      return dashboard.gallery.artworks.save({
+        only: 'nil'
+      });
     };
   });
 });

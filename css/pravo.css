@@ -96,9 +96,14 @@ body {
 }
 .btn,
 .btn-fav {
-  padding: 10px;
+  display: inline-block;
+  padding: 5px 10px;
   cursor: pointer;
-  color: #eee;
+  background-color: rgba(129,216,208,0.3);
+  color: #81d8d0;
+  border: 2px solid #81d8d0;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
 }
 .dashboard {
   position: relative;
@@ -129,9 +134,6 @@ body {
 }
 .layer-gallery * {
   pointer-events: auto;
-}
-.gallery {
-  color: #666;
 }
 .layer-artworks {
   display: -webkit-box;
@@ -187,6 +189,15 @@ body {
 }
 .layer-fav * {
   pointer-events: auto;
+}
+.gallery {
+  color: #666;
+}
+.gallery .btn-fav {
+  display: none;
+}
+.gallery.with-artworks .btn-fav {
+  display: inline-block;
 }
 .artwork {
   display: none;

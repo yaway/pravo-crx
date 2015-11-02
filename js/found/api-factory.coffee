@@ -10,7 +10,6 @@ define ['found/error'],(Errors)->
     create: (option)=>
       option ?= {}
       return (data,callback)=>
-        console.log data
         if not data 
           data = {}
         method = option.method or 'GET'

@@ -40,26 +40,13 @@ define(['lib/underscore', 'found/utl', 'found/m'], function(_, Utl, M) {
       }
     };
 
-    Artwork.prototype.getFav = function() {
-      var fav;
-      fav = this.get('isFavorite');
-      return fav;
-    };
-
-    Artwork.prototype.setFav = function() {
-      return this.set('isFavorite', true);
-    };
-
-    Artwork.prototype.unsetFav = function() {
-      return this.set('isFavorite', false);
-    };
-
-    Artwork.prototype.toggleFav = function() {
+    Artwork.prototype.toggleFavorite = function() {
       if (this.get('isFavorite')) {
-        return this.unsetFav();
+        this.set('isFavorite', false);
       } else {
-        return this.setFav();
+        this.set('isFavorite', true);
       }
+      return this.set('isCurrent', true);
     };
 
     return Artwork;

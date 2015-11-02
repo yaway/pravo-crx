@@ -2,19 +2,23 @@
 
 global-reset()
 
+
 @import "./mixins"
 
+tiffanyBlue = #81D8D0
 
 html,body
   height 100%
   font-family Helvetica, sans-serif
 
-
 .btn
-  padding 10px
-  cursor: pointer
-  // bg(rgba(255,255,255,0.2))
-  color: #eee
+  display inline-block
+  padding 5px 10px
+  cursor pointer
+  bg(rgba(129, 216, 208, 0.3))
+  color #81D8D0
+  border 2px solid #81D8D0
+  border-radius 4px
   
 @import "./dashboard"
 @import "./gallery"

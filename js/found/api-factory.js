@@ -24,7 +24,6 @@ define(['found/error'], function(Errors) {
       return (function(_this) {
         return function(data, callback) {
           var contentType, method, timeout, url;
-          console.log(data);
           if (!data) {
             data = {};
           }

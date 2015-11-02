@@ -4,7 +4,7 @@ define [
   'found/m'
 ],(_,Utl,M)->
   class Artwork extends M
-    defaults: {
+    defaults:
       "id": undefined
       "idAttribute": "id"
       "url": ''
@@ -14,7 +14,7 @@ define [
       "src": ''
       "isCurrent": false
       "isFavorite": false
-    }
+
     initialize: ()->
       console.log "New Artwork"
       if (@get 'url') is ''
@@ -26,17 +26,11 @@ define [
           console.debug "Data URL:"
           console.log dataUrl
           @set 'src',dataUrl
-    getFav: ()->
-      fav = @get 'isFavorite'
-      return fav
-    setFav: ()->
-      @set 'isFavorite',true
-    unsetFav: ()->
-      @set 'isFavorite',false
-    toggleFav: ()->
-      if (@get 'isFavorite')
-        @unsetFav()
+    toggleFavorite: ()->
+      if @get 'isFavorite'
+        @set 'isFavorite',false
       else
-        @setFav()
+        @set 'isFavorite',true
+      @set 'isCurrent',true
 
   return Artwork

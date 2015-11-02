@@ -6,121 +6,82 @@ define [
 ],(_,C,Artwork,API)->
   class Artworks extends C
     model: Artwork
-
-    initialize: ()->
-      @currentIndex = 0
-      @isSettingLocal = false
-      @on
-        "change:isCurrent": @onChangeIsCurrent
-      @on
-        "change:isFavorite": @onChangeIsFavorite
-
-    onChangeIsCurrent: ()=>
-      @updateCurrentIndex()
-    onChangeIsFavorite: ()=>
-      @trigger 'changeIsFavorite'
-
-    update: ()->
-      console.log "Updated to #{@length} Artworks"
-      console.log @models
-
-
-    getAlter: ()->
-      if @length is 0
-        @add [
-          {
-            path: '1.png'
-            isCurrent: true
-          }
-          {
-            path: '2.png'
-          }
-          {
-            path: '3.png'
-          }
-          {
-            path: '0.png'
-          }
-        ]
-
-    getLocal: ()->
-      console.debug "Getting Local Artworks"
-      chrome.storage.local.get 'artworks',(data)=>
-        unless data.artworks
-          console.log 'No Local Artworks'
-        else
-          @reset()
-          rawArtworks = JSON.parse (data.artworks or {})
-          for rawArtwork in rawArtworks
-            console.log "New Artwork from Local"
-            # artwork = new Artwork rawArtwork
-            @add rawArtwork
-        @trigger "gotLocal"
-        console.debug "Local Artworks Got:"
-        console.log @models
-    setLocal: ()->
-      @isSettingLocal = true
-      console.debug 'Setting LocalArtworks'
-      artworksJSON = JSON.stringify @models
+    
+    save: (opt)->
+      console.debug 'Will Save Artworks'
+      rawArtworks = @models.map (artwork)->
+        artwork = artwork.attributes
+        artwork.isCurrent = false
+        return artwork
+      if opt.only is "fav"
+        rawArtworks = _.where rawArtworks,{isFavorite: true}
+      else if opt.only is "nil"
+        rawArtworks = []
+      artworksJSON = JSON.stringify rawArtworks
       console.log artworksJSON
       chrome.storage.local.set {'artworks':artworksJSON},()=>
-        @trigger "setLocal"
-        console.debug "Local Artworks Set:"
-        console.log @models
-      @isSettingLocal = false
-    cleanLocal: ()->
-      @isSettingLocal = true
-      console.debug 'Cleaning LocalArtworks'
-      chrome.storage.local.set {'artworks':[]},()=>
-        @trigger "cleanLocal"
-        console.debug "Local Artworks Cleaned"
-      @isSettingLocal = false
+        @trigger "didSaveToLocal"
+        console.debug "Artworks Did Save:"
+        console.log rawArtworks
 
+    fetch: (opt)->
+      console.debug 'Will Fetch Artworks'
+      rawArtworks = []
+      callback = opt.callback or ((data)-> return data)
+      if opt.from is "local"
+        console.debug "Will Fetch Local Artworks"
+        chrome.storage.local.get 'artworks',(data)=>
+          unless data.artworks
+            console.log 'No Local Artworks to Fetch'
+          else
+            rawArtworks = JSON.parse (data.artworks or {})
+            # for rawArtwork in rawArtworks
+              # @add rawArtwork
+            console.debug "Local Artworks Did Fetch:"
+            console.log rawArtworks
+            callback rawArtworks
+            @trigger "didFetchFromLocal"
+      else if opt.from is "konachan"
+        console.debug "Will Fetch Server Artworks"
+        API.getArtworks {},(err,data)=>
+          refArtworks = []
+          console.debug "Server RefArtworks:"
+          console.log data
+          if data?.length > 0
+            refArtworks = data
+            for refArtwork in refArtworks
+              rawArtwork = {
+                id: refArtwork.id
+                url: refArtwork.file_url
+              }
+              rawArtworks.push rawArtwork
+              # @add rawArtwork
+              # @at(0).set 'isCurrent',true
+            console.debug "Server Artworks Did Fetch:"
+            console.log rawArtworks
+            callback rawArtworks
+            @trigger "didFetchFromServer"
 
-    getServer: ()->
-      console.debug "Getting Server Artworks"
-      API.getArtworks {},(err,data)=>
-        refArtworks = []
-        console.debug "Server Data:"
-        console.log data
-        if data?.length > 0
-          @reset()
-          refArtworks = data
-          for refArtwork in refArtworks
-            # artwork = new Artwork {
-            rawArtwork = {
-              id: refArtwork.id
-              url: refArtwork.file_url
-            }
-            @add rawArtwork
-            @at(0).set 'isCurrent',true
-          @trigger "gotServer"
-          console.debug "Server Artworks Get:"
-          console.log @models
 
     loop: ()->
-      @toggleCurrent()
-      if @currentIndex < @length-1
-        @currentIndex++
+      if @length < 2
+        return
+      current = @getCurrent()
+      console.log @models
+      next = @getNext()
+      current.set 'isCurrent',false
+      next.set 'isCurrent',true
+    getCurrent: ()->
+      current = @findWhere 'isCurrent'
+      return current
+    getNext: ()->
+      current = @getCurrent()
+      currentIndex = @indexOf current
+      console.error currentIndex
+      if currentIndex < @length-1
+        next = @at currentIndex+1
       else
-        @currentIndex = 0
-      @toggleCurrent()
-
-    getCurrentArtwork: ()->
-      currentArtwork = @findWhere 'isCurrent'
-      return currentArtwork
-
-    toggleCurrent: ()->
-      console.debug 'Is Artworks C:'
-      console.log this
-      if (@at @currentIndex).get 'isCurrent'
-        (@at @currentIndex).set 'isCurrent',false
-      else
-        (@at @currentIndex).set 'isCurrent',true
-
-    updateCurrentIndex: ()->
-      for artwork,i in @models
-        if artwork.get 'isCurrent'
-          @currentIndex = i
+        next = @at 0
+      return next
 
   return Artworks

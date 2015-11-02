@@ -18,7 +18,7 @@ require [
 
     window.Pravo = {}
     Pravo.cleanLocalArtworks = ()->
-      dashboard.gallery.artworks.cleanLocal()
+      dashboard.gallery.artworks.save {only: 'nil'}
   # $ ()->
   #   console.log 'pravo!'
     

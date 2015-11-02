@@ -1,6 +1,3 @@
-.gallery
-  color #666
-
 .layer-artworks
   layer(1)
 
@@ -13,3 +10,11 @@
   
 .btn-fav
   @extends .btn
+
+.gallery
+  color #666
+  .btn-fav
+    display none
+  &.with-artworks
+    .btn-fav
+      display inline-block

@@ -9,72 +9,78 @@ define [
     events:
       "click [data-ui='artwork']": 'onClickArtwork'
       "click [data-ui='btnFav']": 'onClickBtnFav'
-    onClickArtwork: ()=>
+    onClickArtwork: (e)=>
       console.error 'Artwork Clicked'
+      e.stopPropagation()
       @artworks.loop()
-      # if @artworks.isSettingLocal
-      #   console.error 'Is Setting Local Artworks'
-      #   @artworks.once 'setLocal',@artworks.setLocal
-      # else
-      #   @artworks.setLocal()
       @updateStateFavorite()
-    onClickBtnFav: ()=>
+    onClickBtnFav: (e)=>
       console.error 'BtnFav Clicked'
-      @favCurrentArtwork()
-
+      console.error 'e'
+      e.stopPropagation()
+      @artworks.getCurrent().toggleFavorite()
     initialize: (option)->
       super(option)
       @artworks = new Artworks
-      @artworks.currentIndex = 0
-      @isArtworksSetLocal = false
-      @render()        
+      @artworks.on {
+        'didFetchFromLocal': @onArtworksDidFetchFromLocal
+        'didFetchFromServer': @onArtworksDidFetchFromServer
+        'change:isFavorite': @onArtworksChangeIsFavorite
+        'change:isCurrent': @onArtworksChangeIsCurrent
+        'update': @onArtworksUpdate
+      }
+      @render()
 
     initializeArtworks: ()=>
-      # @artworks.getLocal()
-      @artworks.getServer()
-      # newArtworks = new Artworks
-      # newArtworks.getServer()
-      @renderArtworks()
-      @artworks.on {
-        'gotLocal': @onArtworksGotLocal
-        'setLocal': @onArtworksSetLocal
-        'gotServer': @onArtworksGotServer
-        'changeIsFavorite': @onArtworksChangeIsFavorite
-      }
-    onArtworksGotServer: ()=>
-      console.error 'Artworks Got Server'
-      @artworks.setLocal()
-      @renderArtworks()
-    onArtworksGotLocal: ()=>
-      console.error 'Artworks Got Local'
+      @artworks.fetch
+        from:"local"
+        callback:(rawArtworks)=>
+          limit = 5
+          lack = limit - rawArtworks.length
+
+          if lack < 5
+            rawArtworks[0].isCurrent = true
+            @artworks.add rawArtworks
+          if lack > 0
+            @artworks.fetch
+              from:"konachan"
+              callback:(rawArtworks)=>
+                if lack = limit
+                  rawArtworks[0].isCurrent = true
+                else
+                  rawArtworks = _.first rawArtworks,lack
+                @artworks.add rawArtworks
+
+
+      
+    onArtworksUpdate: ()=>
+      @renderArtworks()            
+
+    onArtworksDidFetchFromLocal: ()=>
       if @artworks.length > 0
         @renderArtworks()
-      else
-        @artworks.getServer()
-    onArtworksSetLocal: ()=>
-      console.error 'Artworks Set Local'
-      @isArtworksSetLocal = true
+    onArtworksDidFetchFromServer: ()=>
+      if @artworks.length > 0
+        @renderArtworks()
     onArtworksChangeIsFavorite: ()=>
       @updateStateFavorite()
-
+      @artworks.save {only: "fav"}
 
     update: ()->
       console.log "Gallery Rendered"
       @initializeArtworks()
 
     updateStateFavorite: ()->
-      currentArtwork = @artworks.getCurrentArtwork()
-      if currentArtwork.getFav()
+      currentArtwork = @artworks.getCurrent()
+      if currentArtwork.get 'isFavorite'
         @$el.addClass 'favorite'
         @ui.$btnFav.text 'Faved'
       else
         @$el.removeClass 'favorite'
         @ui.$btnFav.text 'Fav'
 
-    favCurrentArtwork: ()->
-      @artworks.getCurrentArtwork().setFav()
-
     renderArtworks: ()->
+      @$el.addClass 'with-artworks'
       @ui.$artworks.empty()
       if not @artworks
         console.log "No Artworks to Render"
@@ -82,6 +88,7 @@ define [
       console.log @artworks
       for artwork in @artworks.models
         artworkVC = new ArtworkVC {root: 'artworks', position: 'append', template: 'artwork', model: artwork}
+      @updateStateFavorite()
 
     downloadArtworks: ()->
 
