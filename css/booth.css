@@ -1,24 +1,3 @@
-.layer-gallery .layer-receipt .scroll {
-  display: none;
-  background-color: rgba(0,0,0,0.6);
-  bottom: 0;
-  padding: 10px 0;
-  width: 50%;
-  max-width: 150px;
-  overflow: auto;
-}
-.layer-gallery .layer-receipt .scroll .artworks {
-  min-height: min-content;
-}
-.layer-gallery .layer-receipt .btn {
-  margin: 10px;
-}
-.artwork-thumbnail {
-  width: 100%;
-}
-.artwork-thumbnail .img {
-  width: 100%;
-}
 .layer-booth {
   overflow: hidden;
 }

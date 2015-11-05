@@ -1,9 +1,8 @@
 define [
-  'lib/underscore'
   'found/c'
-  'mcs/artwork'
+  'mc/artwork'
   'found/api'
-],(_,C,Artwork,API)->
+],(C,Artwork,API)->
   class Artworks extends C
     model: Artwork
     
@@ -26,8 +25,10 @@ define [
 
     fetch: (opt)->
       console.debug 'Will Fetch Artworks'
+      
       rawArtworks = []
       callback = opt.callback or ((data)-> return data)
+
       if opt.from is "local"
         console.debug "Will Fetch Local Artworks"
         chrome.storage.local.get 'artworks',(data)=>
@@ -53,10 +54,9 @@ define [
               rawArtwork = {
                 id: refArtwork.id
                 url: refArtwork.file_url
+                thumb: refArtwork.preview_url
               }
               rawArtworks.push rawArtwork
-              # @add rawArtwork
-              # @at(0).set 'isCurrent',true
             console.debug "Server Artworks Did Fetch:"
             console.log rawArtworks
             callback rawArtworks

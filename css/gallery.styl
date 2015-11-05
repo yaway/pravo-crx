@@ -1,20 +1,37 @@
-.layer-artworks
-  layer(1)
-
-.layer-fav
-  layer(2)
-  flex-direction(column)
-  align-items(center)
-  justify-content(flex-end)
-  margin-bottom 10px
+.layer-gallery
   
-.btn-fav
-  @extends .btn
+  .layer-booth
+    layer(1)
+    
+  .layer-receipt
+    layer(2)
+    // background-color rgba(0,0,0,0.6)
+    &.unfolded
+      .scroll
+        display(flex)
+    .scroll
+      display none
+      background-color rgba(0,0,0,0.6)
+      flex(1)
+      absolute(top right)
+      bottom 0
+      padding 10px 0
+      width 50%
+      max-width 150px
+      overflow auto
+      .artworks
+        display(flex)
+        flex-direction(column)
+        min-height min-content
+        
 
-.gallery
-  color #666
-  .btn-fav
-    display none
-  &.with-artworks
-    .btn-fav
-      display inline-block
+    .btn
+      margin 10px
+      absolute(bottom right)
+  
+
+.artwork-thumbnail
+  width 100%
+  .img
+      width 100%
+@import "./booth"

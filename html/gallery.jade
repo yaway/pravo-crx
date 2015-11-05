@@ -1,6 +1,14 @@
 template(data-tpl="gallery")
-  div.gallery
-    div.layer-artworks
-      ul.artworks(data-ui="artworks")
-    div.layer-fav
-      b.btn-fav(data-ui="btnFav") Fav
+  div.layer-gallery(data-ui="gallery")
+    div.layer-booth(data-ui="booth")
+      ul.layer-artworks(data-ui="artworks")
+      div.layer-btns
+        b.btn(data-ui="btnFav") Fav
+
+    //- div.layer-inventory(data-ui="inventory")
+    //-   ul.artworks(data-ui="artworks")
+
+    div.layer-receipt(data-ui="receipt")
+      div.scroll
+        ul.artworks(data-ui="artworks")
+      b.btn(data-ui="btnNew") New

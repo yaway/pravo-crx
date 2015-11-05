@@ -1,19 +1,19 @@
 define [
-  'lib/underscore'
   'lib/backbone'
   'found/tpl'
-],(_,Backbone,TPL)->
+],(Backbone,TPL)->
   class VC extends Backbone.View
-    initialize: (option)->
-      option ?= {}
-      @model = option.model
+    initialize: (opt)->
+      opt ?= {}
+      @model = opt.model
       @ui ?= {}
-      @position = option.position
-      @$root = $("[data-ui='#{option.root or ''}']")
-      if option.template
-        @template = TPL.getTpl option.template
+      @position = opt.position
+      @root = opt.root or document.body
+      @$root = opt.$root or $(@root)
+      if opt.template
+        @template = TPL.getTpl opt.template
       else
-        @template = @template or '<div></div>'
+        @template = @$root[0].outerHTML
     update: ()->
     getUI: (ui)->
       return @$el.find("[data-ui='#{ui}']")

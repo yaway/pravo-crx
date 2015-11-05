@@ -2,7 +2,7 @@
 var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
-define(['lib/underscore', 'lib/backbone', 'found/tpl'], function(_, Backbone, TPL) {
+define(['lib/backbone', 'found/tpl'], function(Backbone, TPL) {
   var VC;
   VC = (function(superClass) {
     extend(VC, superClass);
@@ -11,20 +11,21 @@ define(['lib/underscore', 'lib/backbone', 'found/tpl'], function(_, Backbone, TP
       return VC.__super__.constructor.apply(this, arguments);
     }
 
-    VC.prototype.initialize = function(option) {
-      if (option == null) {
-        option = {};
+    VC.prototype.initialize = function(opt) {
+      if (opt == null) {
+        opt = {};
       }
-      this.model = option.model;
+      this.model = opt.model;
       if (this.ui == null) {
         this.ui = {};
       }
-      this.position = option.position;
-      this.$root = $("[data-ui='" + (option.root || '') + "']");
-      if (option.template) {
-        return this.template = TPL.getTpl(option.template);
+      this.position = opt.position;
+      this.root = opt.root || document.body;
+      this.$root = opt.$root || $(this.root);
+      if (opt.template) {
+        return this.template = TPL.getTpl(opt.template);
       } else {
-        return this.template = this.template || '<div></div>';
+        return this.template = this.$root[0].outerHTML;
       }
     };
 

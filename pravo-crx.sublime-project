@@ -7,17 +7,17 @@
 	],
   "settings":
   {
-      "CoffeeScript":
-      {
-          "noWrapper": true,
-          "compileOnSave": true,
-          "compileDir": "."
-      },
-      "Stylus":
-      {
-          "compress": false,
-          "compileOnSave": true,
-          "compileDir": "."
-      }
+    "Stylus":
+    {
+      "compress": false,
+      "compileOnSave": true,
+      "compileDir": "."
+    },
+    "CoffeeScript":
+    {
+      "noWrapper": true,
+      "compileOnSave": true,
+      "compileDir": "."
+    }
   }
 }

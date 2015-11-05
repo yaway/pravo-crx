@@ -4,6 +4,102 @@
 		"selected_items":
 		[
 			[
+				"art",
+				"artworks"
+			],
+			[
+				"render",
+				"renderArtworks"
+			],
+			[
+				"get",
+				"getCurrent"
+			],
+			[
+				"curren",
+				"current"
+			],
+			[
+				"current",
+				"currentIndex"
+			],
+			[
+				"ge",
+				"getCurrent"
+			],
+			[
+				"is",
+				"isCurrent"
+			],
+			[
+				"cur",
+				"currentArtwork"
+			],
+			[
+				"set",
+				"setFav"
+			],
+			[
+				"da",
+				"dashboard"
+			],
+			[
+				"ar",
+				"artworks"
+			],
+			[
+				"Art",
+				"Artworks"
+			],
+			[
+				"rende",
+				"renderArtworks"
+			],
+			[
+				"on",
+				"onGetServer"
+			],
+			[
+				"A",
+				"Artworks"
+			],
+			[
+				"Ar",
+				"Artworks"
+			],
+			[
+				"ref",
+				"refArtworks"
+			],
+			[
+				"a",
+				"artworks"
+			],
+			[
+				"raw",
+				"rawArtwork"
+			],
+			[
+				"font-",
+				"font-family"
+			],
+			[
+				"mi",
+				"min-width"
+			],
+			[
+				"tpl",
+				"tplStr"
+			],
+			[
+				"te",
+				"template"
+			],
+			[
+				"font",
+				"font-size"
+			],
+			[
 				"res",
 				"resImg"
 			],
@@ -32,43 +128,70 @@
 	"buffers":
 	[
 		{
-			"file": "dashboard.jade",
+			"file": "html/artwork.jade",
 			"settings":
 			{
-				"buffer_size": 143,
+				"buffer_size": 105,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/Users/yaway/Library/Application Support/Sublime Text 2/Packages/User/Preferences.sublime-settings",
+			"settings":
+			{
+				"buffer_size": 493,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "js/pravo.coffee",
+			"settings":
+			{
+				"buffer_size": 1112,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "css/pravo.styl",
+			"settings":
+			{
+				"buffer_size": 363,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "css/artwork.styl",
+			"settings":
+			{
+				"buffer_size": 204,
 				"line_ending": "Unix"
 			}
 		}
 	],
-	"build_system": "Packages/Better CoffeeScript/CoffeeScript.sublime-build",
-	"build_system_choices":
-	[
-		[
-			[
-				[
-					"Packages/Better CoffeeScript/CoffeeScript.sublime-build",
-					""
-				],
-				[
-					"Packages/Better CoffeeScript/CoffeeScript.sublime-build",
-					"Run"
-				]
-			],
-			[
-				"Packages/Better CoffeeScript/CoffeeScript.sublime-build",
-				""
-			]
-		]
-	],
-	"build_varint": "",
+	"build_system": "",
 	"command_palette":
 	{
-		"height": 309.0,
-		"last_filter": "",
+		"height": 244.0,
 		"selected_items":
 		[
 			[
 				"pci",
+				"Package Control: Install Package"
+			],
+			[
+				"pic",
+				"Package Control: Install Package"
+			],
+			[
+				"pcr",
+				"Package Control: Remove Package"
+			],
+			[
+				"pc",
+				"Package Control: Remove Package"
+			],
+			[
+				"PCI",
 				"Package Control: Install Package"
 			],
 			[
@@ -84,22 +207,15 @@
 				"Package Control: Install Package"
 			],
 			[
-				"pc",
-				"Package Control: Remove Package"
-			],
-			[
 				"Packge",
 				"Preferences: Browse Packages"
 			]
 		],
-		"width": 443.0
+		"width": 485.0
 	},
 	"console":
 	{
-		"height": 0.0,
-		"history":
-		[
-		]
+		"height": 125.0
 	},
 	"distraction_free":
 	{
@@ -110,21 +226,78 @@
 		"side_bar_visible": false,
 		"status_bar_visible": false
 	},
-	"expanded_folders":
-	[
-		"/Users/yaway/Workspace/Pravo/project/pravo-crx",
-		"/Users/yaway/Workspace/Pravo/project/pravo-crx/css",
-		"/Users/yaway/Workspace/Pravo/project/pravo-crx/html"
-	],
 	"file_history":
 	[
+		"/Users/yaway/Workspace/Pravo/project/pravo-crx/css/pravo.css",
+		"/Users/yaway/Workspace/Pravo/project/pravo-crx/js/pravo.coffee",
+		"/Users/yaway/Workspace/Pravo/project/pravo-crx/html/dashboard.html",
+		"/Users/yaway/Workspace/Pravo/project/pravo-crx/node_modules/nib/iconic/demo.html",
+		"/Users/yaway/Library/Application Support/Sublime Text 2/Packages/User/SublimeOnSaveBuild.sublime-settings",
+		"/Users/yaway/Library/Application Support/Sublime Text 2/Packages/User/Preferences.sublime-settings",
+		"/Users/yaway/Workspace/Pravo/project/pravo-crx/js/mcs/artworks.coffee",
+		"/Users/yaway/Workspace/Pravo/project/pravo-crx/js/mcs/artwork.coffee",
+		"/Users/yaway/Workspace/Pravo/project/pravo-crx/js/vcs/booth.coffee",
 		"/Users/yaway/Workspace/Pravo/project/pravo-crx/js/vcs/artwork.coffee",
-		"/Users/yaway/aiperm.sh",
+		"/Users/yaway/Workspace/Pravo/project/pravo-crx/js/vcs/dashboard.coffee",
 		"/Users/yaway/Workspace/Pravo/project/pravo-crx/js/vcs/gallery.coffee",
+		"/Users/yaway/Workspace/Pravo/project/pravo-crx/js/pravo.js",
+		"/Users/yaway/Workspace/Pravo/project/pravo-crx/js/vcs/dashboard.js",
+		"/Users/yaway/Workspace/Pravo/project/pravo-crx/js/vcs/booth.js",
+		"/Users/yaway/Workspace/Pravo/project/pravo-crx/js/vcs/gallery.js",
+		"/Users/yaway/Workspace/Pravo/project/pravo-crx/pravo-crx.sublime-workspace",
+		"/Users/yaway/Workspace/Pravo/project/pravo-crx/js/mcs/artworks.js",
+		"/Users/yaway/Workspace/Pravo/project/pravo-crx/js/mcs/gallery.coffee",
+		"/Users/yaway/Workspace/Pravo/project/pravo-crx/css/artwork.styl",
+		"/Users/yaway/Workspace/Pravo/project/pravo-crx/node_modules/nib/index.styl",
+		"/Users/yaway/Workspace/Pravo/project/pravo-crx/node_modules/nib/lib/nib/index.styl",
+		"/Users/yaway/Workspace/Pravo/project/pravo-crx/js/found/utl.coffee",
+		"/Users/yaway/Workspace/Pravo/project/pravo-crx/css/mixins/pos.less",
+		"/Users/yaway/Workspace/Pravo/project/pravo-crx/html/pravo.jade",
+		"/Users/yaway/Workspace/Pravo/project/pravo-crx/css/pravo.less",
+		"/Users/yaway/Workspace/Pravo/project/pravo-crx/node_modules/nib/package.json",
+		"/Users/yaway/Workspace/Pravo/project/pravo-crx/pravo-crx.sublime-project",
+		"/Users/yaway/Workspace/Pravo/project/pravo-crx/node_modules/nib/lib/nib.js",
+		"/Users/yaway/Workspace/Pravo/project/pravo-crx/node_modules/nib/lib/nodes/gradient.js",
+		"/Users/yaway/Workspace/Pravo/project/pravo-crx/node_modules/nib/lib/nodes/color-image.js",
+		"/Users/yaway/Workspace/Pravo/project/pravo-crx/js/found/error.coffee",
+		"/Users/yaway/Workspace/Pravo/project/pravo-crx/js/lib/backbone.js",
+		"/Users/yaway/Workspace/Pravo/project/pravo-crx/js/found/util.js",
+		"/Users/yaway/Workspace/Pravo/project/pravo-crx/dashboard.jade",
+		"/Users/yaway/Workspace/Pravo/project/pravo-crx/js/lib/flickrapi.dev.js",
+		"/Users/yaway/Workspace/Pravo/project/pravo-crx/js/lib/cs.js",
+		"/Users/yaway/Workspace/Pravo/project/pravo-crx/js/lib/text.js",
+		"/Users/yaway/Workspace/Pravo/project/pravo-crx/css/lib/flex.less",
+		"/Users/yaway/Workspace/Pravo/project/pravo-crx/manifest.json",
+		"/Users/yaway/Workspace/Pravo/project/pravo-crx/js/found/tpl.coffee",
+		"/Users/yaway/Workspace/Pravo/project/pravo-crx/js/found/vc.coffee",
+		"/Users/yaway/Workspace/Pravo/project/pravo-crx/css/lib/preboot.less",
+		"/Users/yaway/Workspace/Pravo/project/pravo-crx/css/lib.less",
+		"/Users/yaway/Workspace/Pravo/project/pravo-crx/css/lib/normalize.css",
+		"/Users/yaway/Desktop/服务条款",
+		"/Users/yaway/Workspace/Timehut/peekaboo-album/app/assets/stylesheets/mixins/_pos.sass",
+		"/Users/yaway/Workspace/Pravo/project/pravo-crx/css/mixins/pos.css",
+		"/Users/yaway/Downloads/bootstrap-master/less/bootstrap.less",
+		"/Users/yaway/Downloads/bootstrap-master/less/wells.less",
+		"/Users/yaway/Downloads/bootstrap-master/less/variables.less",
+		"/Users/yaway/Workspace/Pravo/project/pravo-crx/js/lib/underscore.js",
+		"/Users/yaway/Workspace/Pravo/project/pravo-crx/dashboard.html",
+		"/Users/yaway/Library/Application Support/Sublime Text 2/Packages/SublimeOnSaveBuild/SublimeOnSaveBuild.sublime-settings",
+		"/Users/yaway/Workspace/Pravo/project/pravo-crx/html/test.erb",
 		"/Users/yaway/Workspace/Pravo/project/pravo-crx/js/found/api.coffee",
+		"/Users/yaway/Workspace/Pravo/project/pravo-crx/js/app.js",
+		"/Users/yaway/Library/Application Support/Sublime Text 2/Packages/User/CoffeeScript.sublime-settings",
+		"/Users/yaway/Library/Application Support/Sublime Text 2/Packages/Better CoffeeScript/CoffeeScript.sublime-settings",
+		"/Users/yaway/Downloads/preboot-master/less/preboot.less",
+		"/Users/yaway/Downloads/preboot-master/less/pygments.less",
+		"/Users/yaway/Downloads/preboot-master/README.md",
+		"/Users/yaway/Downloads/preboot-master/less/normalize.less",
+		"/Users/yaway/Workspace/Pravo/project/pravo-crx/css/app.css",
+		"/Users/yaway/Workspace/Pravo/project/pravo-crx/css/app.less",
+		"/Users/yaway/Workspace/Pravo/project/pravo-crx/html/artwork.jade",
+		"/Users/yaway/Library/Application Support/Sublime Text 2/Packages/Default/Preferences.sublime-settings",
+		"/Users/yaway/aiperm.sh",
 		"/Users/yaway/Library/Application Support/Sublime Text 3/Packages/User/CoffeeScript.sublime-settings",
 		"/Users/yaway/Workspace/Pravo/project/pravo-crx/js/app.coffee",
-		"/Users/yaway/Workspace/Pravo/project/pravo-crx/js/found/tpl.coffee",
 		"/Users/yaway/Workspace/Pravo/pravo-crx.sublime-project",
 		"/Users/yaway/Workspace/Timehut/peekaboo-album.sublime-project",
 		"/Users/yaway/Library/Application Support/Sublime Text 3/Packages/User/Preferences.sublime-settings",
@@ -159,7 +332,6 @@
 		"/Users/yaway/Workspace/Timehut/peekaboo-album/app/views/pages/test.html.erb",
 		"/Users/yaway/Workspace/Timehut/peekaboo-album/app/assets/javascripts/index.coffee",
 		"/Users/yaway/Workspace/Timehut/peekaboo-album/app/views/layouts/application.html.erb",
-		"/Users/yaway/Workspace/Timehut/peekaboo-album/app/assets/stylesheets/mixins/_pos.sass",
 		"/Users/yaway/Workspace/Timehut/peekaboo-album/app/views/layouts/index.html.erb",
 		"/Users/yaway/Workspace/Timehut/peekaboo-album/app/views/pages/terms.html.erb",
 		"/Users/yaway/Workspace/Timehut/peekaboo-album/app/assets/stylesheets/mixins/_bg.sass",
@@ -185,17 +357,65 @@
 	},
 	"find_in_files":
 	{
-		"height": 93.0,
+		"height": 0.0,
 		"where_history":
 		[
+			"/Users/yaway/Workspace/Pravo/project/pravo-crx",
 			""
 		]
 	},
 	"find_state":
 	{
-		"case_sensitive": false,
+		"case_sensitive": true,
 		"find_history":
 		[
+			"mcs",
+			"vcs",
+			"mcs",
+			"vcs",
+			"mcs",
+			"option",
+			"getFav",
+			"toggleFav",
+			"Fav",
+			"getCurrentArtwork",
+			"pointer",
+			"i",
+			"debug",
+			"getServer",
+			"getLocal",
+			"setLocal",
+			"updateCurrentIndex",
+			"currentArtworkIndex",
+			"_onModelEvent",
+			"change",
+			"set",
+			"artworkVCs",
+			"artworkRefs",
+			"VC",
+			"Access-Control-Allow-Origin",
+			"root",
+			"update",
+			"resolveUrl",
+			"artworks",
+			"VC",
+			"callback",
+			"increaseIndex",
+			"log",
+			"li",
+			"ul ",
+			"ul",
+			"flex",
+			"template",
+			"log",
+			"getUi",
+			"model",
+			"render",
+			"constructor",
+			"initialize",
+			"wrap",
+			"wrapper",
+			"tab",
 			"footer",
 			"    height: 80px\nfooter",
 			"footer",
@@ -272,6 +492,10 @@
 		"regex": false,
 		"replace_history":
 		[
+			"vc",
+			"mc",
+			"opt",
+			"artworks.currentIndex",
 			"……",
 			" PacPhotos",
 			"派图",
@@ -290,8 +514,62 @@
 	"groups":
 	[
 		{
+			"selected": 1,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "html/artwork.jade",
+					"settings":
+					{
+						"buffer_size": 105,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								105,
+								105
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Jade/Syntaxes/Jade.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "/Users/yaway/Library/Application Support/Sublime Text 2/Packages/User/Preferences.sublime-settings",
+					"settings":
+					{
+						"buffer_size": 493,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								373,
+								373
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JSON.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 43.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
 			]
 		},
 		{
@@ -299,39 +577,93 @@
 			"sheets":
 			[
 				{
-					"buffer": 0,
-					"file": "dashboard.jade",
-					"semi_transient": false,
+					"buffer": 2,
+					"file": "js/pravo.coffee",
 					"settings":
 					{
-						"buffer_size": 143,
+						"buffer_size": 1112,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								143,
-								143
+								0,
+								0
 							]
 						],
 						"settings":
 						{
-							"origin_encoding": "ASCII",
-							"syntax": "Packages/Jade/Syntaxes/Jade.tmLanguage"
+							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
 					"type": "text"
 				}
 			]
 		},
 		{
+			"selected": 0,
 			"sheets":
 			[
+				{
+					"buffer": 3,
+					"file": "css/pravo.styl",
+					"settings":
+					{
+						"buffer_size": 363,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								75,
+								75
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Stylus/Stylus.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "css/artwork.styl",
+					"settings":
+					{
+						"buffer_size": 204,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								93,
+								93
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Stylus/Stylus.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
 			]
 		},
 		{
@@ -380,13 +712,13 @@
 		"cols":
 		[
 			0.0,
-			0.553868756121,
+			0.44474381542,
 			1.0
 		],
 		"rows":
 		[
 			0.0,
-			0.490597922015,
+			0.405759679062,
 			1.0
 		]
 	},
@@ -399,19 +731,120 @@
 	{
 		"height": 0.0
 	},
-	"pinned_build_system": "",
-	"project": "pravo-crx.sublime-project",
 	"replace":
 	{
-		"height": 46.0
+		"height": 64.0
 	},
 	"save_all_on_build": true,
 	"select_file":
 	{
 		"height": 0.0,
-		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"dashb",
+				"js/vc/dashboard.coffee"
+			],
+			[
+				"gallery.",
+				"js/vcs/gallery.coffee"
+			],
+			[
+				"gallery.cof",
+				"js/mcs/gallery.coffee"
+			],
+			[
+				"tpl",
+				"js/found/tpl.coffee"
+			],
+			[
+				"pravo.",
+				"js/pravo.coffee"
+			],
+			[
+				"artwork.",
+				"js/mcs/artwork.coffee"
+			],
+			[
+				"art",
+				"js/mcs/artworks.coffee"
+			],
+			[
+				"error",
+				"js/found/error.coffee"
+			],
+			[
+				"v",
+				"js/found/vc.coffee"
+			],
+			[
+				"artworks",
+				"js/mcs/artworks.coffee"
+			],
+			[
+				"api",
+				"js/found/api-factory.coffee"
+			],
+			[
+				"mai",
+				"manifest.json"
+			],
+			[
+				"no",
+				"css/lib/normalize.css"
+			],
+			[
+				"lib",
+				"css/lib.less"
+			],
+			[
+				"pre",
+				"css/lib/preboot.less"
+			],
+			[
+				"vc",
+				"js/found/vc.coffee"
+			],
+			[
+				"ar",
+				"js/mcs/artwork.coffee"
+			],
+			[
+				"appjs",
+				"js/app.js"
+			],
+			[
+				"tp",
+				"js/found/tpl.coffee"
+			],
+			[
+				"gal",
+				"js/vcs/gallery.coffee"
+			],
+			[
+				"g",
+				"html/gallery.jade"
+			],
+			[
+				"app.js",
+				"js/app.js"
+			],
+			[
+				"less",
+				"css/app.less"
+			],
+			[
+				"app",
+				"css/app.less"
+			],
+			[
+				".less",
+				"css/app.less"
+			],
+			[
+				"layout",
+				"html/layout.jade"
+			],
 			[
 				"main",
 				"app/assets/javascripts/landing-page/main.coffee"
@@ -517,10 +950,6 @@
 				"app/assets/javascripts/index.coffee"
 			],
 			[
-				"layout",
-				"app/views/layouts/application.html.erb"
-			],
-			[
 				"pages",
 				"app/controllers/pages_controller.rb"
 			],
@@ -542,36 +971,19 @@
 	"select_project":
 	{
 		"height": 500.0,
-		"last_filter": "",
 		"selected_items":
 		[
 			[
 				"",
-				"~/Workspace/Timehut/peekaboo-album-android.sublime-project"
+				"/Users/yaway/Workspace/Pravo/project/pravo-crx/pravo-crx.sublime-project"
 			]
 		],
 		"width": 380.0
-	},
-	"select_symbol":
-	{
-		"height": 0.0,
-		"last_filter": "",
-		"selected_items":
-		[
-		],
-		"width": 0.0
-	},
-	"selected_group": 3,
-	"settings":
-	{
 	},
 	"show_minimap": true,
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 259.0,
-	"status_bar_visible": true,
-	"template_settings":
-	{
-	}
+	"side_bar_width": 201.0,
+	"status_bar_visible": true
 }

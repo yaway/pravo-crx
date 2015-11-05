@@ -2,7 +2,7 @@
 var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
-define(['lib/underscore', 'found/c', 'mcs/artwork', 'found/api'], function(_, C, Artwork, API) {
+define(['found/c', 'mc/artwork', 'found/api'], function(C, Artwork, API) {
   var Artworks;
   Artworks = (function(superClass) {
     extend(Artworks, superClass);
@@ -77,7 +77,8 @@ define(['lib/underscore', 'found/c', 'mcs/artwork', 'found/api'], function(_, C,
                 refArtwork = refArtworks[i];
                 rawArtwork = {
                   id: refArtwork.id,
-                  url: refArtwork.file_url
+                  url: refArtwork.file_url,
+                  thumb: refArtwork.preview_url
                 };
                 rawArtworks.push(rawArtwork);
               }

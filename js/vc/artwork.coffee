@@ -1,14 +1,10 @@
 define [
-  'lib/underscore'
   'found/vc'
-],(_,VC)->
-  class Artwork extends VC
-    initialize: (option)->
-      super(option)
+],(VC)->
+  class ArtworkVC extends VC
+    initialize: (opt)->
+      super(opt)
       @render()
-      @on
-        "willSetCurrent": @onWillSetCurrent
-        "willUnSetCurrent": @onWillUnsetCurrent
       @model.on
         "change:src": @onChangeSrc
         "change:isCurrent": @onChangeIsCurrent
@@ -21,20 +17,8 @@ define [
       console.log 'Artwork Changed: isCurrent'
       @updateStateCurrent()
 
-    onChangeIsFavorite: ()=>
-      console.log 'Artwork Changed: isFavorite'
-      @updateStateCurrent()
-
     update: ()->
-      console.log "ArtworkVC Updated"
       @updateStateCurrent()
-
-    onWillSetCurrent: ()=>
-      console.debug "onSetCurrent"
-      @setCurrent()
-    onWillUnsetCurrent: ()=>
-      console.debug "onUnsetCurrent"
-      @unsetCurrent()
 
     updateStateCurrent: ()->
       if (@model.get 'isCurrent')
@@ -46,4 +30,4 @@ define [
 
 
 
-  return Artwork
+  return ArtworkVC

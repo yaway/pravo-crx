@@ -14,12 +14,13 @@ require.config({
   }
 });
 
-require(['jquery', 'lib/underscore', 'vcs/dashboard'], function($, _, Dashboard) {
+require(['jquery', 'lib/underscore', 'vc/dashboard'], function($, _, DashboardVC) {
   return $(function() {
     var dashboard;
-    dashboard = new Dashboard({
-      root: 'dashboard',
-      template: 'dashboard'
+    console.debug('Pravo!');
+    dashboard = new DashboardVC({
+      template: 'dashboard',
+      position: 'append'
     });
     window.Pravo = {};
     return Pravo.cleanLocalArtworks = function() {

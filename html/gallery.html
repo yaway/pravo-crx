@@ -1,9 +1,14 @@
 
 <template data-tpl="gallery">
-  <div class="gallery">
-    <div class="layer-artworks">
-      <ul data-ui="artworks" class="artworks"></ul>
+  <div data-ui="gallery" class="layer-gallery">
+    <div data-ui="booth" class="layer-booth">
+      <ul data-ui="artworks" class="layer-artworks"></ul>
+      <div class="layer-btns"><b data-ui="btnFav" class="btn">Fav</b></div>
     </div>
-    <div class="layer-fav"><b data-ui="btnFav" class="btn-fav">Fav</b></div>
+    <div data-ui="receipt" class="layer-receipt">
+      <div class="scroll">
+        <ul data-ui="artworks" class="artworks"></ul>
+      </div><b data-ui="btnNew" class="btn">New</b>
+    </div>
   </div>
 </template>

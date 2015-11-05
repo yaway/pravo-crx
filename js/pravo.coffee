@@ -11,10 +11,13 @@ require.config
 require [
   'jquery'
   'lib/underscore'
-  'vcs/dashboard'
-], ($,_,Dashboard)->
+  'vc/dashboard'
+], ($,_,DashboardVC)->
   $ ()->
-    dashboard = new Dashboard {root: 'dashboard',template: 'dashboard'}
+    console.debug 'Pravo!'
+    dashboard = new DashboardVC
+      template: 'dashboard'
+      position: 'append'
 
     window.Pravo = {}
     Pravo.cleanLocalArtworks = ()->

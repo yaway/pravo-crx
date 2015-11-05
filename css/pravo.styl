@@ -7,9 +7,15 @@ global-reset()
 
 tiffanyBlue = #81D8D0
 
-html,body
+html
   height 100%
   font-family Helvetica, sans-serif
+
+body
+  position relative
+  display flex
+  height 100%
+  overflow hidden
 
 .btn
   display inline-block
@@ -19,7 +25,8 @@ html,body
   color #81D8D0
   border 2px solid #81D8D0
   border-radius 4px
+
+.layer-dashboard
+  layer(1)
   
 @import "./dashboard"
-@import "./gallery"
-@import "./artwork"

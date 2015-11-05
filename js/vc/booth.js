@@ -3,43 +3,42 @@ var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); 
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
-define(['lib/underscore', 'found/vc', 'mcs/artwork', 'mcs/artworks', 'vcs/artwork'], function(_, VC, Artwork, Artworks, ArtworkVC) {
-  var Gallery;
-  Gallery = (function(superClass) {
-    extend(Gallery, superClass);
+define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/booth', 'vc/artwork'], function(VC, Artwork, Artworks, Booth, ArtworkVC) {
+  var BoothVC;
+  BoothVC = (function(superClass) {
+    extend(BoothVC, superClass);
 
-    function Gallery() {
+    function BoothVC() {
       this.onArtworksChangeIsFavorite = bind(this.onArtworksChangeIsFavorite, this);
-      this.onArtworksDidFetchFromServer = bind(this.onArtworksDidFetchFromServer, this);
-      this.onArtworksDidFetchFromLocal = bind(this.onArtworksDidFetchFromLocal, this);
       this.onArtworksUpdate = bind(this.onArtworksUpdate, this);
       this.initializeArtworks = bind(this.initializeArtworks, this);
+      this.onChangeHasArtworks = bind(this.onChangeHasArtworks, this);
       this.onClickBtnFav = bind(this.onClickBtnFav, this);
       this.onClickArtwork = bind(this.onClickArtwork, this);
-      return Gallery.__super__.constructor.apply(this, arguments);
+      return BoothVC.__super__.constructor.apply(this, arguments);
     }
 
-    Gallery.prototype.events = {
+    BoothVC.prototype.events = {
       "click [data-ui='artwork']": 'onClickArtwork',
       "click [data-ui='btnFav']": 'onClickBtnFav'
     };
 
-    Gallery.prototype.onClickArtwork = function(e) {
+    BoothVC.prototype.onClickArtwork = function(e) {
       console.error('Artwork Clicked');
       e.stopPropagation();
       this.artworks.loop();
       return this.updateStateFavorite();
     };
 
-    Gallery.prototype.onClickBtnFav = function(e) {
+    BoothVC.prototype.onClickBtnFav = function(e) {
       console.error('BtnFav Clicked');
       console.error('e');
       e.stopPropagation();
       return this.artworks.getCurrent().toggleFavorite();
     };
 
-    Gallery.prototype.initialize = function(option) {
-      Gallery.__super__.initialize.call(this, option);
+    BoothVC.prototype.initialize = function(opt) {
+      BoothVC.__super__.initialize.call(this, opt);
       this.artworks = new Artworks;
       this.artworks.on({
         'didFetchFromLocal': this.onArtworksDidFetchFromLocal,
@@ -48,10 +47,22 @@ define(['lib/underscore', 'found/vc', 'mcs/artwork', 'mcs/artworks', 'vcs/artwor
         'change:isCurrent': this.onArtworksChangeIsCurrent,
         'update': this.onArtworksUpdate
       });
+      this.model = new Booth;
+      this.model.on({
+        'change:hasArtworks': this.onChangeHasArtworks
+      });
       return this.render();
     };
 
-    Gallery.prototype.initializeArtworks = function() {
+    BoothVC.prototype.onChangeHasArtworks = function() {
+      if (this.model.get('hasArtworks')) {
+        return this.$el.addClass('with-artworks');
+      } else {
+        return this.$el.removeClass('with-artworks');
+      }
+    };
+
+    BoothVC.prototype.initializeArtworks = function() {
       return this.artworks.fetch({
         from: "local",
         callback: (function(_this) {
@@ -59,57 +70,32 @@ define(['lib/underscore', 'found/vc', 'mcs/artwork', 'mcs/artworks', 'vcs/artwor
             var lack, limit;
             limit = 5;
             lack = limit - rawArtworks.length;
-            if (lack < 5) {
+            if (rawArtworks.length > 0) {
               rawArtworks[0].isCurrent = true;
-              _this.artworks.add(rawArtworks);
-            }
-            if (lack > 0) {
-              return _this.artworks.fetch({
-                from: "konachan",
-                callback: function(rawArtworks) {
-                  if (lack = limit) {
-                    rawArtworks[0].isCurrent = true;
-                  } else {
-                    rawArtworks = _.first(rawArtworks, lack);
-                  }
-                  return _this.artworks.add(rawArtworks);
-                }
-              });
+              return _this.artworks.add(rawArtworks);
             }
           };
         })(this)
       });
     };
 
-    Gallery.prototype.onArtworksUpdate = function() {
+    BoothVC.prototype.onArtworksUpdate = function() {
       return this.renderArtworks();
     };
 
-    Gallery.prototype.onArtworksDidFetchFromLocal = function() {
-      if (this.artworks.length > 0) {
-        return this.renderArtworks();
-      }
-    };
-
-    Gallery.prototype.onArtworksDidFetchFromServer = function() {
-      if (this.artworks.length > 0) {
-        return this.renderArtworks();
-      }
-    };
-
-    Gallery.prototype.onArtworksChangeIsFavorite = function() {
+    BoothVC.prototype.onArtworksChangeIsFavorite = function() {
       this.updateStateFavorite();
       return this.artworks.save({
         only: "fav"
       });
     };
 
-    Gallery.prototype.update = function() {
-      console.log("Gallery Rendered");
+    BoothVC.prototype.update = function() {
+      console.log("Booth Rendered");
       return this.initializeArtworks();
     };
 
-    Gallery.prototype.updateStateFavorite = function() {
+    BoothVC.prototype.updateStateFavorite = function() {
       var currentArtwork;
       currentArtwork = this.artworks.getCurrent();
       if (currentArtwork.get('isFavorite')) {
@@ -121,20 +107,20 @@ define(['lib/underscore', 'found/vc', 'mcs/artwork', 'mcs/artworks', 'vcs/artwor
       }
     };
 
-    Gallery.prototype.renderArtworks = function() {
+    BoothVC.prototype.renderArtworks = function() {
       var artwork, artworkVC, i, len, ref;
-      this.$el.addClass('with-artworks');
       this.ui.$artworks.empty();
       if (!this.artworks) {
         console.log("No Artworks to Render");
         return;
       }
-      console.log(this.artworks);
+      console.error(this.artworks.length + " Artworks Rendered");
+      this.model.set('hasArtworks', true);
       ref = this.artworks.models;
       for (i = 0, len = ref.length; i < len; i++) {
         artwork = ref[i];
         artworkVC = new ArtworkVC({
-          root: 'artworks',
+          $root: this.ui.$artworks,
           position: 'append',
           template: 'artwork',
           model: artwork
@@ -143,10 +129,8 @@ define(['lib/underscore', 'found/vc', 'mcs/artwork', 'mcs/artworks', 'vcs/artwor
       return this.updateStateFavorite();
     };
 
-    Gallery.prototype.downloadArtworks = function() {};
-
-    return Gallery;
+    return BoothVC;
 
   })(VC);
-  return Gallery;
+  return BoothVC;
 });

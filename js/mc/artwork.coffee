@@ -1,17 +1,16 @@
 define [
-  'lib/underscore'
-  'found/utl'
   'found/m'
-],(_,Utl,M)->
+  'found/utl'
+],(M,Utl)->
   class Artwork extends M
     defaults:
       "id": undefined
       "idAttribute": "id"
       "url": ''
-      "base64": ''
       "root": "../../img/artwork"
       "path": "0.png"
       "src": ''
+      "thumb": ''
       "isCurrent": false
       "isFavorite": false
 

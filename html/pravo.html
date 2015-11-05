@@ -5,26 +5,31 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <script src="../js/lib/require.js" data-main="../js/pravo"></script>
     <link rel="stylesheet" href="../css/pravo.css">
-    <template data-tpl="gallery">
-      <div class="gallery">
-        <div class="layer-artworks">
-          <ul data-ui="artworks" class="artworks"></ul>
-        </div>
-        <div class="layer-fav"><b data-ui="btnFav" class="btn-fav">Fav</b></div>
-      </div>
-    </template>
     <template data-tpl="artwork">
       <li data-ui="artwork" class="artwork"><img data-ui="img" src="&lt;%- src %&gt;" class="img"></li>
     </template>
-    <template data-tpl="dashboard">
-      <div data-ui="dashboard" class="dashboard">
-        <div class="layer-gallery">
-          <div data-ui="gallery" class="gallery"></div>
+    <template data-tpl="artworkThumbnail">
+      <li data-ui="artworkThumbnail" class="artwork-thumbnail"><img data-ui="img" src="&lt;%- thumb %&gt;" class="img"></li>
+    </template>
+    <template data-tpl="gallery">
+      <div data-ui="gallery" class="layer-gallery">
+        <div data-ui="booth" class="layer-booth">
+          <ul data-ui="artworks" class="layer-artworks"></ul>
+          <div class="layer-btns"><b data-ui="btnFav" class="btn">Fav</b></div>
         </div>
+        <div data-ui="receipt" class="layer-receipt">
+          <div class="scroll">
+            <ul data-ui="artworks" class="artworks"></ul>
+          </div><b data-ui="btnNew" class="btn">New</b>
+        </div>
+      </div>
+    </template>
+    <template data-tpl="dashboard">
+      <div data-ui="dashboard" class="layer-dashboard">
+        <div data-ui="gallery" class="layer-gallery"></div>
       </div>
     </template>
   </head>
   <body>
-    <div data-ui="dashboard" class="dashboard"></div>
   </body>
 </html>

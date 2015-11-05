@@ -11,6 +11,14 @@ define(['lib/backbone'], function(Backbone) {
       return M.__super__.constructor.apply(this, arguments);
     }
 
+    M.prototype.toggle = function(attr) {
+      if (this.get(attr)) {
+        return this.set(attr, false);
+      } else {
+        return this.set(attr, true);
+      }
+    };
+
     return M;
 
   })(Backbone.Model);

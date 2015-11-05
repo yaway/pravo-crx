@@ -1,12 +1,3 @@
-.layer-booth .btn-fav {
-  display: none;
-}
-.layer-booth.with-booth .btn-fav {
-  display: inline-block;
-}
-.layer-btns {
-  margin-bottom: 10px;
-}
 .artwork {
   display: none;
   position: absolute;

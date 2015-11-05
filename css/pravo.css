@@ -89,23 +89,11 @@ td {
 a img {
   border: none;
 }
-html,
-body {
+html {
   height: 100%;
   font-family: Helvetica, sans-serif;
 }
-.btn,
-.btn-fav {
-  display: inline-block;
-  padding: 5px 10px;
-  cursor: pointer;
-  background-color: rgba(129,216,208,0.3);
-  color: #81d8d0;
-  border: 2px solid #81d8d0;
-  -webkit-border-radius: 4px;
-  border-radius: 4px;
-}
-.dashboard {
+body {
   position: relative;
   display: -webkit-box;
   display: -moz-box;
@@ -115,7 +103,34 @@ body {
   display: flex;
   height: 100%;
   overflow: hidden;
-  height: 100%;
+}
+.btn {
+  display: inline-block;
+  padding: 5px 10px;
+  cursor: pointer;
+  background-color: rgba(129,216,208,0.3);
+  color: #81d8d0;
+  border: 2px solid #81d8d0;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+}
+.layer-dashboard {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: -ms-flexbox;
+  display: box;
+  display: flex;
+  z-index: 1;
+  pointer-events: none;
+}
+.layer-dashboard * {
+  pointer-events: auto;
 }
 .layer-gallery {
   display: -webkit-box;
@@ -135,7 +150,7 @@ body {
 .layer-gallery * {
   pointer-events: auto;
 }
-.layer-artworks {
+.layer-gallery .layer-booth {
   display: -webkit-box;
   display: -moz-box;
   display: -webkit-flex;
@@ -150,10 +165,130 @@ body {
   z-index: 1;
   pointer-events: none;
 }
-.layer-artworks * {
+.layer-gallery .layer-booth * {
   pointer-events: auto;
 }
-.layer-fav {
+.layer-gallery .layer-receipt {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: -ms-flexbox;
+  display: box;
+  display: flex;
+  z-index: 2;
+  pointer-events: none;
+}
+.layer-gallery .layer-receipt * {
+  pointer-events: auto;
+}
+.layer-gallery .layer-receipt.unfolded .scroll {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: box;
+  display: flex;
+}
+.layer-gallery .layer-receipt .scroll {
+  display: none;
+  background-color: rgba(0,0,0,0.6);
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  -o-box-flex: 1;
+  box-flex: 1;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  padding: 10px 0;
+  width: 50%;
+  max-width: 150px;
+  overflow: auto;
+}
+.layer-gallery .layer-receipt .scroll .artworks {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: box;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -moz-box-orient: vertical;
+  -o-box-orient: vertical;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  min-height: min-content;
+}
+.layer-gallery .layer-receipt .btn {
+  margin: 10px;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+.artwork-thumbnail {
+  width: 100%;
+}
+.artwork-thumbnail .img {
+  width: 100%;
+}
+.layer-booth {
+  overflow: hidden;
+}
+.layer-booth .btn {
+  display: none;
+}
+.layer-booth.with-artworks .btn {
+  display: inline-block;
+}
+.layer-booth .artwork {
+  display: none;
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+}
+.layer-booth .artwork .img {
+  min-height: 50%;
+  min-width: 50%;
+  margin: auto;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+.layer-booth .artwork.current {
+  display: block;
+}
+.layer-booth .layer-artworks {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: -ms-flexbox;
+  display: box;
+  display: flex;
+  z-index: 1;
+  pointer-events: none;
+}
+.layer-booth .layer-artworks * {
+  pointer-events: auto;
+}
+.layer-booth .layer-btns {
   display: -webkit-box;
   display: -moz-box;
   display: -webkit-flex;
@@ -187,36 +322,6 @@ body {
   justify-content: flex-end;
   margin-bottom: 10px;
 }
-.layer-fav * {
+.layer-booth .layer-btns * {
   pointer-events: auto;
-}
-.gallery {
-  color: #666;
-}
-.gallery .btn-fav {
-  display: none;
-}
-.gallery.with-artworks .btn-fav {
-  display: inline-block;
-}
-.artwork {
-  display: none;
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-}
-.artwork .img {
-  min-height: 50%;
-  min-width: 50%;
-  margin: auto;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-}
-.artwork.current {
-  display: block;
 }
