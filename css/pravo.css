@@ -208,7 +208,7 @@ body {
   top: 0;
   right: 0;
   bottom: 0;
-  padding: 10px 0;
+  padding: 10px 10px 50px;
   width: 50%;
   max-width: 150px;
   overflow: auto;
@@ -236,9 +236,23 @@ body {
 }
 .artwork-thumbnail {
   width: 100%;
+  position: relative;
 }
 .artwork-thumbnail .img {
   width: 100%;
+  display: block;
+}
+.artwork-thumbnail.chosen:before {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  content: '';
+  background-color: rgba(129,216,208,0.6);
+}
+.artwork-thumbnail + .artwork-thumbnail {
+  margin-top: 10px;
 }
 .layer-booth {
   overflow: hidden;

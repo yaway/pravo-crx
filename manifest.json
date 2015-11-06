@@ -25,6 +25,8 @@
     ,"http://211.155.86.150:9999/"
     ,"https://konachan.com/"
     ,"http://konachan.com/"
+    ,"https://*.unsplash.com/"
+    ,"http://*.unsplash.com/"
     ,"storage"
     ,"unlimitedStorage"
   ]

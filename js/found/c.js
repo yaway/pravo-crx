@@ -17,6 +17,17 @@ define(['lib/backbone'], function(Backbone) {
       });
     };
 
+    C.prototype.allSet = function(attrs) {
+      var i, len, model, ref, results;
+      ref = this.models;
+      results = [];
+      for (i = 0, len = ref.length; i < len; i++) {
+        model = ref[i];
+        results.push(model.set(attrs));
+      }
+      return results;
+    };
+
     return C;
 
   })(Backbone.Collection);

@@ -1,7 +1,7 @@
 define [
   'lib/backbone'
-  'found/tpl'
-],(Backbone,TPL)->
+  'found/utl'
+],(Backbone,Utl)->
   class VC extends Backbone.View
     initialize: (opt)->
       opt ?= {}
@@ -11,7 +11,7 @@ define [
       @root = opt.root or document.body
       @$root = opt.$root or $(@root)
       if opt.template
-        @template = TPL.getTpl opt.template
+        @template = Utl.getTpl opt.template
       else
         @template = @$root[0].outerHTML
     update: ()->

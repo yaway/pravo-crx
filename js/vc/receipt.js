@@ -9,6 +9,7 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/receipt', 'vc/artwork-thumb
     extend(ReceiptVC, superClass);
 
     function ReceiptVC() {
+      this.onArtworksDidFetchFromServer = bind(this.onArtworksDidFetchFromServer, this);
       this.onArtworksUpdate = bind(this.onArtworksUpdate, this);
       this.initializeArtworks = bind(this.initializeArtworks, this);
       this.onChangeIsUnfolded = bind(this.onChangeIsUnfolded, this);
@@ -62,7 +63,7 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/receipt', 'vc/artwork-thumb
 
     ReceiptVC.prototype.initializeArtworks = function() {
       return this.artworks.fetch({
-        from: "konachan",
+        from: "unsplash",
         callback: (function(_this) {
           return function(rawArtworks) {
             _this.artworks.add(rawArtworks);
@@ -74,6 +75,10 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/receipt', 'vc/artwork-thumb
 
     ReceiptVC.prototype.onArtworksUpdate = function() {
       return this.renderArtworks();
+    };
+
+    ReceiptVC.prototype.onArtworksDidFetchFromServer = function() {
+      return this.ui.$countNew.text(" (" + this.artworks.length + ")");
     };
 
     ReceiptVC.prototype.update = function() {

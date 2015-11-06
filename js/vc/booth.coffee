@@ -20,7 +20,7 @@ define [
       console.error 'BtnFav Clicked'
       console.error 'e'
       e.stopPropagation()
-      @artworks.getCurrent().toggleFavorite()
+      @artworks.getCurrent().toggle 'isFavorite'
 
 
     initialize: (opt)->
@@ -49,9 +49,8 @@ define [
       @artworks.fetch
         from: "local"
         callback: (rawArtworks)=>
-          limit = 5
-          lack = limit - rawArtworks.length
-
+          # limit = 5
+          # lack = limit - rawArtworks.length
           if rawArtworks.length > 0
             rawArtworks[0].isCurrent = true
             @artworks.add rawArtworks
@@ -63,14 +62,19 @@ define [
     onArtworksChangeIsFavorite: ()=>
       @updateStateFavorite()
       @artworks.save {only: "fav"}
+    onArtworksChangeIsCurrent: ()=>
+      @updateStateFavorite()
 
     update: ()->
       console.log "Booth Rendered"
       @initializeArtworks()
 
     updateStateFavorite: ()->
+      if @artworks.length is 0
+        return
+
       currentArtwork = @artworks.getCurrent()
-      if currentArtwork.get 'isFavorite'
+      if currentArtwork?.get 'isFavorite'
         @$el.addClass 'favorite'
         @ui.$btnFav.text 'Faved'
       else
@@ -79,8 +83,8 @@ define [
 
     renderArtworks: ()->
       @ui.$artworks.empty()
-      
-      if not @artworks
+
+      if @artworks.length is 0
         console.log "No Artworks to Render"
         return
 

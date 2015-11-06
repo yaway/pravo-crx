@@ -6,6 +6,16 @@ define [
   class Artworks extends C
     model: Artwork
     
+    initialize: ()->
+      console.log "New Artwork"
+      @on
+        'willChangeIsChosen': ()=>
+          console.error "Artwork Will Change IsChosen"
+          # @allSet 'isChosen',false
+        'willChangeIsCurrent': ()=>
+          console.error "Artwork Will Change IsCurrent"
+          @allSet 'isCurrent',false
+
     save: (opt)->
       console.debug 'Will Save Artworks'
       rawArtworks = @models.map (artwork)->
@@ -42,34 +52,51 @@ define [
             console.log rawArtworks
             callback rawArtworks
             @trigger "didFetchFromLocal"
-      else if opt.from is "konachan"
+
+      else 
         console.debug "Will Fetch Server Artworks"
-        API.getArtworks {},(err,data)=>
-          refArtworks = []
-          console.debug "Server RefArtworks:"
-          console.log data
-          if data?.length > 0
-            refArtworks = data
-            for refArtwork in refArtworks
-              rawArtwork = {
-                id: refArtwork.id
-                url: refArtwork.file_url
-                thumb: refArtwork.preview_url
-              }
-              rawArtworks.push rawArtwork
-            console.debug "Server Artworks Did Fetch:"
-            console.log rawArtworks
-            callback rawArtworks
-            @trigger "didFetchFromServer"
+        if opt.from is "konachan"
+          parseRawArtwork = (refArtwork)->
+            artwork =
+              id: refArtwork.id
+              url: refArtwork.file_url
+              thumb: refArtwork.preview_url
+            return artwork
+        else if opt.from is "unsplash"
+          parseRawArtwork = (refArtwork)->
+            artwork =
+              id: refArtwork.id
+              url: refArtwork.urls.full
+              thumb: refArtwork.urls.thumb
+            return artwork
+
+        do (parseRawArtwork)=>
+
+          API.fetchArtworks {from:opt.from},{},(err,data)=>
+            refArtworks = []
+            rawArtworks = []
+            console.debug "Server RefArtworks:"
+            console.log data
+
+            if data?.length > 0
+              refArtworks = data
+              console.log refArtworks
+              for refArtwork in refArtworks
+                rawArtwork = parseRawArtwork refArtwork
+                rawArtworks.push rawArtwork
+
+              console.debug "Server Artworks Did Fetch:"
+              console.log rawArtworks
+
+              callback rawArtworks
+              @trigger "didFetchFromServer"
 
 
     loop: ()->
       if @length < 2
         return
-      current = @getCurrent()
-      console.log @models
       next = @getNext()
-      current.set 'isCurrent',false
+      next.trigger 'willChangeIsCurrent'
       next.set 'isCurrent',true
     getCurrent: ()->
       current = @findWhere 'isCurrent'

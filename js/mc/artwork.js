@@ -19,34 +19,35 @@ define(['found/m', 'found/utl'], function(M, Utl) {
       "path": "0.png",
       "src": '',
       "thumb": '',
+      "willBeCurrent": false,
       "isCurrent": false,
-      "isFavorite": false
+      "isFavorite": false,
+      "willBeChosen": false,
+      "isChosen": false
     };
 
     Artwork.prototype.initialize = function() {
       console.log("New Artwork");
+      this.on({
+        'change:willBeCurrent': this.onChangeWillBeCurrent,
+        'change:isCurrent': this.onChangeIsCurrent
+      });
       if ((this.get('url')) === '') {
         return this.set("src", (this.get('root')) + "/" + (this.get('path')));
       } else {
-        this.set("src", this.get('url'));
-        console.log(this.get('src'));
-        return Utl.getDataUrl(this.get('src'), (function(_this) {
-          return function(dataUrl) {
-            console.debug("Data URL:");
-            console.log(dataUrl);
-            return _this.set('src', dataUrl);
-          };
-        })(this));
+        return this.set("src", this.get('url'));
       }
     };
 
-    Artwork.prototype.toggleFavorite = function() {
-      if (this.get('isFavorite')) {
-        this.set('isFavorite', false);
-      } else {
-        this.set('isFavorite', true);
-      }
-      return this.set('isCurrent', true);
+    Artwork.prototype.saveDataURL = function() {
+      console.log(this.get('src'));
+      return Utl.fetchDataURL(this.get('src'), (function(_this) {
+        return function(dataURL) {
+          console.debug("Data URL:");
+          console.log(dataURL);
+          return _this.set('src', dataURL);
+        };
+      })(this));
     };
 
     return Artwork;

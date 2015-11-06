@@ -9,6 +9,7 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/booth', 'vc/artwork'], func
     extend(BoothVC, superClass);
 
     function BoothVC() {
+      this.onArtworksChangeIsCurrent = bind(this.onArtworksChangeIsCurrent, this);
       this.onArtworksChangeIsFavorite = bind(this.onArtworksChangeIsFavorite, this);
       this.onArtworksUpdate = bind(this.onArtworksUpdate, this);
       this.initializeArtworks = bind(this.initializeArtworks, this);
@@ -34,7 +35,7 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/booth', 'vc/artwork'], func
       console.error('BtnFav Clicked');
       console.error('e');
       e.stopPropagation();
-      return this.artworks.getCurrent().toggleFavorite();
+      return this.artworks.getCurrent().toggle('isFavorite');
     };
 
     BoothVC.prototype.initialize = function(opt) {
@@ -67,9 +68,6 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/booth', 'vc/artwork'], func
         from: "local",
         callback: (function(_this) {
           return function(rawArtworks) {
-            var lack, limit;
-            limit = 5;
-            lack = limit - rawArtworks.length;
             if (rawArtworks.length > 0) {
               rawArtworks[0].isCurrent = true;
               return _this.artworks.add(rawArtworks);
@@ -90,6 +88,10 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/booth', 'vc/artwork'], func
       });
     };
 
+    BoothVC.prototype.onArtworksChangeIsCurrent = function() {
+      return this.updateStateFavorite();
+    };
+
     BoothVC.prototype.update = function() {
       console.log("Booth Rendered");
       return this.initializeArtworks();
@@ -97,8 +99,11 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/booth', 'vc/artwork'], func
 
     BoothVC.prototype.updateStateFavorite = function() {
       var currentArtwork;
+      if (this.artworks.length === 0) {
+        return;
+      }
       currentArtwork = this.artworks.getCurrent();
-      if (currentArtwork.get('isFavorite')) {
+      if (currentArtwork != null ? currentArtwork.get('isFavorite') : void 0) {
         this.$el.addClass('favorite');
         return this.ui.$btnFav.text('Faved');
       } else {
@@ -110,7 +115,7 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/booth', 'vc/artwork'], func
     BoothVC.prototype.renderArtworks = function() {
       var artwork, artworkVC, i, len, ref;
       this.ui.$artworks.empty();
-      if (!this.artworks) {
+      if (this.artworks.length === 0) {
         console.log("No Artworks to Render");
         return;
       }

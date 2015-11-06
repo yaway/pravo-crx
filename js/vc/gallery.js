@@ -21,8 +21,49 @@ define(['found/vc', 'vc/booth', 'vc/receipt'], function(VC, BoothVC, ReceiptVC) 
       this.boothVC = new BoothVC({
         $root: this.ui.$booth
       });
-      return this.receiptVC = new ReceiptVC({
+      this.receiptVC = new ReceiptVC({
         $root: this.ui.$receipt
+      });
+      return this.receiptVC.artworks.on({
+        "change:isChosen": (function(_this) {
+          return function() {
+            var chosenArtwork;
+            chosenArtwork = _this.receiptVC.artworks.findWhere({
+              'isChosen': true
+            });
+            if (chosenArtwork) {
+              console.error(chosenArtwork);
+              _this.boothVC.artworks.add(chosenArtwork);
+              chosenArtwork.trigger('willChangeIsCurrent');
+              return chosenArtwork.set('isCurrent', true);
+            }
+          };
+        })(this),
+        "didFetchFromServer": (function(_this) {
+          return function() {
+            var boothArtwork, i, len, receiptArtwork, ref, results;
+            ref = _this.receiptVC.artworks.models;
+            results = [];
+            for (i = 0, len = ref.length; i < len; i++) {
+              receiptArtwork = ref[i];
+              results.push((function() {
+                var j, len1, ref1, results1;
+                ref1 = this.boothVC.artworks.models;
+                results1 = [];
+                for (j = 0, len1 = ref1.length; j < len1; j++) {
+                  boothArtwork = ref1[j];
+                  if ((receiptArtwork.get('id')) === (boothArtwork.get('id'))) {
+                    results1.push(receiptArtwork.set('isChosen', true));
+                  } else {
+                    results1.push(void 0);
+                  }
+                }
+                return results1;
+              }).call(_this));
+            }
+            return results;
+          };
+        })(this)
       });
     };
 

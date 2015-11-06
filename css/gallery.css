@@ -2,7 +2,7 @@
   display: none;
   background-color: rgba(0,0,0,0.6);
   bottom: 0;
-  padding: 10px 0;
+  padding: 10px 10px 50px;
   width: 50%;
   max-width: 150px;
   overflow: auto;
@@ -15,9 +15,18 @@
 }
 .artwork-thumbnail {
   width: 100%;
+  position: relative;
 }
 .artwork-thumbnail .img {
   width: 100%;
+  display: block;
+}
+.artwork-thumbnail.chosen:before {
+  content: '';
+rgba(129,216,208,0.6)
+}
+.artwork-thumbnail + .artwork-thumbnail {
+  margin-top: 10px;
 }
 .layer-booth {
   overflow: hidden;

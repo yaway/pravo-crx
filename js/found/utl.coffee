@@ -1,16 +1,19 @@
-define [],()->
-  Util = {}
-  Util.resolveUrl = ()->
+define [
+  'jquery'
+  'lib/underscore'
+],($,_)->
+  Utl = {}
+  Utl.resolveURL = ()->
     console.log arguments
-    numUrls = arguments.length
+    numURLs = arguments.length
 
-    if numUrls is 0
+    if numURLs is 0
       return false
 
     base = document.createElement 'base'
     base.href = arguments[0]
 
-    if numUrls is 1
+    if numURLs is 1
       return base.href
 
     head = (document.getElementsByTagName 'head')[0]
@@ -27,7 +30,7 @@ define [],()->
 
     return resolved
 
-  Util.getDataUrl = (src, callback)->
+  Utl.fetchDataURL = (src, callback)->
     img = new Image()
     img.crossOrigin = 'Anonymous'
     img.onload = ()->
@@ -36,10 +39,13 @@ define [],()->
       canvas.width = @naturalWidth
       canvas.height = @naturalHeight
       ctx.drawImage this,0,0
-      dataUrl = canvas.toDataURL 'image/png'
-      callback(dataUrl)
+      dataURL = canvas.toDataURL 'image/png'
+      callback(dataURL)
       canvas = null
     img.src = src
  
+  Utl.getTpl = (tpl)->
+    tplStr = _.unescape $("[data-tpl='#{tpl}']").html()
+    return tplStr
 
-  return Util
+  return Utl

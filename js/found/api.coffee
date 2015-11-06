@@ -1,29 +1,53 @@
 define [
   'found/api-factory'
-],(ApiFactory)->
+],(APIFactory)->
   
   # flickr = new Flickr {api_key: "a745b3049b6cc2550348561bb53619df"}
 
   # API = new ApiFactory {root: 'http://211.155.86.150:9999/'}
-  API = new ApiFactory {root: 'https://konachan.com/'}
+  API = new APIFactory
+
+  roots =
+    konachan: 'https://konachan.com/'
+    unsplash: 'https://api.unsplash.com/'
 
   create = API.create.bind API
 
   GET = "GET"
   POST = "POST"
 
-  API.signUp = create {
+  API.signUp = create
     method: POST
     path: 'me/register'
-  }
 
-  API.signIn = create {
+  API.signIn = create
     method: POST
     path: 'me/session'
-  }
 
-  API.getArtworks = create {
-    method: GET
-    path: 'post.json?limit=5&tags=hatsune_miku'
-  }
+
+  API.fetchArtworks = (opt,data,callback)=>
+    if opt.from is 'konachan'
+      api = create
+        root: roots.konachan
+        path: 'post.json?limit=5&tags=hatsune_miku'
+    else if opt.from is 'unsplash'
+      api = create
+        root: roots.unsplash
+        path: 'photos/?client_id=b913958e7c261416a76d50da89193b5b7eccd8694fd94b3f274c970d2a6c833d'
+    api(data,callback)
+
+
+  # API.fetchArtworks = (opt,data,callback)=>
+  #   console.error opt
+  #   console.error data
+  #   console.error callback
+  #   if opt.from is 'konachan'
+  #     do create
+  #       root: roots.konachan
+  #       path: 'post.json?limit=5&tags=hatsune_miku'
+  #   else if opt.from is 'unsplash'
+  #     do create
+  #       root: roots.unsplash
+  #       path: 'photos/?client_id=b913958e7c261416a76d50da89193b5b7eccd8694fd94b3f274c970d2a6c833d'
+
   return API

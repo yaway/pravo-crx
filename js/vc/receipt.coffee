@@ -44,13 +44,16 @@ define [
 
     initializeArtworks: ()=>
       @artworks.fetch
-        from:"konachan"
+        from:"unsplash"
         callback: (rawArtworks)=>
           @artworks.add rawArtworks
           console.debug @artworks.pluck 'id'
 
     onArtworksUpdate: ()=>
-      @renderArtworks()            
+      @renderArtworks()
+
+    onArtworksDidFetchFromServer: ()=>
+      @ui.$countNew.text " (#{@artworks.length})"
 
     update: ()->
       console.log "Receipt Rendered"
@@ -74,5 +77,6 @@ define [
           template: 'artworkThumbnail'
           model: artwork
         console.error artworkVC
+
 
   return ReceiptVC

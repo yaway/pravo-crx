@@ -2,37 +2,39 @@
 var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
 define(['found/error'], function(Errors) {
-  var ApiFactory;
-  ApiFactory = (function() {
-    function ApiFactory(option) {
+  var APIFactory;
+  APIFactory = (function() {
+    function APIFactory(opt) {
       this.create = bind(this.create, this);
-      if (option == null) {
-        option = {};
+      if (opt == null) {
+        opt = {};
       }
-      this.root = option.root || '';
-      this.timeout = option.timeout || 1000 * 60;
+      this.root = opt.root || '';
+      this.timeout = opt.timeout || 1000 * 60;
     }
 
-    ApiFactory.prototype.request = function(option) {
-      return $.ajax(option);
+    APIFactory.prototype.request = function(opt) {
+      return $.ajax(opt);
     };
 
-    ApiFactory.prototype.create = function(option) {
-      if (option == null) {
-        option = {};
+    APIFactory.prototype.create = function(opt) {
+      if (opt == null) {
+        opt = {};
       }
       return (function(_this) {
         return function(data, callback) {
           var contentType, method, timeout, url;
+          console.error("API Called");
+          console.error(data);
           if (!data) {
             data = {};
           }
-          method = option.method || 'GET';
+          method = opt.method || 'GET';
           url = '';
-          if (option.url) {
-            url = option.url;
+          if (opt.url) {
+            url = opt.url;
           } else {
-            url = (_this.root || '') + option.path;
+            url = "" + (opt.root || _this.root || '') + opt.path;
           }
           timeout = _this.timeout;
           if (method.toUpperCase() === 'GET') {
@@ -47,6 +49,7 @@ define(['found/error'], function(Errors) {
             data: data,
             url: url,
             success: function(data) {
+              console.error('API Succeeded');
               if (data && data.error) {
                 return callback(data, null);
               } else {
@@ -54,6 +57,7 @@ define(['found/error'], function(Errors) {
               }
             },
             error: function(xhr, state) {
+              console.error(callback);
               return callback(state);
             }
           });
@@ -61,8 +65,8 @@ define(['found/error'], function(Errors) {
       })(this);
     };
 
-    return ApiFactory;
+    return APIFactory;
 
   })();
-  return ApiFactory;
+  return APIFactory;
 });

@@ -16,12 +16,12 @@ define(['found/vc'], function(VC) {
 
     ArtworkVC.prototype.initialize = function(opt) {
       ArtworkVC.__super__.initialize.call(this, opt);
-      this.render();
-      return this.model.on({
+      this.model.on({
         "change:src": this.onChangeSrc,
         "change:isCurrent": this.onChangeIsCurrent,
         "change:isFavorite": this.onChangeIsFavorite
       });
+      return this.render();
     };
 
     ArtworkVC.prototype.onChangeSrc = function() {

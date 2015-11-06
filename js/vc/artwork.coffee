@@ -4,11 +4,11 @@ define [
   class ArtworkVC extends VC
     initialize: (opt)->
       super(opt)
-      @render()
       @model.on
         "change:src": @onChangeSrc
         "change:isCurrent": @onChangeIsCurrent
         "change:isFavorite": @onChangeIsFavorite
+      @render()
 
     onChangeSrc: ()=>
       @ui.$img.attr 'src',(@model.get 'src')

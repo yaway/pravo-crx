@@ -13,6 +13,23 @@ define(['found/c', 'mc/artwork', 'found/api'], function(C, Artwork, API) {
 
     Artworks.prototype.model = Artwork;
 
+    Artworks.prototype.initialize = function() {
+      console.log("New Artwork");
+      return this.on({
+        'willChangeIsChosen': (function(_this) {
+          return function() {
+            return console.error("Artwork Will Change IsChosen");
+          };
+        })(this),
+        'willChangeIsCurrent': (function(_this) {
+          return function() {
+            console.error("Artwork Will Change IsCurrent");
+            return _this.allSet('isCurrent', false);
+          };
+        })(this)
+      });
+    };
+
     Artworks.prototype.save = function(opt) {
       var artworksJSON, rawArtworks;
       console.debug('Will Save Artworks');
@@ -42,7 +59,7 @@ define(['found/c', 'mc/artwork', 'found/api'], function(C, Artwork, API) {
     };
 
     Artworks.prototype.fetch = function(opt) {
-      var callback, rawArtworks;
+      var callback, parseRawArtwork, rawArtworks;
       console.debug('Will Fetch Artworks');
       rawArtworks = [];
       callback = opt.callback || (function(data) {
@@ -63,44 +80,65 @@ define(['found/c', 'mc/artwork', 'found/api'], function(C, Artwork, API) {
             }
           };
         })(this));
-      } else if (opt.from === "konachan") {
+      } else {
         console.debug("Will Fetch Server Artworks");
-        return API.getArtworks({}, (function(_this) {
-          return function(err, data) {
-            var i, len, rawArtwork, refArtwork, refArtworks;
-            refArtworks = [];
-            console.debug("Server RefArtworks:");
-            console.log(data);
-            if ((data != null ? data.length : void 0) > 0) {
-              refArtworks = data;
-              for (i = 0, len = refArtworks.length; i < len; i++) {
-                refArtwork = refArtworks[i];
-                rawArtwork = {
-                  id: refArtwork.id,
-                  url: refArtwork.file_url,
-                  thumb: refArtwork.preview_url
-                };
-                rawArtworks.push(rawArtwork);
-              }
-              console.debug("Server Artworks Did Fetch:");
-              console.log(rawArtworks);
-              callback(rawArtworks);
-              return _this.trigger("didFetchFromServer");
-            }
+        if (opt.from === "konachan") {
+          parseRawArtwork = function(refArtwork) {
+            var artwork;
+            artwork = {
+              id: refArtwork.id,
+              url: refArtwork.file_url,
+              thumb: refArtwork.preview_url
+            };
+            return artwork;
           };
-        })(this));
+        } else if (opt.from === "unsplash") {
+          parseRawArtwork = function(refArtwork) {
+            var artwork;
+            artwork = {
+              id: refArtwork.id,
+              url: refArtwork.urls.full,
+              thumb: refArtwork.urls.thumb
+            };
+            return artwork;
+          };
+        }
+        return (function(_this) {
+          return function(parseRawArtwork) {
+            return API.fetchArtworks({
+              from: opt.from
+            }, {}, function(err, data) {
+              var i, len, rawArtwork, refArtwork, refArtworks;
+              refArtworks = [];
+              rawArtworks = [];
+              console.debug("Server RefArtworks:");
+              console.log(data);
+              if ((data != null ? data.length : void 0) > 0) {
+                refArtworks = data;
+                console.log(refArtworks);
+                for (i = 0, len = refArtworks.length; i < len; i++) {
+                  refArtwork = refArtworks[i];
+                  rawArtwork = parseRawArtwork(refArtwork);
+                  rawArtworks.push(rawArtwork);
+                }
+                console.debug("Server Artworks Did Fetch:");
+                console.log(rawArtworks);
+                callback(rawArtworks);
+                return _this.trigger("didFetchFromServer");
+              }
+            });
+          };
+        })(this)(parseRawArtwork);
       }
     };
 
     Artworks.prototype.loop = function() {
-      var current, next;
+      var next;
       if (this.length < 2) {
         return;
       }
-      current = this.getCurrent();
-      console.log(this.models);
       next = this.getNext();
-      current.set('isCurrent', false);
+      next.trigger('willChangeIsCurrent');
       return next.set('isCurrent', true);
     };
 

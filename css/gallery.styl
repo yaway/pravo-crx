@@ -5,20 +5,22 @@
     
   .layer-receipt
     layer(2)
-    // background-color rgba(0,0,0,0.6)
+    
     &.unfolded
       .scroll
         display(flex)
+        
     .scroll
       display none
       background-color rgba(0,0,0,0.6)
       flex(1)
       absolute(top right)
       bottom 0
-      padding 10px 0
+      padding 10px 10px 50px
       width 50%
       max-width 150px
       overflow auto
+      
       .artworks
         display(flex)
         flex-direction(column)
@@ -32,6 +34,15 @@
 
 .artwork-thumbnail
   width 100%
+  position relative
   .img
       width 100%
+      display block
+  &.chosen
+    &:before
+      absolute-cover()
+      content: ''
+      bg(rgba(129, 216, 208, 0.6))  
+.artwork-thumbnail + .artwork-thumbnail
+  margin-top 10px
 @import "./booth"
