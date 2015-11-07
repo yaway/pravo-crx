@@ -26,10 +26,12 @@ define [
             chosenArtwork.set 'isCurrent',true
 
         "didFetchFromServer": ()=>
-          for receiptArtwork in @receiptVC.artworks.models
-            for boothArtwork in @boothVC.artworks.models
-              if (receiptArtwork.get 'id') is (boothArtwork.get 'id')
-                receiptArtwork.set 'isChosen',true
+          @receiptVC.artworks.remove (@boothVC.artworks.pluck 'id')
+          # for receiptArtwork in @receiptVC.artworks.models
+          #   for boothArtwork in @boothVC.artworks.models
+          #     if (receiptArtwork.get 'id') is (boothArtwork.get 'id')
+          #       # receiptArtwork.set 'isChosen',true
+          #       @receiptVC.artworks.remove receiptArtwork
 
 
   return GalleryVC

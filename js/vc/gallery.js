@@ -41,27 +41,7 @@ define(['found/vc', 'vc/booth', 'vc/receipt'], function(VC, BoothVC, ReceiptVC) 
         })(this),
         "didFetchFromServer": (function(_this) {
           return function() {
-            var boothArtwork, i, len, receiptArtwork, ref, results;
-            ref = _this.receiptVC.artworks.models;
-            results = [];
-            for (i = 0, len = ref.length; i < len; i++) {
-              receiptArtwork = ref[i];
-              results.push((function() {
-                var j, len1, ref1, results1;
-                ref1 = this.boothVC.artworks.models;
-                results1 = [];
-                for (j = 0, len1 = ref1.length; j < len1; j++) {
-                  boothArtwork = ref1[j];
-                  if ((receiptArtwork.get('id')) === (boothArtwork.get('id'))) {
-                    results1.push(receiptArtwork.set('isChosen', true));
-                  } else {
-                    results1.push(void 0);
-                  }
-                }
-                return results1;
-              }).call(_this));
-            }
-            return results;
+            return _this.receiptVC.artworks.remove(_this.boothVC.artworks.pluck('id'));
           };
         })(this)
       });
