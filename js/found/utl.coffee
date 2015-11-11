@@ -44,6 +44,10 @@ define [
       canvas = null
     img.src = src
  
+  Utl.deepCopy = (obj)->
+    newObj = JSON.parse (JSON.stringify obj)
+    return newObj
+
   Utl.getTpl = (tpl)->
     tplStr = _.unescape $("[data-tpl='#{tpl}']").html()
     return tplStr

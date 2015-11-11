@@ -11,6 +11,7 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/booth', 'vc/artwork'], func
     function BoothVC() {
       this.onArtworksChangeIsCurrent = bind(this.onArtworksChangeIsCurrent, this);
       this.onArtworksChangeIsFavorite = bind(this.onArtworksChangeIsFavorite, this);
+      this.onArtworksAdd = bind(this.onArtworksAdd, this);
       this.onArtworksUpdate = bind(this.onArtworksUpdate, this);
       this.initializeArtworks = bind(this.initializeArtworks, this);
       this.onChangeHasArtworks = bind(this.onChangeHasArtworks, this);
@@ -32,10 +33,12 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/booth', 'vc/artwork'], func
     };
 
     BoothVC.prototype.onClickBtnFav = function(e) {
-      console.error('BtnFav Clicked');
-      console.error('e');
+      var currentArtwork;
       e.stopPropagation();
-      return this.artworks.getCurrent().toggle('isFavorite');
+      console.error('BtnFav Clicked');
+      currentArtwork = this.artworks.getCurrent();
+      console.error(currentArtwork);
+      return currentArtwork.toggle('isFavorite');
     };
 
     BoothVC.prototype.initialize = function(opt) {
@@ -46,6 +49,7 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/booth', 'vc/artwork'], func
         'didFetchFromServer': this.onArtworksDidFetchFromServer,
         'change:isFavorite': this.onArtworksChangeIsFavorite,
         'change:isCurrent': this.onArtworksChangeIsCurrent,
+        'add': this.onArtworksAdd,
         'update': this.onArtworksUpdate
       });
       this.model = new Booth;
@@ -78,7 +82,13 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/booth', 'vc/artwork'], func
     };
 
     BoothVC.prototype.onArtworksUpdate = function() {
+      console.error("Artwork Updated");
       return this.renderArtworks();
+    };
+
+    BoothVC.prototype.onArtworksAdd = function(artwork) {
+      console.error("Artwork Added:");
+      return console.debug(artwork);
     };
 
     BoothVC.prototype.onArtworksChangeIsFavorite = function() {

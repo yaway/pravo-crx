@@ -20,6 +20,8 @@ define(['found/vc'], function(VC) {
 
     ArtworkThumbnailVC.prototype.onClick = function() {
       console.error('ArtworkThumbnail Clicked');
+      this.model.trigger('willChangeIsCurrent');
+      this.model.set('isCurrent', true);
       this.model.trigger('willChangeIsChosen');
       return this.model.set('isChosen', true);
     };

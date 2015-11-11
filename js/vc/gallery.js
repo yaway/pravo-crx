@@ -26,16 +26,16 @@ define(['found/vc', 'vc/booth', 'vc/receipt'], function(VC, BoothVC, ReceiptVC) 
       });
       return this.receiptVC.artworks.on({
         "change:isChosen": (function(_this) {
-          return function() {
+          return function(a) {
             var chosenArtwork;
+            console.error(a);
             chosenArtwork = _this.receiptVC.artworks.findWhere({
-              'isChosen': true
+              isChosen: true,
+              isCurrent: true
             });
+            console.error(chosenArtwork);
             if (chosenArtwork) {
-              console.error(chosenArtwork);
-              _this.boothVC.artworks.add(chosenArtwork);
-              chosenArtwork.trigger('willChangeIsCurrent');
-              return chosenArtwork.set('isCurrent', true);
+              return _this.boothVC.artworks.add(chosenArtwork);
             }
           };
         })(this),

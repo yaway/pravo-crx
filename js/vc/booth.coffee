@@ -17,10 +17,12 @@ define [
       @updateStateFavorite()
 
     onClickBtnFav: (e)=>
-      console.error 'BtnFav Clicked'
-      console.error 'e'
       e.stopPropagation()
-      @artworks.getCurrent().toggle 'isFavorite'
+      console.error 'BtnFav Clicked'
+      currentArtwork = @artworks.getCurrent()
+      console.error currentArtwork
+
+      currentArtwork.toggle 'isFavorite'
 
 
     initialize: (opt)->
@@ -31,6 +33,7 @@ define [
         'didFetchFromServer': @onArtworksDidFetchFromServer
         'change:isFavorite': @onArtworksChangeIsFavorite
         'change:isCurrent': @onArtworksChangeIsCurrent
+        'add': @onArtworksAdd
         'update': @onArtworksUpdate
 
       @model = new Booth
@@ -57,7 +60,12 @@ define [
 
       
     onArtworksUpdate: ()=>
-      @renderArtworks()            
+      console.error "Artwork Updated"
+      @renderArtworks()
+
+    onArtworksAdd: (artwork)=>
+      console.error "Artwork Added:"
+      console.debug artwork
 
     onArtworksChangeIsFavorite: ()=>
       @updateStateFavorite()

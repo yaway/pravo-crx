@@ -43,6 +43,11 @@ define(['jquery', 'lib/underscore'], function($, _) {
     };
     return img.src = src;
   };
+  Utl.deepCopy = function(obj) {
+    var newObj;
+    newObj = JSON.parse(JSON.stringify(obj));
+    return newObj;
+  };
   Utl.getTpl = function(tpl) {
     var tplStr;
     tplStr = _.unescape($("[data-tpl='" + tpl + "']").html());

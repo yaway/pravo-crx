@@ -25,7 +25,6 @@ define(['found/error'], function(Errors) {
         return function(data, callback) {
           var contentType, method, timeout, url;
           console.error("API Called");
-          console.error(data);
           if (!data) {
             data = {};
           }

@@ -11,7 +11,6 @@ define ['found/error'],(Errors)->
       opt ?= {}
       return (data,callback)=>
         console.error "API Called"
-        console.error data
         if not data 
           data = {}
         method = opt.method or 'GET'

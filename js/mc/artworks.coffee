@@ -2,7 +2,8 @@ define [
   'found/c'
   'mc/artwork'
   'found/api'
-],(C,Artwork,API)->
+  'found/utl'
+],(C,Artwork,API,Utl)->
   class Artworks extends C
     model: Artwork
     
@@ -18,8 +19,9 @@ define [
 
     save: (opt)->
       console.debug 'Will Save Artworks'
-      rawArtworks = @models.map (artwork)->
-        artwork = artwork.attributes
+
+      rawArtworks = Utl.deepCopy @models
+      _.map rawArtworks,(artwork)=>
         artwork.isCurrent = false
         return artwork
       if opt.only is "fav"
@@ -99,7 +101,8 @@ define [
       next.trigger 'willChangeIsCurrent'
       next.set 'isCurrent',true
     getCurrent: ()->
-      current = @findWhere 'isCurrent'
+      current = @findWhere 
+        isCurrent: true
       return current
     getNext: ()->
       current = @getCurrent()

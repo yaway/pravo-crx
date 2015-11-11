@@ -6,6 +6,8 @@ define [
       'click': 'onClick'
     onClick: ()=>
       console.error 'ArtworkThumbnail Clicked'
+      @model.trigger 'willChangeIsCurrent'
+      @model.set 'isCurrent',true
       @model.trigger 'willChangeIsChosen'
       # @model.toggle 'isChosen'
       @model.set 'isChosen',true

@@ -24,6 +24,8 @@ define [
       @artworks.on
         'didFetchFromServer': @onArtworksDidFetchFromServer
         'update': @onArtworksUpdate
+        'change:isChosen': ()=>
+          console.error 'Artworks isChosen Changed'
 
       @render()
 
@@ -76,7 +78,5 @@ define [
           position: 'append'
           template: 'artworkThumbnail'
           model: artwork
-        console.error artworkVC
-
 
   return ReceiptVC

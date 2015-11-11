@@ -17,21 +17,17 @@ define [
         $root: @ui.$receipt
 
       @receiptVC.artworks.on
-        "change:isChosen": ()=>
-          chosenArtwork = @receiptVC.artworks.findWhere {'isChosen': true}
+        "change:isChosen": (a)=>
+          console.error a
+          chosenArtwork = @receiptVC.artworks.findWhere
+            isChosen: true
+            isCurrent: true
+          console.error chosenArtwork
           if chosenArtwork
-            console.error chosenArtwork
             @boothVC.artworks.add chosenArtwork
-            chosenArtwork.trigger 'willChangeIsCurrent'
-            chosenArtwork.set 'isCurrent',true
 
         "didFetchFromServer": ()=>
           @receiptVC.artworks.remove (@boothVC.artworks.pluck 'id')
-          # for receiptArtwork in @receiptVC.artworks.models
-          #   for boothArtwork in @boothVC.artworks.models
-          #     if (receiptArtwork.get 'id') is (boothArtwork.get 'id')
-          #       # receiptArtwork.set 'isChosen',true
-          #       @receiptVC.artworks.remove receiptArtwork
 
 
   return GalleryVC

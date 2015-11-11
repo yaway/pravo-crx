@@ -2,7 +2,7 @@
 var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
-define(['found/c', 'mc/artwork', 'found/api'], function(C, Artwork, API) {
+define(['found/c', 'mc/artwork', 'found/api', 'found/utl'], function(C, Artwork, API, Utl) {
   var Artworks;
   Artworks = (function(superClass) {
     extend(Artworks, superClass);
@@ -33,11 +33,13 @@ define(['found/c', 'mc/artwork', 'found/api'], function(C, Artwork, API) {
     Artworks.prototype.save = function(opt) {
       var artworksJSON, rawArtworks;
       console.debug('Will Save Artworks');
-      rawArtworks = this.models.map(function(artwork) {
-        artwork = artwork.attributes;
-        artwork.isCurrent = false;
-        return artwork;
-      });
+      rawArtworks = Utl.deepCopy(this.models);
+      _.map(rawArtworks, (function(_this) {
+        return function(artwork) {
+          artwork.isCurrent = false;
+          return artwork;
+        };
+      })(this));
       if (opt.only === "fav") {
         rawArtworks = _.where(rawArtworks, {
           isFavorite: true
@@ -144,7 +146,9 @@ define(['found/c', 'mc/artwork', 'found/api'], function(C, Artwork, API) {
 
     Artworks.prototype.getCurrent = function() {
       var current;
-      current = this.findWhere('isCurrent');
+      current = this.findWhere({
+        isCurrent: true
+      });
       return current;
     };
 

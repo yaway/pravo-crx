@@ -38,7 +38,12 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/receipt', 'vc/artwork-thumb
       this.artworks = new Artworks;
       this.artworks.on({
         'didFetchFromServer': this.onArtworksDidFetchFromServer,
-        'update': this.onArtworksUpdate
+        'update': this.onArtworksUpdate,
+        'change:isChosen': (function(_this) {
+          return function() {
+            return console.error('Artworks isChosen Changed');
+          };
+        })(this)
       });
       return this.render();
     };
@@ -99,13 +104,12 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/receipt', 'vc/artwork-thumb
       results = [];
       for (i = 0, len = ref.length; i < len; i++) {
         artwork = ref[i];
-        artworkVC = new ArtworkThumbnailVC({
+        results.push(artworkVC = new ArtworkThumbnailVC({
           $root: this.ui.$artworks,
           position: 'append',
           template: 'artworkThumbnail',
           model: artwork
-        });
-        results.push(console.error(artworkVC));
+        }));
       }
       return results;
     };
