@@ -14,16 +14,13 @@ define(['found/c', 'mc/artwork', 'found/api', 'found/utl'], function(C, Artwork,
     Artworks.prototype.model = Artwork;
 
     Artworks.prototype.initialize = function() {
-      console.log("New Artwork");
+      console.log("New Artworks");
       return this.on({
         'willChangeIsChosen': (function(_this) {
-          return function() {
-            return console.error("Artwork Will Change IsChosen");
-          };
+          return function() {};
         })(this),
         'willChangeIsCurrent': (function(_this) {
           return function() {
-            console.error("Artwork Will Change IsCurrent");
             return _this.allSet('isCurrent', false);
           };
         })(this)

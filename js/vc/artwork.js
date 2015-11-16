@@ -29,7 +29,6 @@ define(['found/vc'], function(VC) {
     };
 
     ArtworkVC.prototype.onChangeIsCurrent = function() {
-      console.log('Artwork Changed: isCurrent');
       return this.updateStateCurrent();
     };
 
@@ -39,11 +38,9 @@ define(['found/vc'], function(VC) {
 
     ArtworkVC.prototype.updateStateCurrent = function() {
       if (this.model.get('isCurrent')) {
-        this.$el.addClass('current');
-        return this.model.set('isCurrent', true);
+        return this.$el.addClass('current');
       } else {
-        this.$el.removeClass('current');
-        return this.model.set('isCurrent', false);
+        return this.$el.removeClass('current');
       }
     };
 

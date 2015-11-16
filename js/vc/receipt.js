@@ -3,23 +3,24 @@ var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); 
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
-define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/receipt', 'vc/artwork-thumbnail'], function(VC, Artwork, Artworks, Receipt, ArtworkThumbnailVC) {
+define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/feed', 'mc/feeds', 'mc/receipt', 'vc/artwork-thumbnail', 'vc/artwork-feed'], function(VC, Artwork, Artworks, Feed, Feeds, Receipt, ArtworkThumbnailVC, ArtworkFeedVC) {
   var ReceiptVC;
   ReceiptVC = (function(superClass) {
     extend(ReceiptVC, superClass);
 
     function ReceiptVC() {
-      this.onArtworksDidFetchFromServer = bind(this.onArtworksDidFetchFromServer, this);
-      this.onArtworksUpdate = bind(this.onArtworksUpdate, this);
-      this.initializeArtworks = bind(this.initializeArtworks, this);
+      this.initializeFeeds = bind(this.initializeFeeds, this);
+      this.onChangeIsFeedListUnfolded = bind(this.onChangeIsFeedListUnfolded, this);
       this.onChangeIsUnfolded = bind(this.onChangeIsUnfolded, this);
       this.onChangeHasArtworks = bind(this.onChangeHasArtworks, this);
+      this.onClickBtnMenu = bind(this.onClickBtnMenu, this);
       this.onClickBtnNew = bind(this.onClickBtnNew, this);
       return ReceiptVC.__super__.constructor.apply(this, arguments);
     }
 
     ReceiptVC.prototype.events = {
-      "click [data-ui='btnNew']": 'onClickBtnNew'
+      "click [data-ui='btnNew']": 'onClickBtnNew',
+      "click [data-ui='btnMenu']": 'onClickBtnMenu'
     };
 
     ReceiptVC.prototype.onClickBtnNew = function(e) {
@@ -28,24 +29,27 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/receipt', 'vc/artwork-thumb
       return this.model.toggle('isUnfolded');
     };
 
+    ReceiptVC.prototype.onClickBtnMenu = function(e) {
+      console.error('BtnMenu Clicked');
+      e.stopPropagation();
+      return this.model.toggle('isFeedListUnfolded');
+    };
+
     ReceiptVC.prototype.initialize = function(opt) {
       ReceiptVC.__super__.initialize.call(this, opt);
       this.model = new Receipt;
       this.model.on({
         'change:hasArtworks': this.onChangeHasArtworks,
-        'change:isUnfolded': this.onChangeIsUnfolded
+        'change:isUnfolded': this.onChangeIsUnfolded,
+        'change:isFeedListUnfolded': this.onChangeIsFeedListUnfolded
       });
-      this.artworks = new Artworks;
-      this.artworks.on({
-        'didFetchFromServer': this.onArtworksDidFetchFromServer,
-        'update': this.onArtworksUpdate,
-        'change:isChosen': (function(_this) {
-          return function() {
-            return console.error('Artworks isChosen Changed');
-          };
-        })(this)
-      });
+      this.initializeFeeds();
       return this.render();
+    };
+
+    ReceiptVC.prototype.update = function() {
+      console.log("Receipt Rendered");
+      return this.renderFeeds();
     };
 
     ReceiptVC.prototype.onChangeHasArtworks = function() {
@@ -59,16 +63,51 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/receipt', 'vc/artwork-thumb
     ReceiptVC.prototype.onChangeIsUnfolded = function() {
       if (this.model.get('isUnfolded')) {
         this.$el.addClass('unfolded');
-        return this.ui.$btnNew.text('Close');
+        this.ui.$btnNew.text('Close');
+        return this.model.set('isFeedListUnfolded', false);
       } else {
         this.$el.removeClass('unfolded');
         return this.ui.$btnNew.text('New');
       }
     };
 
+    ReceiptVC.prototype.onChangeIsFeedListUnfolded = function() {
+      if (this.model.get('isFeedListUnfolded')) {
+        return this.$el.addClass('feed-list-unfolded');
+      } else {
+        return this.$el.removeClass('feed-list-unfolded');
+      }
+    };
+
     ReceiptVC.prototype.initializeArtworks = function() {
+      var chosenFeed;
+      chosenFeed = this.feeds.findWhere({
+        'isChosen': true
+      }).get('name');
+      console.error(chosenFeed);
+      this.artworks = new Artworks;
+      this.artworks.on({
+        'didFetchFromServer': (function(_this) {
+          return function() {
+            return _this.ui.$countNew.text(" (" + _this.artworks.length + ")");
+          };
+        })(this),
+        'update': (function(_this) {
+          return function() {
+            _this.renderArtworks();
+            return _this.trigger('didUpdate');
+          };
+        })(this),
+        'change:isChosen': (function(_this) {
+          return function(artwork) {
+            if (artwork.get('isChosen')) {
+              return _this.trigger('didChooseArtwork', artwork);
+            }
+          };
+        })(this)
+      });
       return this.artworks.fetch({
-        from: "unsplash",
+        from: chosenFeed,
         callback: (function(_this) {
           return function(rawArtworks) {
             _this.artworks.add(rawArtworks);
@@ -78,21 +117,7 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/receipt', 'vc/artwork-thumb
       });
     };
 
-    ReceiptVC.prototype.onArtworksUpdate = function() {
-      return this.renderArtworks();
-    };
-
-    ReceiptVC.prototype.onArtworksDidFetchFromServer = function() {
-      return this.ui.$countNew.text(" (" + this.artworks.length + ")");
-    };
-
-    ReceiptVC.prototype.update = function() {
-      console.log("Receipt Rendered");
-      return this.initializeArtworks();
-    };
-
     ReceiptVC.prototype.renderArtworks = function() {
-      var artwork, artworkVC, i, len, ref, results;
       this.ui.$artworks.empty();
       if (!this.artworks) {
         console.log("No Artworks to Render");
@@ -100,18 +125,80 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/receipt', 'vc/artwork-thumb
       }
       console.error(this.artworks.length + " Artworks Rendered");
       this.model.set('hasArtworks', true);
-      ref = this.artworks.models;
-      results = [];
-      for (i = 0, len = ref.length; i < len; i++) {
-        artwork = ref[i];
-        results.push(artworkVC = new ArtworkThumbnailVC({
-          $root: this.ui.$artworks,
-          position: 'append',
-          template: 'artworkThumbnail',
-          model: artwork
-        }));
-      }
-      return results;
+      this.artworks.each((function(_this) {
+        return function(artwork) {
+          var artworkVC;
+          return artworkVC = new ArtworkThumbnailVC({
+            $root: _this.ui.$artworks,
+            position: 'append',
+            template: 'artworkThumbnail',
+            model: artwork
+          });
+        };
+      })(this));
+      return this.model.set('isFeedListUnfolded', false);
+    };
+
+    ReceiptVC.prototype.initializeFeeds = function() {
+      var alterFeeds;
+      alterFeeds = [
+        {
+          name: "unsplash",
+          isChosen: true
+        }, {
+          name: "konachan"
+        }
+      ];
+      this.feeds = new Feeds;
+      this.feeds.fetch({
+        callback: (function(_this) {
+          return function(rawFeeds) {
+            console.error(rawFeeds);
+            if (rawFeeds.length === 0) {
+              return _this.feeds.add(alterFeeds);
+            } else {
+              return _this.feeds.add(rawFeeds);
+            }
+          };
+        })(this)
+      });
+      return this.feeds.on({
+        'update': (function(_this) {
+          return function() {
+            _this.initializeArtworks();
+            return _this.renderFeeds();
+          };
+        })(this),
+        'change:isChosen': (function(_this) {
+          return function(artwork) {
+            if (artwork.get('isChosen')) {
+              return _this.initializeArtworks();
+            }
+          };
+        })(this),
+        'didFetch': (function(_this) {
+          return function() {
+            return _this.renderFeeds();
+          };
+        })(this)
+      });
+    };
+
+    ReceiptVC.prototype.renderFeeds = function() {
+      this.ui.$feeds.empty();
+      console.debug("New Feeds:");
+      console.log(this.feeds.models);
+      return this.feeds.each((function(_this) {
+        return function(feed) {
+          var feedVC;
+          return feedVC = new ArtworkFeedVC({
+            $root: _this.ui.$feeds,
+            position: 'append',
+            template: 'artworkFeed',
+            model: feed
+          });
+        };
+      })(this));
     };
 
     return ReceiptVC;

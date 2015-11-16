@@ -10,9 +10,6 @@
 .layer-gallery .layer-receipt .scroll .artworks {
   min-height: min-content;
 }
-.layer-gallery .layer-receipt .btn {
-  margin: 10px;
-}
 .artwork-thumbnail {
   width: 100%;
   position: relative;

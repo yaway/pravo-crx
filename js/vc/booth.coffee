@@ -15,6 +15,7 @@ define [
       e.stopPropagation()
       @artworks.loop()
       @updateStateFavorite()
+      @trigger 'didClickArtwork'
 
     onClickBtnFav: (e)=>
       e.stopPropagation()
@@ -41,6 +42,10 @@ define [
         'change:hasArtworks': @onChangeHasArtworks
       @render()
 
+    update: ()->
+      console.log "Booth Rendered"
+      @initializeArtworks()
+
     onChangeHasArtworks: ()=>
       if @model.get 'hasArtworks'
         @$el.addClass 'with-artworks'
@@ -64,18 +69,16 @@ define [
       @renderArtworks()
 
     onArtworksAdd: (artwork)=>
-      console.error "Artwork Added:"
-      console.debug artwork
+      if artwork.get 'isCurrent'
+        artwork.trigger 'willChangeIsCurrent'
+        artwork.set 'isCurrent',true
 
     onArtworksChangeIsFavorite: ()=>
       @updateStateFavorite()
       @artworks.save {only: "fav"}
+
     onArtworksChangeIsCurrent: ()=>
       @updateStateFavorite()
-
-    update: ()->
-      console.log "Booth Rendered"
-      @initializeArtworks()
 
     updateStateFavorite: ()->
       if @artworks.length is 0

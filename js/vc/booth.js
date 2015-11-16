@@ -29,7 +29,8 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/booth', 'vc/artwork'], func
       console.error('Artwork Clicked');
       e.stopPropagation();
       this.artworks.loop();
-      return this.updateStateFavorite();
+      this.updateStateFavorite();
+      return this.trigger('didClickArtwork');
     };
 
     BoothVC.prototype.onClickBtnFav = function(e) {
@@ -57,6 +58,11 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/booth', 'vc/artwork'], func
         'change:hasArtworks': this.onChangeHasArtworks
       });
       return this.render();
+    };
+
+    BoothVC.prototype.update = function() {
+      console.log("Booth Rendered");
+      return this.initializeArtworks();
     };
 
     BoothVC.prototype.onChangeHasArtworks = function() {
@@ -87,8 +93,10 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/booth', 'vc/artwork'], func
     };
 
     BoothVC.prototype.onArtworksAdd = function(artwork) {
-      console.error("Artwork Added:");
-      return console.debug(artwork);
+      if (artwork.get('isCurrent')) {
+        artwork.trigger('willChangeIsCurrent');
+        return artwork.set('isCurrent', true);
+      }
     };
 
     BoothVC.prototype.onArtworksChangeIsFavorite = function() {
@@ -100,11 +108,6 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/booth', 'vc/artwork'], func
 
     BoothVC.prototype.onArtworksChangeIsCurrent = function() {
       return this.updateStateFavorite();
-    };
-
-    BoothVC.prototype.update = function() {
-      console.log("Booth Rendered");
-      return this.initializeArtworks();
     };
 
     BoothVC.prototype.updateStateFavorite = function() {

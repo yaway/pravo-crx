@@ -27,7 +27,6 @@ define(['found/m', 'found/utl'], function(M, Utl) {
     };
 
     Artwork.prototype.initialize = function() {
-      console.log("New Artwork");
       this.on({
         'change:willBeCurrent': this.onChangeWillBeCurrent,
         'change:isCurrent': this.onChangeIsCurrent

@@ -16,17 +16,15 @@ define [
       @receiptVC = new ReceiptVC
         $root: @ui.$receipt
 
-      @receiptVC.artworks.on
-        "change:isChosen": (a)=>
-          console.error a
-          chosenArtwork = @receiptVC.artworks.findWhere
-            isChosen: true
-            isCurrent: true
-          console.error chosenArtwork
-          if chosenArtwork
-            @boothVC.artworks.add chosenArtwork
+      @boothVC.on
+        "didClickArtwork": ()=>
+          console.error 'Booth Artwork Clicked'
+          @receiptVC.model.set 'isUnfolded',false
 
-        "didFetchFromServer": ()=>
+      @receiptVC.on
+        "didChooseArtwork": (artwork)=>
+          @boothVC.artworks.add artwork
+        "didUpdate": ()=>
           @receiptVC.artworks.remove (@boothVC.artworks.pluck 'id')
 
 

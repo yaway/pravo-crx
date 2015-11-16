@@ -8,13 +8,10 @@ define [
     model: Artwork
     
     initialize: ()->
-      console.log "New Artwork"
+      console.log "New Artworks"
       @on
         'willChangeIsChosen': ()=>
-          console.error "Artwork Will Change IsChosen"
-          # @allSet 'isChosen',false
         'willChangeIsCurrent': ()=>
-          console.error "Artwork Will Change IsCurrent"
           @allSet 'isCurrent',false
 
     save: (opt)->

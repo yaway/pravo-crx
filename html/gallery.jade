@@ -9,9 +9,13 @@ template(data-tpl="gallery")
     //-   ul.artworks(data-ui="artworks")
 
     div.layer-receipt(data-ui="receipt")
-      div.scroll
-        ul.artworks(data-ui="artworks")
-      b.btn(data-ui="btnNew")
-        | New
-        span(data-ui="countNew")
-
+      div.panel
+        div.scroll
+          ul.artworks(data-ui="artworks")
+        b.btn.btn-feeds(data-ui="btnMenu")
+          span.oi(data-glyph="menu",title="menu" aria-hidden="true")
+        ul.feeds(data-ui="feeds")
+      div.combined.btns
+        b.btn.btn-panel(data-ui="btnNew")
+          | New
+          span(data-ui="countNew")

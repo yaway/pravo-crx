@@ -5,6 +5,7 @@ define [
     defaults:
       "hasArtworks": false
       "isUnfolded": false
+      "isFeedListUnfolded": false
 
     initialize: ()->
       console.log "New Receipt"

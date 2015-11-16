@@ -14,7 +14,7 @@ define [
       @ui.$img.attr 'src',(@model.get 'src')
 
     onChangeIsCurrent: ()=>
-      console.log 'Artwork Changed: isCurrent'
+      # console.log 'Artwork Changed: isCurrent'
       @updateStateCurrent()
 
     update: ()->
@@ -23,10 +23,10 @@ define [
     updateStateCurrent: ()->
       if (@model.get 'isCurrent')
         @$el.addClass 'current'
-        @model.set 'isCurrent',true
+        # @model.set 'isCurrent',true
       else
         @$el.removeClass 'current'
-        @model.set 'isCurrent',false
+        # @model.set 'isCurrent',false
 
 
 

@@ -1,13 +1,40 @@
-.layer-booth .btn-fav {
+.layer-gallery .layer-receipt .scroll {
+  display: none;
+  background-color: rgba(0,0,0,0.6);
+  bottom: 0;
+  padding: 10px 10px 50px;
+  width: 50%;
+  max-width: 150px;
+  overflow: auto;
+}
+.layer-gallery .layer-receipt .scroll .artworks {
+  min-height: min-content;
+}
+.artwork-thumbnail {
+  width: 100%;
+  position: relative;
+}
+.artwork-thumbnail .img {
+  width: 100%;
+  display: block;
+}
+.artwork-thumbnail.chosen:before {
+  content: '';
+rgba(129,216,208,0.6)
+}
+.artwork-thumbnail + .artwork-thumbnail {
+  margin-top: 10px;
+}
+.layer-booth {
+  overflow: hidden;
+}
+.layer-booth .btn {
   display: none;
 }
-.layer-booth.with-booth .btn-fav {
+.layer-booth.with-artworks .btn {
   display: inline-block;
 }
-.layer-btns {
-  margin-bottom: 10px;
-}
-.artwork {
+.layer-booth .artwork {
   display: none;
   position: absolute;
   top: -50%;
@@ -15,11 +42,14 @@
   width: 200%;
   height: 200%;
 }
-.artwork .img {
+.layer-booth .artwork .img {
   min-height: 50%;
   min-width: 50%;
   margin: auto;
 }
-.artwork.current {
+.layer-booth .artwork.current {
   display: block;
+}
+.layer-booth .layer-btns {
+  margin-bottom: 10px;
 }

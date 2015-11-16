@@ -18,7 +18,6 @@ define [
       "isChosen": false
 
     initialize: ()->
-      console.log "New Artwork"
       @on
         'change:willBeCurrent': @onChangeWillBeCurrent
         'change:isCurrent': @onChangeIsCurrent

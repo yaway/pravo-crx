@@ -24,22 +24,21 @@ define(['found/vc', 'vc/booth', 'vc/receipt'], function(VC, BoothVC, ReceiptVC) 
       this.receiptVC = new ReceiptVC({
         $root: this.ui.$receipt
       });
-      return this.receiptVC.artworks.on({
-        "change:isChosen": (function(_this) {
-          return function(a) {
-            var chosenArtwork;
-            console.error(a);
-            chosenArtwork = _this.receiptVC.artworks.findWhere({
-              isChosen: true,
-              isCurrent: true
-            });
-            console.error(chosenArtwork);
-            if (chosenArtwork) {
-              return _this.boothVC.artworks.add(chosenArtwork);
-            }
+      this.boothVC.on({
+        "didClickArtwork": (function(_this) {
+          return function() {
+            console.error('Booth Artwork Clicked');
+            return _this.receiptVC.model.set('isUnfolded', false);
+          };
+        })(this)
+      });
+      return this.receiptVC.on({
+        "didChooseArtwork": (function(_this) {
+          return function(artwork) {
+            return _this.boothVC.artworks.add(artwork);
           };
         })(this),
-        "didFetchFromServer": (function(_this) {
+        "didUpdate": (function(_this) {
           return function() {
             return _this.receiptVC.artworks.remove(_this.boothVC.artworks.pluck('id'));
           };

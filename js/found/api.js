@@ -23,7 +23,7 @@ define(['found/api-factory'], function(APIFactory) {
       if (opt.from === 'konachan') {
         api = create({
           root: roots.konachan,
-          path: 'post.json?limit=5&tags=hatsune_miku'
+          path: 'post.json?limit=10&tags=hatsune_miku'
         });
       } else if (opt.from === 'unsplash') {
         api = create({

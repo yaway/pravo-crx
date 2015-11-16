@@ -4,37 +4,38 @@ var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); 
   hasProp = {}.hasOwnProperty;
 
 define(['found/vc'], function(VC) {
-  var ArtworkThumbnailVC;
-  ArtworkThumbnailVC = (function(superClass) {
-    extend(ArtworkThumbnailVC, superClass);
+  var ArtworkFeedVC;
+  ArtworkFeedVC = (function(superClass) {
+    extend(ArtworkFeedVC, superClass);
 
-    function ArtworkThumbnailVC() {
+    function ArtworkFeedVC() {
       this.onChangeIsChosen = bind(this.onChangeIsChosen, this);
       this.onClick = bind(this.onClick, this);
-      return ArtworkThumbnailVC.__super__.constructor.apply(this, arguments);
+      return ArtworkFeedVC.__super__.constructor.apply(this, arguments);
     }
 
-    ArtworkThumbnailVC.prototype.events = {
+    ArtworkFeedVC.prototype.events = {
       'click': 'onClick'
     };
 
-    ArtworkThumbnailVC.prototype.onClick = function() {
-      this.model.trigger('willChangeIsCurrent');
-      this.model.set('isCurrent', true);
+    ArtworkFeedVC.prototype.onClick = function() {
       this.model.trigger('willChangeIsChosen');
       return this.model.set('isChosen', true);
     };
 
-    ArtworkThumbnailVC.prototype.initialize = function(opt) {
-      ArtworkThumbnailVC.__super__.initialize.call(this, opt);
+    ArtworkFeedVC.prototype.initialize = function(opt) {
+      ArtworkFeedVC.__super__.initialize.call(this, opt);
       this.model.on({
-        'change:isChosen': this.onChangeIsChosen,
-        'change:isCurrent': this.onChangeIsCurrent
+        'change:isChosen': this.onChangeIsChosen
       });
       return this.render();
     };
 
-    ArtworkThumbnailVC.prototype.onChangeIsChosen = function() {
+    ArtworkFeedVC.prototype.onChangeIsChosen = function() {
+      return this.updateStateChosen();
+    };
+
+    ArtworkFeedVC.prototype.updateStateChosen = function() {
       if (this.model.get('isChosen')) {
         return this.$el.addClass('chosen');
       } else {
@@ -42,10 +43,12 @@ define(['found/vc'], function(VC) {
       }
     };
 
-    ArtworkThumbnailVC.prototype.update = function() {};
+    ArtworkFeedVC.prototype.update = function() {
+      return this.updateStateChosen();
+    };
 
-    return ArtworkThumbnailVC;
+    return ArtworkFeedVC;
 
   })(VC);
-  return ArtworkThumbnailVC;
+  return ArtworkFeedVC;
 });

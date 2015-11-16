@@ -2,17 +2,26 @@ define [
   'found/vc'
   'mc/artwork'
   'mc/artworks'
+  'mc/feed'
+  'mc/feeds'
   'mc/receipt'
   'vc/artwork-thumbnail'
-],(VC,Artwork,Artworks,Receipt,ArtworkThumbnailVC)->
+  'vc/artwork-feed'
+],(VC,Artwork,Artworks,Feed,Feeds,Receipt,ArtworkThumbnailVC,ArtworkFeedVC)->
   class ReceiptVC extends VC
     events:
       "click [data-ui='btnNew']": 'onClickBtnNew'
+      "click [data-ui='btnMenu']": 'onClickBtnMenu'
 
     onClickBtnNew: (e)=>
       console.error 'BtnNew Clicked'
       e.stopPropagation()
       @model.toggle 'isUnfolded'
+
+    onClickBtnMenu: (e)=>
+      console.error 'BtnMenu Clicked'
+      e.stopPropagation()
+      @model.toggle 'isFeedListUnfolded'
 
     initialize: (opt)->
       super(opt)
@@ -20,14 +29,15 @@ define [
       @model.on
         'change:hasArtworks': @onChangeHasArtworks
         'change:isUnfolded': @onChangeIsUnfolded
-      @artworks = new Artworks
-      @artworks.on
-        'didFetchFromServer': @onArtworksDidFetchFromServer
-        'update': @onArtworksUpdate
-        'change:isChosen': ()=>
-          console.error 'Artworks isChosen Changed'
+        'change:isFeedListUnfolded': @onChangeIsFeedListUnfolded
+
+      @initializeFeeds()
 
       @render()
+
+    update: ()->
+      console.log "Receipt Rendered"
+      @renderFeeds()
 
     onChangeHasArtworks: ()=>
       if @model.get 'hasArtworks'
@@ -39,27 +49,40 @@ define [
       if @model.get 'isUnfolded'
         @$el.addClass 'unfolded'
         @ui.$btnNew.text 'Close'
+        @model.set 'isFeedListUnfolded',false
       else
         @$el.removeClass 'unfolded'
         @ui.$btnNew.text 'New'
 
+    onChangeIsFeedListUnfolded: ()=>
+      if @model.get 'isFeedListUnfolded'
+        @$el.addClass 'feed-list-unfolded'
+      else
+        @$el.removeClass 'feed-list-unfolded'
 
-    initializeArtworks: ()=>
+
+    initializeArtworks: ()->
+
+      chosenFeed = @feeds.findWhere({'isChosen':true}).get 'name'
+      console.error chosenFeed
+
+      @artworks = new Artworks
+
+      @artworks.on
+        'didFetchFromServer': ()=>
+          @ui.$countNew.text " (#{@artworks.length})"
+        'update': ()=>
+          @renderArtworks()
+          @trigger 'didUpdate'
+        'change:isChosen': (artwork)=>
+          if artwork.get 'isChosen'
+            @trigger 'didChooseArtwork',artwork
+
       @artworks.fetch
-        from:"unsplash"
+        from: chosenFeed
         callback: (rawArtworks)=>
           @artworks.add rawArtworks
           console.debug @artworks.pluck 'id'
-
-    onArtworksUpdate: ()=>
-      @renderArtworks()
-
-    onArtworksDidFetchFromServer: ()=>
-      @ui.$countNew.text " (#{@artworks.length})"
-
-    update: ()->
-      console.log "Receipt Rendered"
-      @initializeArtworks()
 
     renderArtworks: ()->
       @ui.$artworks.empty()
@@ -72,11 +95,46 @@ define [
 
       @model.set 'hasArtworks',true
 
-      for artwork in @artworks.models
+      @artworks.each (artwork)=>
         artworkVC = new ArtworkThumbnailVC
           $root: @ui.$artworks
           position: 'append'
           template: 'artworkThumbnail'
           model: artwork
+
+      @model.set 'isFeedListUnfolded',false
+
+    initializeFeeds: ()=>
+      alterFeeds = [{name: "unsplash",isChosen: true},{name: "konachan"}]
+      @feeds = new Feeds
+      @feeds.fetch
+        callback: (rawFeeds)=>
+          console.error rawFeeds
+          if rawFeeds.length is 0
+            @feeds.add alterFeeds
+          else
+            @feeds.add rawFeeds
+
+
+      @feeds.on
+        'update': ()=>
+          @initializeArtworks()
+          @renderFeeds()
+        'change:isChosen': (artwork)=>
+          if artwork.get 'isChosen'
+            @initializeArtworks()
+        'didFetch': ()=>
+          @renderFeeds()
+
+    renderFeeds: ()->
+      @ui.$feeds.empty()
+      console.debug "New Feeds:"
+      console.log @feeds.models
+      @feeds.each (feed)=>
+        feedVC = new ArtworkFeedVC
+          $root: @ui.$feeds
+          position: 'append'
+          template: 'artworkFeed'
+          model: feed
 
   return ReceiptVC
