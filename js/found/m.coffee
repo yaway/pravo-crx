@@ -1,4 +1,6 @@
-define ['lib/backbone'],(Backbone)->
+define [
+  'backbone'
+],(Backbone)->
   class M extends Backbone.Model
 
     toggle: (attr)->

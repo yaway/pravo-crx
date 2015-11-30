@@ -24,13 +24,13 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/feed', 'mc/feeds', 'mc/rece
     };
 
     ReceiptVC.prototype.onClickBtnNew = function(e) {
-      console.error('BtnNew Clicked');
+      console.log('BtnNew Clicked');
       e.stopPropagation();
       return this.model.toggle('isUnfolded');
     };
 
     ReceiptVC.prototype.onClickBtnMenu = function(e) {
-      console.error('BtnMenu Clicked');
+      console.log('BtnMenu Clicked');
       e.stopPropagation();
       return this.model.toggle('isFeedListUnfolded');
     };
@@ -54,28 +54,28 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/feed', 'mc/feeds', 'mc/rece
 
     ReceiptVC.prototype.onChangeHasArtworks = function() {
       if (this.model.get('hasArtworks')) {
-        return this.$el.addClass('with-artworks');
+        return this.$el.addClass('has-artworks');
       } else {
-        return this.$el.removeClass('with-artworks');
+        return this.$el.removeClass('has-artworks');
       }
     };
 
     ReceiptVC.prototype.onChangeIsUnfolded = function() {
       if (this.model.get('isUnfolded')) {
-        this.$el.addClass('unfolded');
+        this.$el.addClass('is-unfolded');
         this.ui.$btnNew.text('Close');
         return this.model.set('isFeedListUnfolded', false);
       } else {
-        this.$el.removeClass('unfolded');
+        this.$el.removeClass('is-unfolded');
         return this.ui.$btnNew.text('New');
       }
     };
 
     ReceiptVC.prototype.onChangeIsFeedListUnfolded = function() {
       if (this.model.get('isFeedListUnfolded')) {
-        return this.$el.addClass('feed-list-unfolded');
+        return this.$el.addClass('is-feed-list-unfolded');
       } else {
-        return this.$el.removeClass('feed-list-unfolded');
+        return this.$el.removeClass('is-feed-list-unfolded');
       }
     };
 
@@ -84,7 +84,7 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/feed', 'mc/feeds', 'mc/rece
       chosenFeed = this.feeds.findWhere({
         'isChosen': true
       }).get('name');
-      console.error(chosenFeed);
+      console.log(chosenFeed);
       this.artworks = new Artworks;
       this.artworks.on({
         'didFetchFromServer': (function(_this) {
@@ -123,7 +123,7 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/feed', 'mc/feeds', 'mc/rece
         console.log("No Artworks to Render");
         return;
       }
-      console.error(this.artworks.length + " Artworks Rendered");
+      console.log(this.artworks.length + " Artworks Rendered");
       this.model.set('hasArtworks', true);
       this.artworks.each((function(_this) {
         return function(artwork) {
@@ -153,7 +153,7 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/feed', 'mc/feeds', 'mc/rece
       this.feeds.fetch({
         callback: (function(_this) {
           return function(rawFeeds) {
-            console.error(rawFeeds);
+            console.log(rawFeeds);
             if (rawFeeds.length === 0) {
               return _this.feeds.add(alterFeeds);
             } else {

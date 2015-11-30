@@ -20,9 +20,9 @@ define [
 
     onChangeIsChosen: ()=>
       if @model.get 'isChosen'
-        @$el.addClass 'chosen'
+        @$el.addClass 'is-chosen'
       else
-        @$el.removeClass 'chosen'
+        @$el.removeClass 'is-chosen'
 
     update: ()->
 

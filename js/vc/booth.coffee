@@ -11,7 +11,7 @@ define [
       "click [data-ui='btnFav']": 'onClickBtnFav'
 
     onClickArtwork: (e)=>
-      console.error 'Artwork Clicked'
+      console.log 'Artwork Clicked'
       e.stopPropagation()
       @artworks.loop()
       @updateStateFavorite()
@@ -19,9 +19,9 @@ define [
 
     onClickBtnFav: (e)=>
       e.stopPropagation()
-      console.error 'BtnFav Clicked'
+      console.log 'BtnFav Clicked'
       currentArtwork = @artworks.getCurrent()
-      console.error currentArtwork
+      console.log currentArtwork
 
       currentArtwork.toggle 'isFavorite'
 
@@ -48,9 +48,9 @@ define [
 
     onChangeHasArtworks: ()=>
       if @model.get 'hasArtworks'
-        @$el.addClass 'with-artworks'
+        @$el.addClass 'has-artworks'
       else
-        @$el.removeClass 'with-artworks'
+        @$el.removeClass 'has-artworks'
 
 
     initializeArtworks: ()=>
@@ -60,12 +60,13 @@ define [
           # limit = 5
           # lack = limit - rawArtworks.length
           if rawArtworks.length > 0
-            rawArtworks[0].isCurrent = true
+            index = Math.floor Math.random()*rawArtworks.length
+            rawArtworks[index].isCurrent = true
             @artworks.add rawArtworks
 
       
     onArtworksUpdate: ()=>
-      console.error "Artwork Updated"
+      console.log "Artwork Updated"
       @renderArtworks()
 
     onArtworksAdd: (artwork)=>
@@ -79,6 +80,7 @@ define [
 
     onArtworksChangeIsCurrent: ()=>
       @updateStateFavorite()
+      @trigger 'didChangeCurrentArtwork'
 
     updateStateFavorite: ()->
       if @artworks.length is 0
@@ -86,10 +88,10 @@ define [
 
       currentArtwork = @artworks.getCurrent()
       if currentArtwork?.get 'isFavorite'
-        @$el.addClass 'favorite'
+        @$el.addClass 'is-favorite'
         @ui.$btnFav.text 'Faved'
       else
-        @$el.removeClass 'favorite'
+        @$el.removeClass 'is-favorite'
         @ui.$btnFav.text 'Fav'
 
     renderArtworks: ()->
@@ -99,7 +101,7 @@ define [
         console.log "No Artworks to Render"
         return
 
-      console.error "#{@artworks.length} Artworks Rendered"
+      console.log "#{@artworks.length} Artworks Rendered"
 
       @model.set 'hasArtworks',true
       for artwork in @artworks.models
@@ -109,6 +111,7 @@ define [
           template: 'artwork'
           model: artwork
       @updateStateFavorite()
+      @trigger 'didRenderArtworks'
 
 
   return BoothVC

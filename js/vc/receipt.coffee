@@ -14,12 +14,12 @@ define [
       "click [data-ui='btnMenu']": 'onClickBtnMenu'
 
     onClickBtnNew: (e)=>
-      console.error 'BtnNew Clicked'
+      console.log 'BtnNew Clicked'
       e.stopPropagation()
       @model.toggle 'isUnfolded'
 
     onClickBtnMenu: (e)=>
-      console.error 'BtnMenu Clicked'
+      console.log 'BtnMenu Clicked'
       e.stopPropagation()
       @model.toggle 'isFeedListUnfolded'
 
@@ -41,30 +41,30 @@ define [
 
     onChangeHasArtworks: ()=>
       if @model.get 'hasArtworks'
-        @$el.addClass 'with-artworks'
+        @$el.addClass 'has-artworks'
       else
-        @$el.removeClass 'with-artworks'
+        @$el.removeClass 'has-artworks'
 
     onChangeIsUnfolded: ()=>
       if @model.get 'isUnfolded'
-        @$el.addClass 'unfolded'
+        @$el.addClass 'is-unfolded'
         @ui.$btnNew.text 'Close'
         @model.set 'isFeedListUnfolded',false
       else
-        @$el.removeClass 'unfolded'
+        @$el.removeClass 'is-unfolded'
         @ui.$btnNew.text 'New'
 
     onChangeIsFeedListUnfolded: ()=>
       if @model.get 'isFeedListUnfolded'
-        @$el.addClass 'feed-list-unfolded'
+        @$el.addClass 'is-feed-list-unfolded'
       else
-        @$el.removeClass 'feed-list-unfolded'
+        @$el.removeClass 'is-feed-list-unfolded'
 
 
     initializeArtworks: ()->
 
       chosenFeed = @feeds.findWhere({'isChosen':true}).get 'name'
-      console.error chosenFeed
+      console.log chosenFeed
 
       @artworks = new Artworks
 
@@ -91,7 +91,7 @@ define [
         console.log "No Artworks to Render"
         return
 
-      console.error "#{@artworks.length} Artworks Rendered"
+      console.log "#{@artworks.length} Artworks Rendered"
 
       @model.set 'hasArtworks',true
 
@@ -109,7 +109,7 @@ define [
       @feeds = new Feeds
       @feeds.fetch
         callback: (rawFeeds)=>
-          console.error rawFeeds
+          console.log rawFeeds
           if rawFeeds.length is 0
             @feeds.add alterFeeds
           else

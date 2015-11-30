@@ -1,5 +1,5 @@
 define [
-  'lib/backbone'
+  'backbone'
   'found/utl'
 ],(Backbone,Utl)->
   class VC extends Backbone.View
@@ -22,11 +22,7 @@ define [
       tpl = _.template @template
       elStr = tpl data
       $el = $(elStr)
-      vc = this
-      $el.find('[data-ui]').each ()->
-        vc.ui[(@getAttribute 'data-ui')] = this
-        vc.ui["$#{(@getAttribute 'data-ui')}"] = $(this)
-      @setElement $el[0]
+      
       if @position is 'append'
         @$root.append $el
       else if @position is 'prepend'
@@ -37,6 +33,13 @@ define [
         @$root.after $el
       else
         @$root.replaceWith $el
+
+      vc = this
+      $el.find('[data-ui]').each ()->
+        vc.ui[(@getAttribute 'data-ui')] = this
+        vc.ui["$#{(@getAttribute 'data-ui')}"] = $(this)
+
+      @setElement $el[0]
       @update()
       return $el[0]
   return VC

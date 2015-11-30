@@ -1,6 +1,6 @@
 define [
   'jquery'
-  'lib/underscore'
+  'underscore'
 ],($,_)->
   Utl = {}
   Utl.resolveURL = ()->

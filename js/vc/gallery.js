@@ -27,8 +27,18 @@ define(['found/vc', 'vc/booth', 'vc/receipt'], function(VC, BoothVC, ReceiptVC) 
       this.boothVC.on({
         "didClickArtwork": (function(_this) {
           return function() {
-            console.error('Booth Artwork Clicked');
+            console.log('Booth Artwork Clicked');
             return _this.receiptVC.model.set('isUnfolded', false);
+          };
+        })(this),
+        "didChangeCurrentArtwork": (function(_this) {
+          return function() {
+            return _this.trigger('didChangeCurrentArtwork');
+          };
+        })(this),
+        "didRenderArtworks": (function(_this) {
+          return function() {
+            return _this.trigger('didRenderArtworks');
           };
         })(this)
       });

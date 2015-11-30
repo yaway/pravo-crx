@@ -2,7 +2,7 @@
 var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
-define(['lib/backbone', 'found/utl'], function(Backbone, Utl) {
+define(['backbone', 'found/utl'], function(Backbone, Utl) {
   var VC;
   VC = (function(superClass) {
     extend(VC, superClass);
@@ -43,12 +43,6 @@ define(['lib/backbone', 'found/utl'], function(Backbone, Utl) {
       tpl = _.template(this.template);
       elStr = tpl(data);
       $el = $(elStr);
-      vc = this;
-      $el.find('[data-ui]').each(function() {
-        vc.ui[this.getAttribute('data-ui')] = this;
-        return vc.ui["$" + (this.getAttribute('data-ui'))] = $(this);
-      });
-      this.setElement($el[0]);
       if (this.position === 'append') {
         this.$root.append($el);
       } else if (this.position === 'prepend') {
@@ -60,6 +54,12 @@ define(['lib/backbone', 'found/utl'], function(Backbone, Utl) {
       } else {
         this.$root.replaceWith($el);
       }
+      vc = this;
+      $el.find('[data-ui]').each(function() {
+        vc.ui[this.getAttribute('data-ui')] = this;
+        return vc.ui["$" + (this.getAttribute('data-ui'))] = $(this);
+      });
+      this.setElement($el[0]);
       this.update();
       return $el[0];
     };

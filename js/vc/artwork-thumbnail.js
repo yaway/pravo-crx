@@ -36,9 +36,9 @@ define(['found/vc'], function(VC) {
 
     ArtworkThumbnailVC.prototype.onChangeIsChosen = function() {
       if (this.model.get('isChosen')) {
-        return this.$el.addClass('chosen');
+        return this.$el.addClass('is-chosen');
       } else {
-        return this.$el.removeClass('chosen');
+        return this.$el.removeClass('is-chosen');
       }
     };
 

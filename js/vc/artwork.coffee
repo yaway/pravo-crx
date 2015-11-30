@@ -22,10 +22,10 @@ define [
 
     updateStateCurrent: ()->
       if (@model.get 'isCurrent')
-        @$el.addClass 'current'
+        @$el.addClass 'is-current'
         # @model.set 'isCurrent',true
       else
-        @$el.removeClass 'current'
+        @$el.removeClass 'is-current'
         # @model.set 'isCurrent',false
 
 

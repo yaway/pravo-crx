@@ -26,7 +26,7 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/booth', 'vc/artwork'], func
     };
 
     BoothVC.prototype.onClickArtwork = function(e) {
-      console.error('Artwork Clicked');
+      console.log('Artwork Clicked');
       e.stopPropagation();
       this.artworks.loop();
       this.updateStateFavorite();
@@ -36,9 +36,9 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/booth', 'vc/artwork'], func
     BoothVC.prototype.onClickBtnFav = function(e) {
       var currentArtwork;
       e.stopPropagation();
-      console.error('BtnFav Clicked');
+      console.log('BtnFav Clicked');
       currentArtwork = this.artworks.getCurrent();
-      console.error(currentArtwork);
+      console.log(currentArtwork);
       return currentArtwork.toggle('isFavorite');
     };
 
@@ -67,9 +67,9 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/booth', 'vc/artwork'], func
 
     BoothVC.prototype.onChangeHasArtworks = function() {
       if (this.model.get('hasArtworks')) {
-        return this.$el.addClass('with-artworks');
+        return this.$el.addClass('has-artworks');
       } else {
-        return this.$el.removeClass('with-artworks');
+        return this.$el.removeClass('has-artworks');
       }
     };
 
@@ -78,8 +78,10 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/booth', 'vc/artwork'], func
         from: "local",
         callback: (function(_this) {
           return function(rawArtworks) {
+            var index;
             if (rawArtworks.length > 0) {
-              rawArtworks[0].isCurrent = true;
+              index = Math.floor(Math.random() * rawArtworks.length);
+              rawArtworks[index].isCurrent = true;
               return _this.artworks.add(rawArtworks);
             }
           };
@@ -88,7 +90,7 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/booth', 'vc/artwork'], func
     };
 
     BoothVC.prototype.onArtworksUpdate = function() {
-      console.error("Artwork Updated");
+      console.log("Artwork Updated");
       return this.renderArtworks();
     };
 
@@ -107,7 +109,8 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/booth', 'vc/artwork'], func
     };
 
     BoothVC.prototype.onArtworksChangeIsCurrent = function() {
-      return this.updateStateFavorite();
+      this.updateStateFavorite();
+      return this.trigger('didChangeCurrentArtwork');
     };
 
     BoothVC.prototype.updateStateFavorite = function() {
@@ -117,10 +120,10 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/booth', 'vc/artwork'], func
       }
       currentArtwork = this.artworks.getCurrent();
       if (currentArtwork != null ? currentArtwork.get('isFavorite') : void 0) {
-        this.$el.addClass('favorite');
+        this.$el.addClass('is-favorite');
         return this.ui.$btnFav.text('Faved');
       } else {
-        this.$el.removeClass('favorite');
+        this.$el.removeClass('is-favorite');
         return this.ui.$btnFav.text('Fav');
       }
     };
@@ -132,7 +135,7 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/booth', 'vc/artwork'], func
         console.log("No Artworks to Render");
         return;
       }
-      console.error(this.artworks.length + " Artworks Rendered");
+      console.log(this.artworks.length + " Artworks Rendered");
       this.model.set('hasArtworks', true);
       ref = this.artworks.models;
       for (i = 0, len = ref.length; i < len; i++) {
@@ -144,7 +147,8 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/booth', 'vc/artwork'], func
           model: artwork
         });
       }
-      return this.updateStateFavorite();
+      this.updateStateFavorite();
+      return this.trigger('didRenderArtworks');
     };
 
     return BoothVC;

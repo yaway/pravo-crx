@@ -1,4 +1,6 @@
-define ['lib/backbone'],(Backbone)->
+define [
+  'backbone'
+],(Backbone)->
   class C extends Backbone.Collection
     initialize: ()->
       @on

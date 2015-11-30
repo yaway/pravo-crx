@@ -1,0 +1,28 @@
+{
+  "name": "pravo-crx",
+  "homepage": "https://github.com/yaway/pravo-crx",
+  "authors": [
+    "yaway <yaway.fe@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.4",
+    "underscore": "~1.8.3",
+    "backbone": "~1.2.3",
+    "nib": "~1.1.0",
+    "open-iconic": "~1.1.1",
+    "background-check": "~1.2.2",
+    "moment": "~2.10.6"
+  }
+}

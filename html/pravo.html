@@ -31,9 +31,15 @@
         </div>
       </div>
     </template>
+    <template data-tpl="clock">
+      <div data-ui="clock" class="layer-clock">
+        <div data-ui="time" class="time"></div>
+      </div>
+    </template>
     <template data-tpl="dashboard">
       <div data-ui="dashboard" class="layer-dashboard">
-        <div data-ui="gallery" class="layer-gallery"></div>
+        <div data-ui="gallery" class="ui-root"></div>
+        <div data-ui="clock" class="ui-root"></div>
       </div>
     </template>
   </head>

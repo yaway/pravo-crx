@@ -38,9 +38,9 @@ define(['found/vc'], function(VC) {
 
     ArtworkVC.prototype.updateStateCurrent = function() {
       if (this.model.get('isCurrent')) {
-        return this.$el.addClass('current');
+        return this.$el.addClass('is-current');
       } else {
-        return this.$el.removeClass('current');
+        return this.$el.removeClass('is-current');
       }
     };
 

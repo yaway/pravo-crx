@@ -18,8 +18,12 @@ define [
 
       @boothVC.on
         "didClickArtwork": ()=>
-          console.error 'Booth Artwork Clicked'
+          console.log 'Booth Artwork Clicked'
           @receiptVC.model.set 'isUnfolded',false
+        "didChangeCurrentArtwork": ()=>
+          @trigger 'didChangeCurrentArtwork'
+        "didRenderArtworks": ()=>
+          @trigger 'didRenderArtworks'
 
       @receiptVC.on
         "didChooseArtwork": (artwork)=>

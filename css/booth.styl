@@ -2,7 +2,7 @@
   overflow hidden
   .btn
     display none
-  &.with-artworks
+  &.has-artworks
     .btn
       display inline-block
   .artwork
@@ -14,10 +14,10 @@
     height 200%
     .img
       min-height 50%
-      min-width 50%
+      max-width 100%
       margin auto
       absolute-cover()
-    &.current
+    &.is-current
       display block
 
   .layer-artworks
