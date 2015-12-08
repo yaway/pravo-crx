@@ -9,7 +9,7 @@
   //   ,"128": "img/icon128.png"
   // }
   ,"chrome_url_overrides": {
-    "newtab": "html/pravo.html"
+    "newtab": "pravo/html/pravo.html"
   }
   ,"browser_action": {
     "default_icon": {

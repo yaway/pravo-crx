@@ -1,0 +1,19 @@
+
+<template data-tpl="gallery">
+  <div data-ui="gallery" class="layer-gallery">
+    <div data-ui="booth" class="layer-booth">
+      <ul data-ui="artworkList" class="layer-artworks"></ul>
+      <div class="layer-btns"><b data-ui="btnToggleFav" class="m-fa-btn btn-favorite"><i data-ui="icoToggleFav" class="m-ico">bookmark</i></b></div>
+    </div>
+    <div data-ui="receipt" class="layer-receipt">
+      <div class="panel"><b data-ui="btnUnfoldPanel" class="m-fa-btn"><i class="m-ico">collections</i></b>
+        <div class="drawer">
+          <div class="scroll">
+            <ul data-ui="artworkList" class="artwork-list"></ul>
+          </div><b data-ui="btnFoldPanel" class="m-i-btn btn-fold-panel"><i class="m-ico">close</i></b>
+          <ul data-ui="feedList" class="feed-list"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

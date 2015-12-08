@@ -1,0 +1,29 @@
+{
+  "name": "pravo-crx",
+  "version": "0.1.0",
+  "description": "Chrome Extension of Pravo",
+  "main": "gruntfile.coffee",
+  "dependencies": {},
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-clean": "^0.7.0",
+    "grunt-contrib-coffee": "^0.13.0",
+    "grunt-contrib-copy": "^0.8.2",
+    "grunt-contrib-jade": "^0.15.0",
+    "grunt-contrib-stylus": "^0.22.0",
+    "grunt-contrib-watch": "^0.6.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yaway/pravo-crx.git"
+  },
+  "author": "yaway",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yaway/pravo-crx/issues"
+  },
+  "homepage": "https://github.com/yaway/pravo-crx#readme"
+}

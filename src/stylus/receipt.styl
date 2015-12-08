@@ -1,0 +1,90 @@
+.layer-receipt
+  &.is-unfolded
+    .panel
+      width 240px
+      overflow hidden
+        
+    .m-fa-btn
+      transition(all,0.6s)
+      transform(translateY(-400px),scale(60))
+      bg(alpha(#000,0.6))
+      .m-ico
+        display none
+    
+    .drawer
+      transition(all,0.6s)
+      opacity(1)
+      .scroll
+        transition(all,0.4s,0.1s)
+        transform(translateX(0))
+      
+  &.is-feed-list-unfolded
+    .feed-list
+      display block
+
+  .m-fa-btn
+    absolute(bottom 10px right 20px)
+    
+    
+  .panel
+    display(flex)
+    flex(1)
+    absolute(top right)
+    bottom 0
+    width 0
+    
+  .drawer
+    opacity(0)
+    absolute-cover()
+    .scroll
+      transform(translateX(10px))
+      absolute-cover()
+      margin-top 10px
+      margin-bottom 56px
+      margin-left 10px
+      margin-right 10px
+      overflow-y auto      
+      .artwork-list
+        display(flex)
+        flex-direction(column)
+        min-height min-content
+    
+  .btn-toggle-feed-list
+    absolute(bottom 10px left 10px)
+    
+  .btn-fold-panel
+    absolute(bottom 10px right 10px)
+  
+  .feed-list
+    display none
+    bt = (10 + 20 + 20)px
+    absolute(bottom 10px right 230px)
+    bg(transparent)
+    border 2px solid #fff
+    color #fff
+    .feed
+      padding 5px 10px
+      cursor pointer
+      &.is-chosen
+        bg(alpha(#fff,0.3))
+    .feed + .feed
+      border-top 1px solid #fff
+      
+    
+
+.artwork-thumbnail
+  width 100%
+  position relative
+  .img
+      width 100%
+      display block
+  &.is-chosen
+    &:before
+      absolute-cover()
+      content: ''
+      bg(alpha(#fff,0.3))
+      
+.artwork-thumbnail + .artwork-thumbnail
+  margin-top 10px
+
+      

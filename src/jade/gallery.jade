@@ -1,0 +1,23 @@
+template(data-tpl="gallery")
+  div.layer-gallery(data-ui="gallery")
+    div.layer-booth(data-ui="booth")
+      ul.layer-artworks(data-ui="artworkList")
+      div.layer-btns
+        b.m-fa-btn.btn-favorite(data-ui="btnToggleFav")
+          i.m-ico(data-ui="icoToggleFav") bookmark
+
+    //- div.layer-inventory(data-ui="inventory")
+    //-   ul.artworks(data-ui="artworks")
+
+    div.layer-receipt(data-ui="receipt")
+      div.panel
+        b.m-fa-btn(data-ui="btnUnfoldPanel")
+          i.m-ico collections
+        div.drawer
+          div.scroll
+            ul.artwork-list(data-ui="artworkList")
+          //- b.m-i-btn.btn-toggle-feed-list(data-ui="btnToggleFeedList")
+            //- i.m-ico art_track
+          b.m-i-btn.btn-fold-panel(data-ui="btnFoldPanel")
+            i.m-ico close
+          ul.feed-list(data-ui="feedList")
