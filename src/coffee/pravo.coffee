@@ -9,6 +9,7 @@ require.config
     'backbone': "#{bcRoot}backbone/backbone"
     'moment': "#{bcRoot}moment/moment"
     'background-check': "#{bcRoot}background-check/background-check"
+    'jquery-mousewheel': "#{bcRoot}jquery-mousewheel/jquery.mousewheel"
 
 require [
   'jquery'

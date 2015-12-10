@@ -10,7 +10,8 @@
       'underscore': bcRoot + "underscore/underscore-1.8.3/underscore",
       'backbone': bcRoot + "backbone/backbone",
       'moment': bcRoot + "moment/moment",
-      'background-check': bcRoot + "background-check/background-check"
+      'background-check': bcRoot + "background-check/background-check",
+      'jquery-mousewheel': bcRoot + "jquery-mousewheel/jquery.mousewheel"
     }
   });
 

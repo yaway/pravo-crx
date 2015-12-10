@@ -25,7 +25,7 @@
         if (opt.template) {
           return this.template = Utl.getTpl(opt.template);
         } else {
-          return this.template = this.$root[0].outerHTML;
+          return this.template = '';
         }
       };
 
@@ -52,7 +52,11 @@
         } else if (this.position === 'after') {
           this.$root.after($el);
         } else {
-          this.$root.replaceWith($el);
+          if (this.template === '') {
+            $el = this.$root;
+          } else {
+            this.$root.replaceWith($el);
+          }
         }
         vc = this;
         $el.find('[data-ui]').each(function() {

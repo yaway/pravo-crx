@@ -3,7 +3,7 @@
     extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     hasProp = {}.hasOwnProperty;
 
-  define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/feed', 'mc/feeds', 'mc/receipt', 'vc/artwork-thumbnail', 'vc/artwork-feed'], function(VC, Artwork, Artworks, Feed, Feeds, Receipt, ArtworkThumbnailVC, ArtworkFeedVC) {
+  define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/feed', 'mc/feeds', 'mc/receipt', 'vc/artwork-thumbnail', 'vc/artwork-feed', 'vc/scroll'], function(VC, Artwork, Artworks, Feed, Feeds, Receipt, ArtworkThumbnailVC, ArtworkFeedVC, ScrollVC) {
     var ReceiptVC;
     ReceiptVC = (function(superClass) {
       extend(ReceiptVC, superClass);
@@ -13,33 +13,27 @@
         this.onClickBtnToggleFeedList = bind(this.onClickBtnToggleFeedList, this);
         this.onClickBtnTogglePanel = bind(this.onClickBtnTogglePanel, this);
         this.onClickBtnTogglePanel = bind(this.onClickBtnTogglePanel, this);
-        this.onClickBtnTogglePanel = bind(this.onClickBtnTogglePanel, this);
         this.onClickBtnUnfoldPanel = bind(this.onClickBtnUnfoldPanel, this);
         this.onClickBtnFoldPanel = bind(this.onClickBtnFoldPanel, this);
         return ReceiptVC.__super__.constructor.apply(this, arguments);
       }
 
       ReceiptVC.prototype.events = {
-        "click [data-ui='btnTogglePanel']": "onClickBtnTogglePanel",
         "click [data-ui='btnUnfoldPanel']": "onClickBtnUnfoldPanel",
         "click [data-ui='btnFoldPanel']": "onClickBtnFoldPanel",
         "click [data-ui='btnToggleFeedList']": "onClickBtnToggleFeedList"
       };
 
       ReceiptVC.prototype.onClickBtnFoldPanel = function(e) {
+        console.log('BtnFoldPanel Clicked');
         e.stopPropagation();
         return this.model.set('isUnfolded', false);
       };
 
       ReceiptVC.prototype.onClickBtnUnfoldPanel = function(e) {
+        console.log('BtnUnfoldPanel Clicked');
         e.stopPropagation();
         return this.model.set('isUnfolded', true);
-      };
-
-      ReceiptVC.prototype.onClickBtnTogglePanel = function(e) {
-        console.log('BtnTogglePanel Clicked');
-        e.stopPropagation();
-        return this.model.toggle('isUnfolded');
       };
 
       ReceiptVC.prototype.onClickBtnTogglePanel = function(e) {
@@ -99,6 +93,11 @@
 
       ReceiptVC.prototype.update = function() {
         console.log("Receipt Rendered");
+        this.scrollVC = new ScrollVC({
+          $root: this.ui.$scroll,
+          direction: 'v',
+          $target: this.ui.$artworkList
+        });
         return this.renderFeeds();
       };
 
@@ -144,9 +143,9 @@
           console.log("No Artworks to Render");
           return;
         }
-        console.log(this.artworks.length + " Artworks Rendered");
+        console.log(this.artworks.length + " Receipt Artworks Rendered");
         this.model.set('hasArtworks', true);
-        this.artworks.each((function(_this) {
+        return this.artworks.each((function(_this) {
           return function(artwork) {
             var artworkVC;
             return artworkVC = new ArtworkThumbnailVC({
@@ -157,7 +156,6 @@
             });
           };
         })(this));
-        return this.model.set('isFeedListUnfolded', false);
       };
 
       ReceiptVC.prototype.initializeFeeds = function() {

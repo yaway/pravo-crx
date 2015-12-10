@@ -5,8 +5,8 @@ define [
 ],(VC,BoothVC,ReceiptVC)->
   class GalleryVC extends VC
 
-    initialize: (option)->
-      super(option)
+    initialize: (opt)->
+      super(opt)
       @render()
 
     update: ()->
@@ -19,7 +19,7 @@ define [
       @boothVC.on
         "didClickArtwork": ()=>
           console.log 'Booth Artwork Clicked'
-          @receiptVC.model.set 'isUnfolded',false
+          # @receiptVC.model.set 'isUnfolded',false
         "didChangeCurrentArtwork": ()=>
           @trigger 'didChangeCurrentArtwork'
         "didRenderArtworks": ()=>

@@ -137,7 +137,7 @@
           console.log("No Artworks to Render");
           return;
         }
-        console.log(this.artworks.length + " Artworks Rendered");
+        console.log(this.artworks.length + " Booth Artworks Rendered");
         this.model.set('hasArtworks', true);
         ref = this.artworks.models;
         for (i = 0, len = ref.length; i < len; i++) {

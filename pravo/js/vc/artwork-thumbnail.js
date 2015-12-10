@@ -31,7 +31,18 @@
           'change:isChosen': this.onChangeIsChosen,
           'change:isCurrent': this.onChangeIsCurrent
         });
-        return this.render();
+        return this.lazyRender();
+      };
+
+      ArtworkThumbnailVC.prototype.lazyRender = function() {
+        var img;
+        img = new Image;
+        img.src = this.model.get('thumb');
+        return img.onload = (function(_this) {
+          return function() {
+            return _this.render();
+          };
+        })(this);
       };
 
       ArtworkThumbnailVC.prototype.onChangeIsChosen = function() {

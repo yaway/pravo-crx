@@ -10,14 +10,12 @@ template(data-tpl="gallery")
     //-   ul.artworks(data-ui="artworks")
 
     div.layer-receipt(data-ui="receipt")
-      div.panel
+      div.drawer
         b.m-fa-btn(data-ui="btnUnfoldPanel")
           i.m-ico collections
-        div.drawer
-          div.scroll
-            ul.artwork-list(data-ui="artworkList")
-          //- b.m-i-btn.btn-toggle-feed-list(data-ui="btnToggleFeedList")
-            //- i.m-ico art_track
-          b.m-i-btn.btn-fold-panel(data-ui="btnFoldPanel")
+        div.panel
+          div.scroll(data-ui="scroll")
+            ul.artwork-list.scrollee(data-ui="artworkList")
+          b.m-i-btn(data-ui="btnFoldPanel")
             i.m-ico close
           ul.feed-list(data-ui="feedList")

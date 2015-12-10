@@ -15,8 +15,14 @@ define [
       @model.on
         'change:isChosen': @onChangeIsChosen
         'change:isCurrent': @onChangeIsCurrent
-      @render()
+      @lazyRender()
 
+
+    lazyRender: ()->
+      img = new Image
+      img.src = @model.get 'thumb'
+      img.onload = ()=>
+        @render()
 
     onChangeIsChosen: ()=>
       if @model.get 'isChosen'

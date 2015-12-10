@@ -13,7 +13,7 @@ define [
       if opt.template
         @template = Utl.getTpl opt.template
       else
-        @template = @$root[0].outerHTML
+        @template = ''
     update: ()->
     getUI: (ui)->
       return @$el.find("[data-ui='#{ui}']")
@@ -32,7 +32,10 @@ define [
       else if @position is 'after'
         @$root.after $el
       else
-        @$root.replaceWith $el
+        if @template is ''
+          $el = @$root
+        else
+          @$root.replaceWith $el
 
       vc = this
       $el.find('[data-ui]').each ()->

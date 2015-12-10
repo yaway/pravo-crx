@@ -18,7 +18,8 @@ define [
       @clockVC = new ClockVC
         $root: @ui.$clock
         template: 'clock'
-        
+
+
       @galleryVC.on 
         'didRenderArtworks': ()=>
           @initBC()

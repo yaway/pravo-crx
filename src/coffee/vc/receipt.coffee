@@ -7,27 +7,24 @@ define [
   'mc/receipt'
   'vc/artwork-thumbnail'
   'vc/artwork-feed'
-],(VC,Artwork,Artworks,Feed,Feeds,Receipt,ArtworkThumbnailVC,ArtworkFeedVC)->
+  'vc/scroll'
+],(VC,Artwork,Artworks,Feed,Feeds,Receipt,ArtworkThumbnailVC,ArtworkFeedVC,ScrollVC)->
   class ReceiptVC extends VC
 
     events:
-      "click [data-ui='btnTogglePanel']": "onClickBtnTogglePanel"
       "click [data-ui='btnUnfoldPanel']": "onClickBtnUnfoldPanel"
       "click [data-ui='btnFoldPanel']": "onClickBtnFoldPanel"
       "click [data-ui='btnToggleFeedList']": "onClickBtnToggleFeedList"
 
     onClickBtnFoldPanel: (e)=>
+      console.log 'BtnFoldPanel Clicked'
       e.stopPropagation()
       @model.set 'isUnfolded',false
 
     onClickBtnUnfoldPanel: (e)=>
+      console.log 'BtnUnfoldPanel Clicked'
       e.stopPropagation()
       @model.set 'isUnfolded',true
-
-    onClickBtnTogglePanel: (e)=>
-      console.log 'BtnTogglePanel Clicked'
-      e.stopPropagation()
-      @model.toggle 'isUnfolded'
 
     onClickBtnTogglePanel: (e)=>
       console.log 'BtnTogglePanel Clicked'
@@ -69,8 +66,17 @@ define [
 
     update: ()->
       console.log "Receipt Rendered"
+      
+
+      @scrollVC = new ScrollVC
+        $root: @ui.$scroll
+        direction: 'v'
+        $target: @ui.$artworkList
+        
       @renderFeeds()
+      
       # @updateBC()
+      # @model.set 'isUnfolded',true
 
     initializeArtworks: ()->
 
@@ -102,7 +108,7 @@ define [
         console.log "No Artworks to Render"
         return
 
-      console.log "#{@artworks.length} Artworks Rendered"
+      console.log "#{@artworks.length} Receipt Artworks Rendered"
 
       @model.set 'hasArtworks',true
 
@@ -113,7 +119,6 @@ define [
           template: 'artworkThumbnail'
           model: artwork
 
-      @model.set 'isFeedListUnfolded',false
 
     initializeFeeds: ()=>
       alterFeeds = [{name: "unsplash",isChosen: true},{name: "konachan"}]

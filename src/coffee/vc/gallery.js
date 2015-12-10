@@ -11,8 +11,8 @@ define(['found/vc', 'vc/booth', 'vc/receipt'], function(VC, BoothVC, ReceiptVC) 
       return GalleryVC.__super__.constructor.apply(this, arguments);
     }
 
-    GalleryVC.prototype.initialize = function(option) {
-      GalleryVC.__super__.initialize.call(this, option);
+    GalleryVC.prototype.initialize = function(opt) {
+      GalleryVC.__super__.initialize.call(this, opt);
       return this.render();
     };
 
@@ -27,8 +27,7 @@ define(['found/vc', 'vc/booth', 'vc/receipt'], function(VC, BoothVC, ReceiptVC) 
       this.boothVC.on({
         "didClickArtwork": (function(_this) {
           return function() {
-            console.log('Booth Artwork Clicked');
-            return _this.receiptVC.model.set('isUnfolded', false);
+            return console.log('Booth Artwork Clicked');
           };
         })(this),
         "didChangeCurrentArtwork": (function(_this) {
