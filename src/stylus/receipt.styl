@@ -1,15 +1,72 @@
 .layer-receipt
+  .m-fa-btn
+    transition(all,0.2s,ease-in-out)
+    absolute(bottom 8px right 20px)
+    .m-ico
+      opacity(0)
+  
+  .m-i-btn
+    absolute(top 8px right 8px)
+    
+  .drawer
+    display(flex)
+    flex(1)
+    absolute-bottom()
+    height 186px
+    overflow hidden
+    
+  .panel
+    opacity(0)
+    transition(all,0.1s)
+    absolute-cover()
+    overflow hidden
+    
+  .scroll
+    transform(translateX(8px))
+    absolute-bottom()
+    left 8px
+    right 8px
+    bottom 8px
+    height 120px
+    overflow hidden
+
+  .toolbar
+    display(flex)
+    absolute-top()
+    height 56px
+    color #fff
+    cursor pointer
+    .title
+      position relative
+      height 56px
+      line-height 56px
+      padding-right 34px
+      padding-left 8px
+      .m-ico
+        absolute(top 16px right 8px)
+    .space
+      flex(1)
+  
+  .feed-list
+    display none
+    absolute(top 8px left 8px)
+    bg(alpha(#000,0.9))
+    color #fff
+    padding: 8px 0
+    .feed
+      pointer()
+      height 48px
+      line-height 48px
+      padding 0 16px
+      // &.is-chosen
+      
   &.is-unfolded
-    .drawer
-      height 120px
-      overflow hidden
-        
     .m-fa-btn
-      transition(all,0.6s)
-      transform(translateX(-600px),scale(60))
+      transform(translateX(-720px) scale(60))
       bg(alpha(#000,0.6))
       .m-ico
-        display none
+        transition(all,0s)
+        opacity(0)
     
     .panel
       transition(all,0.6s)
@@ -39,57 +96,25 @@
           bg(alpha(#fff,0.3))
           
     .artwork-thumbnail + .artwork-thumbnail
-      margin-left 10px
+      margin-left 8px
 
+  &.is-morphed
+    .drawer
+      height 0
+      overflow visible
+    .m-fa-btn
+      .m-ico
+        transition(all,0.2s)
+        opacity(1)
 
   &.is-feed-list-unfolded
     .feed-list
       display block
-
-    
-  .drawer
-    display(flex)
-    flex(1)
-    absolute-bottom()
-    height 0
-    
-  .panel
-    opacity(0)
-    absolute-cover()
-    overflow hidden
-    height 100%
-    .scroll
-      transform(translateX(10px))
-      absolute-cover()
-      height 100%
-      overflow hidden
-    
-    
-  .m-fa-btn
-    absolute(bottom 10px right 20px)
-    
-  .m-i-btn
-    absolute(top 10px right 20px)
-  
-  .feed-list
-    display none
-    bt = (10 + 20 + 20)px
-    absolute(bottom 10px right 230px)
-    bg(transparent)
-    border 2px solid #fff
-    color #fff
-    .feed
-      padding 5px 10px
-      cursor pointer
-      &.is-chosen
-        bg(alpha(#fff,0.3))
-    .feed + .feed
-      border-top 1px solid #fff
       
 
 .scroll
   &.is-eased
     .scrollee
-      transition(all,0.8s,ease-out)      
+      transition(all,0.6s,ease-out)      
   .scrollee
     transition(all,0.1s,ease-in)

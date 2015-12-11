@@ -19,14 +19,14 @@
       };
 
       ArtworkFeedVC.prototype.onClick = function() {
-        this.model.trigger('willChangeIsChosen');
-        return this.model.set('isChosen', true);
+        this.model.trigger('willChangeIsCurrent');
+        return this.model.set('isCurrent', true);
       };
 
       ArtworkFeedVC.prototype.initialize = function(opt) {
         ArtworkFeedVC.__super__.initialize.call(this, opt);
         this.model.on({
-          'change:isChosen': this.onChangeIsChosen
+          'change:isCurrent': this.onChangeIsCurrent
         });
         return this.render();
       };

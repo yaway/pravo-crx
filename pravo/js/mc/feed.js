@@ -13,7 +13,7 @@
 
       Feed.prototype.defaults = {
         name: "",
-        isChosen: false
+        isCurrent: false
       };
 
       Feed.prototype.initialize = function() {

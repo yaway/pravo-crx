@@ -9,51 +9,18 @@ define(['found/vc', 'mc/scroll', 'jquery-mousewheel'], function(VC, Scroll, JqMo
     extend(ScrollVC, superClass);
 
     function ScrollVC() {
-      this.onClick = bind(this.onClick, this);
       this.onMousewheel = bind(this.onMousewheel, this);
       return ScrollVC.__super__.constructor.apply(this, arguments);
     }
 
     ScrollVC.prototype.events = {
-      "mousewheel": "onMousewheel",
-      "click": "onClick"
+      "mousewheel": "onMousewheel"
     };
 
     ScrollVC.prototype.onMousewheel = function(e) {
-      var delta, ease, easeTimer, scroll, timer;
-      console.error('Mousewheeled');
-      timer = this.model.get('timer');
-      easeTimer = this.model.get('easeTimer');
+      var delta;
       delta = e.deltaY;
-      if (timer) {
-        clearTimeout(timer);
-        if (easeTimer) {
-          clearTimeout(easeTimer);
-        }
-      }
-      scroll = (function(_this) {
-        return function() {
-          var distance;
-          distance = _this.model.get('distance');
-          _this.model.set('distance', distance + delta);
-          return _this.scroll();
-        };
-      })(this);
-      ease = (function(_this) {
-        return function() {
-          _this.$el.addClass('is-eased');
-          _this.model.set('distance', (_this.model.get('distance')) + delta * 1.8);
-          return _this.scroll();
-        };
-      })(this);
-      timer = setTimeout(scroll, 10);
-      easeTimer = setTimeout(ease, 100);
-      this.model.set('timer', timer);
-      return this.model.set('easeTimer', easeTimer);
-    };
-
-    ScrollVC.prototype.onClick = function(e) {
-      return console.error("Scroll Clicked");
+      return this.scroll(delta);
     };
 
     ScrollVC.prototype.initialize = function(opt) {
@@ -74,17 +41,48 @@ define(['found/vc', 'mc/scroll', 'jquery-mousewheel'], function(VC, Scroll, JqMo
       return console.log("Scroll Rendered");
     };
 
-    ScrollVC.prototype.scroll = function() {
-      console.error('Scrolled');
-      if ((this.model.get('direction')) === 'v') {
-        return this.$target.css({
-          "transform": "translateX(" + (this.model.get('distance')) + "px)"
-        });
-      } else {
-        return this.$target.css({
-          "transform": "translateY(" + (this.model.get('distance')) + "px)"
-        });
+    ScrollVC.prototype.scroll = function(delta) {
+      var ease, easeTimer, move, scroll, timer;
+      timer = this.model.get('timer');
+      easeTimer = this.model.get('easeTimer');
+      if (timer) {
+        clearTimeout(timer);
+        if (easeTimer) {
+          clearTimeout(easeTimer);
+        }
       }
+      scroll = (function(_this) {
+        return function() {
+          var distance;
+          distance = _this.model.get('distance');
+          _this.model.set('distance', distance + delta);
+          return move();
+        };
+      })(this);
+      ease = (function(_this) {
+        return function() {
+          _this.$el.addClass('is-eased');
+          _this.model.set('distance', (_this.model.get('distance')) + delta * 2);
+          return move();
+        };
+      })(this);
+      move = (function(_this) {
+        return function() {
+          if ((_this.model.get('direction')) === 'v') {
+            return _this.$target.css({
+              "transform": "translateX(" + (_this.model.get('distance')) + "px)"
+            });
+          } else {
+            return _this.$target.css({
+              "transform": "translateY(" + (_this.model.get('distance')) + "px)"
+            });
+          }
+        };
+      })(this);
+      timer = setTimeout(scroll, 10);
+      easeTimer = setTimeout(ease, 100);
+      this.model.set('timer', timer);
+      return this.model.set('easeTimer', easeTimer);
     };
 
     return ScrollVC;

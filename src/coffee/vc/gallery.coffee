@@ -30,6 +30,8 @@ define [
           @boothVC.artworks.add artwork
         "didUpdate": ()=>
           @receiptVC.artworks.remove (@boothVC.artworks.pluck 'id')
+        "didUnfoldDrawer": ()=>
+          @boothVC.$el.addClass 'blur'
 
       @trigger 'didUpdateGallery'
 

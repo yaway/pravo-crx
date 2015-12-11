@@ -12,31 +12,30 @@ define [
   class ReceiptVC extends VC
 
     events:
-      "click [data-ui='btnUnfoldPanel']": "onClickBtnUnfoldPanel"
-      "click [data-ui='btnFoldPanel']": "onClickBtnFoldPanel"
-      "click [data-ui='btnToggleFeedList']": "onClickBtnToggleFeedList"
+      "click [data-ui='btnUnfoldDrawer']": "onClickBtnUnfoldDrawer"
+      "click [data-ui='btnFoldDrawer']": "onClickBtnFoldDrawer"
+      "transitionend [data-ui='btnUnfoldDrawer']": "onMorphBtnUnfoldDrawer"
 
-    onClickBtnFoldPanel: (e)=>
-      console.log 'BtnFoldPanel Clicked'
+      "click [data-ui='toobarTitle']": "onClickToolbarTitle"
+
+    onClickBtnFoldDrawer: (e)=>
+      console.log 'BtnFoldDrawer Clicked'
       e.stopPropagation()
       @model.set 'isUnfolded',false
 
-    onClickBtnUnfoldPanel: (e)=>
-      console.log 'BtnUnfoldPanel Clicked'
+    onClickBtnUnfoldDrawer: (e)=>
+      console.log 'BtnUnfoldDrawer Clicked'
       e.stopPropagation()
       @model.set 'isUnfolded',true
 
-    onClickBtnTogglePanel: (e)=>
-      console.log 'BtnTogglePanel Clicked'
-      e.stopPropagation()
-      @model.toggle 'isUnfolded'
-    onClickBtnTogglePanel: (e)=>
-      console.log 'BtnTogglePanel Clicked'
-      e.stopPropagation()
-      @model.toggle 'isUnfolded'
+    onMorphBtnUnfoldDrawer: (e)=>
+      console.log 'BtnUnfoldDrawer Morphed'
+      if @$el.hasClass 'is-unfolded'
+        return
+      @$el.addClass 'is-morphed'
 
-    onClickBtnToggleFeedList: (e)=>
-      console.log 'BtnToggleFeedList Clicked'
+    onClickToolbarTitle: (e)=>
+      console.log 'ToolbarTitle Clicked'
       e.stopPropagation()
       @model.toggle 'isFeedListUnfolded'
 
@@ -51,11 +50,10 @@ define [
             @$el.removeClass 'has-artworks'
         'change:isUnfolded': ()=>
           if @model.get 'isUnfolded'
-            @$el.addClass 'is-unfolded'
-            # @ui.$btnNew.text 'Close'
+            @unfoldDrawer()
             @model.set 'isFeedListUnfolded',false
           else
-            @$el.removeClass 'is-unfolded'
+            @foldDrawer()
         'change:isFeedListUnfolded': ()=>
           if @model.get 'isFeedListUnfolded'
             @$el.addClass 'is-feed-list-unfolded'
@@ -64,10 +62,17 @@ define [
       @initializeFeeds()
       @render()
 
+    unfoldDrawer: ()->
+      @$el.addClass 'is-unfolded'
+      @$el.removeClass 'is-morphed'
+      @trigger 'didUnfoldDrawer'
+    foldDrawer: ()->
+      @$el.removeClass 'is-unfolded'
+      @trigger 'didFoldDrawer'
+
     update: ()->
       console.log "Receipt Rendered"
       
-
       @scrollVC = new ScrollVC
         $root: @ui.$scroll
         direction: 'v'
@@ -79,8 +84,7 @@ define [
       # @model.set 'isUnfolded',true
 
     initializeArtworks: ()->
-
-      chosenFeed = @feeds.findWhere({'isChosen':true}).get 'name'
+      chosenFeed = @feeds.findWhere({'isCurrent':true}).get 'name'
       console.log chosenFeed
 
       @artworks = new Artworks
@@ -121,7 +125,7 @@ define [
 
 
     initializeFeeds: ()=>
-      alterFeeds = [{name: "unsplash",isChosen: true},{name: "konachan"}]
+      alterFeeds = [{name: "unsplash",isCurrent: true},{name: "konachan"}]
       @feeds = new Feeds
       @feeds.fetch
         callback: (rawFeeds)=>
@@ -129,14 +133,15 @@ define [
           if rawFeeds.length is 0
             @feeds.add alterFeeds
           else
-            @feeds.add rawFeeds
+            @feeds.add alterFeeds
 
       @feeds.on
         'update': ()=>
           @initializeArtworks()
           @renderFeeds()
-        'change:isChosen': (artwork)=>
-          if artwork.get 'isChosen'
+        'change:isCurrent': (feed)=>
+          if feed.get 'isCurrent'
+            @ui.$feedName.text (feed.get 'name')
             @initializeArtworks()
         'didFetch': ()=>
           @renderFeeds()
@@ -151,6 +156,10 @@ define [
           position: 'append'
           template: 'artworkFeed'
           model: feed
+      currentFeed = @feeds.findWhere
+        isCurrent: true
+      if currentFeed
+        @ui.$feedName.text (currentFeed.get 'name')
 
     updateBC: ()->
       for className in ['is-dark','is-light','is-complex']

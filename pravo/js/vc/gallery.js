@@ -51,6 +51,11 @@
             return function() {
               return _this.receiptVC.artworks.remove(_this.boothVC.artworks.pluck('id'));
             };
+          })(this),
+          "didUnfoldDrawer": (function(_this) {
+            return function() {
+              return _this.boothVC.$el.addClass('blur');
+            };
           })(this)
         });
         return this.trigger('didUpdateGallery');

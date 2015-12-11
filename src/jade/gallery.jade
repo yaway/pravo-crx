@@ -9,13 +9,18 @@ template(data-tpl="gallery")
     //- div.layer-inventory(data-ui="inventory")
     //-   ul.artworks(data-ui="artworks")
 
-    div.layer-receipt(data-ui="receipt")
+    div.layer-receipt.is-morphed(data-ui="receipt")
       div.drawer
-        b.m-fa-btn(data-ui="btnUnfoldPanel")
+        b.m-fa-btn(data-ui="btnUnfoldDrawer")
           i.m-ico collections
         div.panel
           div.scroll(data-ui="scroll")
             ul.artwork-list.scrollee(data-ui="artworkList")
-          b.m-i-btn(data-ui="btnFoldPanel")
-            i.m-ico close
-          ul.feed-list(data-ui="feedList")
+          div.toolbar
+            div.title(data-ui="toobarTitle")
+              span.name(data-ui="feedName")
+              i.m-ico arrow_drop_down
+              ul.feed-list(data-ui="feedList")
+            div.space
+            b.m-i-btn(data-ui="btnFoldDrawer")
+              i.m-ico close

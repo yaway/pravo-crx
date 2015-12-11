@@ -5,7 +5,7 @@ define [
   class Feed extends M
     defaults:
       name: ""
-      isChosen: false
+      isCurrent: false
 
     initialize: ()->
       console.log "New Feed"

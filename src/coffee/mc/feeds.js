@@ -16,14 +16,14 @@ define(['found/c', 'mc/feed', 'found/utl'], function(C, Feed, Utl) {
     Feeds.prototype.initialize = function() {
       console.log("New Feeds");
       return this.on({
-        'willChangeIsChosen': (function(_this) {
+        'willChangeIsCurrent': (function(_this) {
           return function() {
-            return _this.allSet('isChosen', false);
+            return _this.allSet('isCurrent', false);
           };
         })(this),
         'change': (function(_this) {
           return function(feed) {
-            if (feed.get('isChosen')) {
+            if (feed.get('isCurrent')) {
               return _this.save();
             }
           };

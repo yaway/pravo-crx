@@ -5,12 +5,12 @@ define [
     events:
       'click': 'onClick'
     onClick: ()=>
-      @model.trigger 'willChangeIsChosen'
-      @model.set 'isChosen',true
+      @model.trigger 'willChangeIsCurrent'
+      @model.set 'isCurrent',true
     initialize: (opt)->
       super(opt)
       @model.on
-        'change:isChosen': @onChangeIsChosen
+        'change:isCurrent': @onChangeIsCurrent
       @render()
 
     onChangeIsChosen: ()=>

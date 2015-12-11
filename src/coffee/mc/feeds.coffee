@@ -9,10 +9,10 @@ define [
     initialize: ()->
       console.log "New Feeds"
       @on
-        'willChangeIsChosen': ()=>
-          @allSet 'isChosen',false
+        'willChangeIsCurrent': ()=>
+          @allSet 'isCurrent',false
         'change': (feed)=>
-          if feed.get 'isChosen'
+          if feed.get 'isCurrent'
             @save()
 
     save: (opt)->
