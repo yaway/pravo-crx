@@ -21,9 +21,10 @@ define(['found/c', 'mc/feed', 'found/utl'], function(C, Feed, Utl) {
             return _this.allSet('isCurrent', false);
           };
         })(this),
-        'change': (function(_this) {
-          return function(feed) {
-            if (feed.get('isCurrent')) {
+        'change:isCurrent': (function(_this) {
+          return function(m, v) {
+            if (v) {
+              _this.trigger('didChangeIsCurrent');
               return _this.save();
             }
           };
@@ -56,7 +57,7 @@ define(['found/c', 'mc/feed', 'found/utl'], function(C, Feed, Utl) {
           } else {
             rawData = [];
           }
-          console.debug("Local Artworks Did Fetch:");
+          console.debug("Local Feeds Did Fetch:");
           console.log(rawData);
           callback(rawData);
           return _this.trigger("didFetch");

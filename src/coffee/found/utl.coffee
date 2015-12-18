@@ -52,4 +52,8 @@ define [
     tplStr = _.unescape $("[data-tpl='#{tpl}']").html()
     return tplStr
 
+  Utl.rebindContextMenu = ()->
+    $(document).on 'contextmenu',(e)->
+      e.preventDefault()
+
   return Utl

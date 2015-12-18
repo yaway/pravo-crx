@@ -53,6 +53,11 @@
       tplStr = _.unescape($("[data-tpl='" + tpl + "']").html());
       return tplStr;
     };
+    Utl.rebindContextMenu = function() {
+      return $(document).on('contextmenu', function(e) {
+        return e.preventDefault();
+      });
+    };
     return Utl;
   });
 

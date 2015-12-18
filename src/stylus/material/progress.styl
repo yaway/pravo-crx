@@ -1,0 +1,69 @@
+$r = 10px
+$c = 2*PI*$r
+$g = 0.1*$c
+$a = $c - $g
+
+@keyframes progress
+  0%
+    stroke-dasharray $g, $a
+    stroke-dashoffset 0.25*$c + $g
+  25%
+    stroke-dasharray $a, $g
+    stroke-dashoffset 0.25*$c + $g
+  50%
+    stroke-dasharray $g, $a
+    stroke-dashoffset 0.25*$c - $a
+  75%
+    stroke-dasharray $a, $g
+    stroke-dashoffset 0.25*$c - $a
+  100%
+    stroke-dasharray $g, $a
+    stroke-dashoffset -0.75*$c - $a
+
+@keyframes circle
+  0%
+    transform(rotate(0deg))
+
+  100%
+    transform(rotate(360deg))
+
+.m-linear-progress
+  height 4px
+  border-top 4px solid alpha(#fff,60%)
+  
+  &:before
+    content ''
+    height 0
+    border-top 4px solid #fff
+    
+  &.top
+    absolute-top()
+    top -4px
+  &.bottom
+    absolute-bottom()
+    bottom -4px
+  &.is-done
+    display none
+    
+.m-circuler-progress
+  $progress = progress 1s infinite
+  $circle = progress 3s infinite
+  width 24px
+  height 24px
+  .svg
+    width 24px
+    height 24px
+    animation(circle linear 3.6s infinite)
+  .circle
+    width 24px
+    height 24px
+    cx 12px
+    cy 12px
+    r $r
+    fill none
+    stroke $gray
+    stroke-width 4px
+    transform-origin center center
+    animation(progress linear 2.4s infinite)
+    
+    

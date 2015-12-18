@@ -58,7 +58,7 @@
       };
 
       Artworks.prototype.fetch = function(opt) {
-        var callback, parseRawArtwork, rawArtworks;
+        var apiCallback, callback, parseRawArtwork, rawArtworks, resetProtocol;
         console.debug('Will Fetch Artworks');
         rawArtworks = [];
         callback = opt.callback || (function(data) {
@@ -69,7 +69,7 @@
           return chrome.storage.local.get('artworks', (function(_this) {
             return function(data) {
               if (!data.artworks) {
-                return console.log('No Local Artworks to Fetch');
+                return console.log('No Local Artworks Fetched');
               } else {
                 rawArtworks = JSON.parse(data.artworks || {});
                 console.debug("Local Artworks Did Fetch:");
@@ -81,6 +81,14 @@
           })(this));
         } else {
           console.debug("Will Fetch Server Artworks");
+          resetProtocol = function(artwork) {
+            var thumb, url;
+            url = artwork.url;
+            thumb = artwork.thumb;
+            artwork.url = url.replace(/http\:/, "https:");
+            artwork.thumb = thumb.replace(/http\:/, "https:");
+            return artwork;
+          };
           if (opt.from === "konachan") {
             parseRawArtwork = function(refArtwork) {
               var artwork;
@@ -89,6 +97,7 @@
                 url: refArtwork.file_url,
                 thumb: refArtwork.preview_url
               };
+              artwork = resetProtocol(artwork);
               return artwork;
             };
           } else if (opt.from === "unsplash") {
@@ -102,29 +111,29 @@
               return artwork;
             };
           }
+          apiCallback = (function(_this) {
+            return function(err, data) {
+              var i, len, rawArtwork, refArtwork, refArtworks;
+              refArtworks = [];
+              rawArtworks = [];
+              if ((data != null ? data.length : void 0) > 0) {
+                refArtworks = data;
+                for (i = 0, len = refArtworks.length; i < len; i++) {
+                  refArtwork = refArtworks[i];
+                  rawArtwork = parseRawArtwork(refArtwork);
+                  rawArtworks.push(rawArtwork);
+                }
+                console.debug("Server Artworks Did Fetch:");
+                console.log(rawArtworks);
+                callback(rawArtworks);
+                return _this.trigger("didFetchFromServer");
+              }
+            };
+          })(this);
           return (function(_this) {
             return function(parseRawArtwork) {
-              return API.fetchArtworks({
+              return API.fetchArtworks({}, apiCallback, {
                 from: opt.from
-              }, {}, function(err, data) {
-                var i, len, rawArtwork, refArtwork, refArtworks;
-                refArtworks = [];
-                rawArtworks = [];
-                console.debug("Server RefArtworks:");
-                console.log(data);
-                if ((data != null ? data.length : void 0) > 0) {
-                  refArtworks = data;
-                  console.log(refArtworks);
-                  for (i = 0, len = refArtworks.length; i < len; i++) {
-                    refArtwork = refArtworks[i];
-                    rawArtwork = parseRawArtwork(refArtwork);
-                    rawArtworks.push(rawArtwork);
-                  }
-                  console.debug("Server Artworks Did Fetch:");
-                  console.log(rawArtworks);
-                  callback(rawArtworks);
-                  return _this.trigger("didFetchFromServer");
-                }
               });
             };
           })(this)(parseRawArtwork);

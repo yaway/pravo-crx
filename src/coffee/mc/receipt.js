@@ -12,9 +12,13 @@ define(['found/m'], function(M) {
     }
 
     Receipt.prototype.defaults = {
-      "hasArtworks": false,
       "isUnfolded": false,
-      "isFeedListUnfolded": false
+      "isFeedListUnfolded": false,
+      "isArtworksUpdated": false,
+      "isArtworksLoaded": false,
+      "isArtworksRendered": false,
+      "isFeedsUpdated": false,
+      "hasArtworks": false
     };
 
     Receipt.prototype.initialize = function() {

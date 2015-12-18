@@ -4,53 +4,33 @@
     hasProp = {}.hasOwnProperty;
 
   define(['found/vc'], function(VC) {
-    var ArtworkFeedVC;
-    ArtworkFeedVC = (function(superClass) {
-      extend(ArtworkFeedVC, superClass);
+    var ArtworkFeed;
+    ArtworkFeed = (function(superClass) {
+      extend(ArtworkFeed, superClass);
 
-      function ArtworkFeedVC() {
-        this.onChangeIsChosen = bind(this.onChangeIsChosen, this);
+      function ArtworkFeed() {
         this.onClick = bind(this.onClick, this);
-        return ArtworkFeedVC.__super__.constructor.apply(this, arguments);
+        return ArtworkFeed.__super__.constructor.apply(this, arguments);
       }
 
-      ArtworkFeedVC.prototype.events = {
+      ArtworkFeed.prototype.events = {
         'click': 'onClick'
       };
 
-      ArtworkFeedVC.prototype.onClick = function() {
+      ArtworkFeed.prototype.onClick = function() {
         this.model.trigger('willChangeIsCurrent');
         return this.model.set('isCurrent', true);
       };
 
-      ArtworkFeedVC.prototype.initialize = function(opt) {
-        ArtworkFeedVC.__super__.initialize.call(this, opt);
-        this.model.on({
-          'change:isCurrent': this.onChangeIsCurrent
-        });
+      ArtworkFeed.prototype.initialize = function(opt) {
+        ArtworkFeed.__super__.initialize.call(this, opt);
         return this.render();
       };
 
-      ArtworkFeedVC.prototype.onChangeIsChosen = function() {
-        return this.updateStateChosen();
-      };
-
-      ArtworkFeedVC.prototype.updateStateChosen = function() {
-        if (this.model.get('isChosen')) {
-          return this.$el.addClass('is-chosen');
-        } else {
-          return this.$el.removeClass('is-chosen');
-        }
-      };
-
-      ArtworkFeedVC.prototype.update = function() {
-        return this.updateStateChosen();
-      };
-
-      return ArtworkFeedVC;
+      return ArtworkFeed;
 
     })(VC);
-    return ArtworkFeedVC;
+    return ArtworkFeed;
   });
 
 }).call(this);

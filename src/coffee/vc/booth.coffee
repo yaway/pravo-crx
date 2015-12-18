@@ -8,6 +8,7 @@ define [
   class BoothVC extends VC
     events:
       "click [data-ui='artwork']": 'onClickArtwork'
+      "contextmenu [data-ui='artwork']": 'onClickArtwork'
       "click [data-ui='btnToggleFav']": 'onClickBtnToggleFav'
 
     onClickArtwork: (e)=>
@@ -67,7 +68,7 @@ define [
 
       
     onArtworksUpdate: ()=>
-      console.log "Artwork Updated"
+      console.log "Booth Artworks Updated"
       @renderArtworks()
 
     onArtworksAdd: (artwork)=>

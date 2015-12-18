@@ -25,7 +25,7 @@ define [
     path: 'me/session'
 
 
-  API.fetchArtworks = (opt,data,callback)=>
+  API.fetchArtworks = (data,callback,opt)=>
     if opt.from is 'konachan'
       api = create
         root: roots.konachan
@@ -36,18 +36,5 @@ define [
         path: 'photos/?client_id=b913958e7c261416a76d50da89193b5b7eccd8694fd94b3f274c970d2a6c833d'
     api(data,callback)
 
-
-  # API.fetchArtworks = (opt,data,callback)=>
-  #   console.error opt
-  #   console.error data
-  #   console.error callback
-  #   if opt.from is 'konachan'
-  #     do create
-  #       root: roots.konachan
-  #       path: 'post.json?limit=5&tags=hatsune_miku'
-  #   else if opt.from is 'unsplash'
-  #     do create
-  #       root: roots.unsplash
-  #       path: 'photos/?client_id=b913958e7c261416a76d50da89193b5b7eccd8694fd94b3f274c970d2a6c833d'
 
   return API

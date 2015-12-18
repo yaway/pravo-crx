@@ -42,7 +42,7 @@ define [
         console.debug "Will Fetch Local Artworks"
         chrome.storage.local.get 'artworks',(data)=>
           unless data.artworks
-            console.log 'No Local Artworks to Fetch'
+            console.log 'No Local Artworks Fetched'
           else
             rawArtworks = JSON.parse (data.artworks or {})
             # for rawArtwork in rawArtworks
@@ -54,12 +54,19 @@ define [
 
       else 
         console.debug "Will Fetch Server Artworks"
+        resetProtocol = (artwork)->
+          url = artwork.url 
+          thumb = artwork.thumb
+          artwork.url = url.replace /http\:/,"https:"
+          artwork.thumb = thumb.replace /http\:/,"https:"
+          return artwork
         if opt.from is "konachan"
           parseRawArtwork = (refArtwork)->
             artwork =
               id: refArtwork.id
               url: refArtwork.file_url
               thumb: refArtwork.preview_url
+            artwork = resetProtocol artwork
             return artwork
         else if opt.from is "unsplash"
           parseRawArtwork = (refArtwork)->
@@ -69,27 +76,23 @@ define [
               thumb: refArtwork.urls.thumb
             return artwork
 
+        apiCallback = (err,data)=>
+          refArtworks = []
+          rawArtworks = []
+          if data?.length > 0
+            refArtworks = data
+            for refArtwork in refArtworks
+              rawArtwork = parseRawArtwork refArtwork
+              rawArtworks.push rawArtwork
+
+            console.debug "Server Artworks Did Fetch:"
+            console.log rawArtworks
+
+            callback rawArtworks
+            @trigger "didFetchFromServer"
+              
         do (parseRawArtwork)=>
-
-          API.fetchArtworks {from:opt.from},{},(err,data)=>
-            refArtworks = []
-            rawArtworks = []
-            console.debug "Server RefArtworks:"
-            console.log data
-
-            if data?.length > 0
-              refArtworks = data
-              console.log refArtworks
-              for refArtwork in refArtworks
-                rawArtwork = parseRawArtwork refArtwork
-                rawArtworks.push rawArtwork
-
-              console.debug "Server Artworks Did Fetch:"
-              console.log rawArtworks
-
-              callback rawArtworks
-              @trigger "didFetchFromServer"
-
+          API.fetchArtworks {},apiCallback,{from:opt.from}
 
     loop: ()->
       if @length < 2

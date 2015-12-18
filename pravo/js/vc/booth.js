@@ -22,6 +22,7 @@
 
       BoothVC.prototype.events = {
         "click [data-ui='artwork']": 'onClickArtwork',
+        "contextmenu [data-ui='artwork']": 'onClickArtwork',
         "click [data-ui='btnToggleFav']": 'onClickBtnToggleFav'
       };
 
@@ -92,7 +93,7 @@
       };
 
       BoothVC.prototype.onArtworksUpdate = function() {
-        console.log("Artwork Updated");
+        console.log("Booth Artworks Updated");
         return this.renderArtworks();
       };
 

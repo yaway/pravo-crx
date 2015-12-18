@@ -15,10 +15,11 @@ require.config({
   }
 });
 
-require(['jquery', 'underscore', 'vc/dashboard'], function($, _, DashboardVC) {
+require(['jquery', 'underscore', 'vc/dashboard', 'found/utl'], function($, _, DashboardVC, UTL) {
   return $(function() {
     var dashboard;
     console.debug('Pravo!');
+    UTL.rebindContextMenu();
     dashboard = new DashboardVC({
       template: 'dashboard',
       position: 'append'

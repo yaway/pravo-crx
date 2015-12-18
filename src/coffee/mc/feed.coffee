@@ -7,7 +7,4 @@ define [
       name: ""
       isCurrent: false
 
-    initialize: ()->
-      console.log "New Feed"
-
   return Feed

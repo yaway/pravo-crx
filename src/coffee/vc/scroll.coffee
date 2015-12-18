@@ -14,18 +14,34 @@ define [
 
     initialize: (opt)->
       super(opt)
-      @model = new Scroll
+      @model ?= new Scroll
       if opt.direction
         @model.set 'direction',opt.direction
-      if opt.$target
-        @$target = opt.$target
-      else
-        @$target = @$el.children(':first')
 
+      if opt.$scrollee
+        @$scrollee = opt.$scrollee
+      else if @ui.$scrollee
+        @$scrollee = @ui.$scrollee
+      else
+        console.error 'No Scrollee'
       @render()
 
     update: ()->
       console.log "Scroll Rendered"
+      @setSize()
+
+    setSize: ()->
+      direction = @model.get 'direction'
+      scrollSize = 0
+      scrolleeSize = 0
+      if direction is 'h'
+        scrollSize = @$el.height()
+        scrolleeSize = @$scrollee.height()
+      else
+        scrollSize = @$el.width()
+        scrolleeSize = @$scrollee.width()+56
+      @model.set 'scrollSize',scrollSize
+      @model.set 'scrolleeSize',scrolleeSize
 
     scroll: (delta)->
       timer = @model.get 'timer'
@@ -38,25 +54,28 @@ define [
 
       scroll = ()=>
         distance = @model.get 'distance'
+        @model.trigger 'willChangeDisance'
         @model.set 'distance',distance+delta
         move()
 
       ease = ()=>
         @$el.addClass 'is-eased'
-        @model.set 'distance',(@model.get 'distance')+delta*2
+        @model.trigger 'willChangeDisance'
+        @model.set 'distance',(@model.get 'distance')+delta*4
         move()
 
       move = ()=>
         if (@model.get 'direction') is 'v'
-          @$target.css {"transform": "translateX(#{@model.get 'distance'}px)"}
+          @$scrollee.css {"transform": "translateX(#{@model.get 'distance'}px)"}
         else
-          @$target.css {"transform": "translateY(#{@model.get 'distance'}px)"}
+          @$scrollee.css {"transform": "translateY(#{@model.get 'distance'}px)"}
+      if @model.get 'isScrollable'
+        timer = setTimeout scroll, 10
+        easeTimer = setTimeout ease, 100
+        @model.set 'timer',timer
+        @model.set 'easeTimer',easeTimer
+      else
+        scroll()
 
-
-      timer = setTimeout scroll, 10
-
-      easeTimer = setTimeout ease, 100
-      @model.set 'timer',timer
-      @model.set 'easeTimer',easeTimer
 
   return ScrollVC

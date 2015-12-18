@@ -25,20 +25,41 @@
 
       ScrollVC.prototype.initialize = function(opt) {
         ScrollVC.__super__.initialize.call(this, opt);
-        this.model = new Scroll;
+        if (this.model == null) {
+          this.model = new Scroll;
+        }
         if (opt.direction) {
           this.model.set('direction', opt.direction);
         }
-        if (opt.$target) {
-          this.$target = opt.$target;
+        if (opt.$scrollee) {
+          this.$scrollee = opt.$scrollee;
+        } else if (this.ui.$scrollee) {
+          this.$scrollee = this.ui.$scrollee;
         } else {
-          this.$target = this.$el.children(':first');
+          console.error('No Scrollee');
         }
         return this.render();
       };
 
       ScrollVC.prototype.update = function() {
-        return console.log("Scroll Rendered");
+        console.log("Scroll Rendered");
+        return this.setSize();
+      };
+
+      ScrollVC.prototype.setSize = function() {
+        var direction, scrollSize, scrolleeSize;
+        direction = this.model.get('direction');
+        scrollSize = 0;
+        scrolleeSize = 0;
+        if (direction === 'h') {
+          scrollSize = this.$el.height();
+          scrolleeSize = this.$scrollee.height();
+        } else {
+          scrollSize = this.$el.width();
+          scrolleeSize = this.$scrollee.width() + 56;
+        }
+        this.model.set('scrollSize', scrollSize);
+        return this.model.set('scrolleeSize', scrolleeSize);
       };
 
       ScrollVC.prototype.scroll = function(delta) {
@@ -55,6 +76,7 @@
           return function() {
             var distance;
             distance = _this.model.get('distance');
+            _this.model.trigger('willChangeDisance');
             _this.model.set('distance', distance + delta);
             return move();
           };
@@ -62,27 +84,32 @@
         ease = (function(_this) {
           return function() {
             _this.$el.addClass('is-eased');
-            _this.model.set('distance', (_this.model.get('distance')) + delta * 2);
+            _this.model.trigger('willChangeDisance');
+            _this.model.set('distance', (_this.model.get('distance')) + delta * 4);
             return move();
           };
         })(this);
         move = (function(_this) {
           return function() {
             if ((_this.model.get('direction')) === 'v') {
-              return _this.$target.css({
+              return _this.$scrollee.css({
                 "transform": "translateX(" + (_this.model.get('distance')) + "px)"
               });
             } else {
-              return _this.$target.css({
+              return _this.$scrollee.css({
                 "transform": "translateY(" + (_this.model.get('distance')) + "px)"
               });
             }
           };
         })(this);
-        timer = setTimeout(scroll, 10);
-        easeTimer = setTimeout(ease, 100);
-        this.model.set('timer', timer);
-        return this.model.set('easeTimer', easeTimer);
+        if (this.model.get('isScrollable')) {
+          timer = setTimeout(scroll, 10);
+          easeTimer = setTimeout(ease, 100);
+          this.model.set('timer', timer);
+          return this.model.set('easeTimer', easeTimer);
+        } else {
+          return scroll();
+        }
       };
 
       return ScrollVC;

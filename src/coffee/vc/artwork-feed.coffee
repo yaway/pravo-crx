@@ -1,7 +1,7 @@
 define [
   'found/vc'
 ],(VC)->
-  class ArtworkFeedVC extends VC
+  class ArtworkFeed extends VC
     events:
       'click': 'onClick'
     onClick: ()=>
@@ -9,20 +9,6 @@ define [
       @model.set 'isCurrent',true
     initialize: (opt)->
       super(opt)
-      @model.on
-        'change:isCurrent': @onChangeIsCurrent
       @render()
 
-    onChangeIsChosen: ()=>
-      @updateStateChosen()
-
-    updateStateChosen: ()->
-      if (@model.get 'isChosen')
-        @$el.addClass 'is-chosen'
-      else
-        @$el.removeClass 'is-chosen'
-
-    update: ()->
-      @updateStateChosen()
-
-  return ArtworkFeedVC
+  return ArtworkFeed

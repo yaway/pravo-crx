@@ -15,9 +15,11 @@ require [
   'jquery'
   'underscore'
   'vc/dashboard'
-], ($,_,DashboardVC)->
+  'found/utl'
+], ($,_,DashboardVC,UTL)->
   $ ()->
     console.debug 'Pravo!'
+    UTL.rebindContextMenu()
     dashboard = new DashboardVC
       template: 'dashboard'
       position: 'append'

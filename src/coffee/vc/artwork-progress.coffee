@@ -1,0 +1,62 @@
+define [
+  'found/vc'
+  'mc/progress'
+  'vc/m-circular-progress'
+],(VC,Progress,MCircularProgressVC)->
+  class ArtworkProgress extends VC
+    initialize: (opt)->
+      opt ?= {}
+      super(opt)
+
+      if not opt.artworks
+        console.log "No Artwork to Load"
+        return
+
+      @artworks = opt.artworks
+
+      @model ?= new Progress
+      @model.set 'total',@artworks.length
+      @model.on
+        'change:isDone': (m,v)=>
+          if v
+            @$el.addClass 'is-done'
+          else
+            @$el.removeClass 'is-done'
+
+      @loadArtworks()
+      @render()
+
+    update: ()->
+      console.log 'Artwork Progress Rendered'
+
+    loadArtworks: ()->
+      if (@model.get 'artworkType') is 'src'
+        srcKey = 'src'
+      else if (@model.get 'artworkType') is 'thumb'
+        srcKey = 'thumb'
+      else
+        return
+
+      iteratee = (artwork,i)=>
+        artwork.set 'isLoaded',false
+        img = new Image
+        img.src = artwork.get srcKey
+
+        onLoadImg = ()=>
+          artwork.set 'isLoaded',true
+          console.log "Artwork #{artwork.get 'id'} Loaded"
+          dones = @artworks.where
+            isLoaded: true
+
+          @model.set 'done',dones.length
+
+          if dones.length is (@model.get 'total')
+            console.log 'All Artworks Loaded'
+            @model.set 'isDone',true
+
+        img.onload = onLoadImg
+
+      @artworks.forEach iteratee
+
+
+  return ArtworkProgress

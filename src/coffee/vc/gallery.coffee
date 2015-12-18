@@ -19,19 +19,14 @@ define [
       @boothVC.on
         "didClickArtwork": ()=>
           console.log 'Booth Artwork Clicked'
-          # @receiptVC.model.set 'isUnfolded',false
-        "didChangeCurrentArtwork": ()=>
-          @trigger 'didChangeCurrentArtwork'
-        "didRenderArtworks": ()=>
-          @trigger 'didRenderArtworks'
 
       @receiptVC.on
         "didChooseArtwork": (artwork)=>
           @boothVC.artworks.add artwork
-        "didUpdate": ()=>
-          @receiptVC.artworks.remove (@boothVC.artworks.pluck 'id')
         "didUnfoldDrawer": ()=>
           @boothVC.$el.addClass 'blur'
+        "didFoldDrawer": ()=>
+          @boothVC.$el.removeClass 'blur'
 
       @trigger 'didUpdateGallery'
 

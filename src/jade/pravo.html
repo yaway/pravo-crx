@@ -3,7 +3,7 @@
   <head>
     <title>Pravo!</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <script src="../js/lib/require.js" data-main="../js/pravo"></script>
+    <script src="../../bower_components/requirejs/require.js" data-main="../js/pravo"></script>
     <link rel="stylesheet" href="../css/pravo.css">
     <template data-tpl="artwork">
       <li data-ui="artwork" class="artwork"><img data-ui="img" src="&lt;%- src %&gt;" class="img"></li>
@@ -18,15 +18,22 @@
       <div data-ui="gallery" class="layer-gallery">
         <div data-ui="booth" class="layer-booth">
           <ul data-ui="artworkList" class="layer-artworks"></ul>
-          <div class="layer-btns"><b data-ui="btnFav" class="btn btn-favorite"><span data-glyph="heart" title="heart" aria-hidden="true" class="oi"></span></b></div>
+          <div class="layer-btns"><b data-ui="btnToggleFav" class="m-fa-btn btn-favorite"><i data-ui="icoToggleFav" class="m-ico">bookmark</i></b></div>
         </div>
-        <div data-ui="receipt" class="layer-receipt">
-          <div class="panel">
-            <div class="scroll">
-              <ul data-ui="artworkList" class="artwork-list"></ul>
-            </div><b data-ui="btnToggleFeedList" class="btn btn-toggle-feed-list"><span data-glyph="menu" title="menu" aria-hidden="true" class="oi"></span></b>
-            <ul data-ui="feedList" class="feed-list"></ul>
-          </div><b data-ui="btnTogglePanel" class="m-fa-btn btn-toggle-panel"><i class="m-ico">face</i></b>
+        <div data-ui="receipt" class="layer-receipt is-morphed">
+          <div class="drawer"><b data-ui="btnUnfoldDrawer" class="m-fa-btn"><i class="m-ico">collections</i></b>
+            <div class="panel">
+              <div data-ui="scroll" class="scroll">
+                <ul data-ui="artworkList" class="artwork-list scrollee"></ul>
+              </div>
+              <div class="toolbar">
+                <div data-ui="toobarTitle" class="title"><span data-ui="feedName" class="name"></span><i class="m-ico">arrow_drop_down</i>
+                  <ul data-ui="feedList" class="feed-list"></ul>
+                </div>
+                <div class="space"></div><b data-ui="btnFoldDrawer" class="m-i-btn"><i class="m-ico">close</i></b>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </template>
@@ -41,6 +48,9 @@
         <div data-ui="gallery" class="ui-root"></div>
         <div data-ui="clock" class="ui-root"></div>
       </div>
+    </template>
+    <template data-tpl="mLinearProgress">
+      <div class="m-linear-progress"></div>
     </template>
   </head>
   <body>

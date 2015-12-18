@@ -29,16 +29,6 @@
             return function() {
               return console.log('Booth Artwork Clicked');
             };
-          })(this),
-          "didChangeCurrentArtwork": (function(_this) {
-            return function() {
-              return _this.trigger('didChangeCurrentArtwork');
-            };
-          })(this),
-          "didRenderArtworks": (function(_this) {
-            return function() {
-              return _this.trigger('didRenderArtworks');
-            };
           })(this)
         });
         this.receiptVC.on({
@@ -47,14 +37,14 @@
               return _this.boothVC.artworks.add(artwork);
             };
           })(this),
-          "didUpdate": (function(_this) {
-            return function() {
-              return _this.receiptVC.artworks.remove(_this.boothVC.artworks.pluck('id'));
-            };
-          })(this),
           "didUnfoldDrawer": (function(_this) {
             return function() {
               return _this.boothVC.$el.addClass('blur');
+            };
+          })(this),
+          "didFoldDrawer": (function(_this) {
+            return function() {
+              return _this.boothVC.$el.removeClass('blur');
             };
           })(this)
         });

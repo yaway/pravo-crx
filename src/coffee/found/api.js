@@ -18,7 +18,7 @@ define(['found/api-factory'], function(APIFactory) {
     path: 'me/session'
   });
   API.fetchArtworks = (function(_this) {
-    return function(opt, data, callback) {
+    return function(data, callback, opt) {
       var api;
       if (opt.from === 'konachan') {
         api = create({

@@ -11,8 +11,10 @@ define [
       @on
         'willChangeIsCurrent': ()=>
           @allSet 'isCurrent',false
-        'change': (feed)=>
-          if feed.get 'isCurrent'
+
+        'change:isCurrent': (m,v)=>
+          if v
+            @trigger 'didChangeIsCurrent'
             @save()
 
     save: (opt)->
@@ -27,7 +29,7 @@ define [
           rawData = JSON.parse data.feeds
         else
           rawData = []
-        console.debug "Local Artworks Did Fetch:"
+        console.debug "Local Feeds Did Fetch:"
         console.log rawData
         callback rawData
         @trigger "didFetch"

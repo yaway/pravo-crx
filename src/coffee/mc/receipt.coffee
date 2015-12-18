@@ -3,9 +3,13 @@ define [
 ],(M)->
   class Receipt extends M
     defaults:
-      "hasArtworks": false
       "isUnfolded": false
       "isFeedListUnfolded": false
+      "isArtworksUpdated": false
+      "isArtworksLoaded": false
+      "isArtworksRendered": false
+      "isFeedsUpdated": false
+      "hasArtworks": false
 
     initialize: ()->
       console.log "New Receipt"
