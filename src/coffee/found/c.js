@@ -17,13 +17,18 @@ define(['backbone'], function(Backbone) {
       });
     };
 
-    C.prototype.allSet = function(attrs) {
+    C.prototype.allSet = function(attrs, opt) {
       var i, len, model, ref, results;
+      if (opt == null) {
+        opt = {};
+      }
       ref = this.models;
       results = [];
       for (i = 0, len = ref.length; i < len; i++) {
         model = ref[i];
-        results.push(model.set(attrs));
+        results.push(model.set(attrs, {
+          silent: true
+        }));
       }
       return results;
     };

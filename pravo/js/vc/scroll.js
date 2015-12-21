@@ -43,10 +43,10 @@
 
       ScrollVC.prototype.update = function() {
         console.log("Scroll Rendered");
-        return this.setSize();
+        return this.resize();
       };
 
-      ScrollVC.prototype.setSize = function() {
+      ScrollVC.prototype.resize = function() {
         var direction, scrollSize, scrolleeSize;
         direction = this.model.get('direction');
         scrollSize = 0;

@@ -28,9 +28,9 @@ define [
 
     update: ()->
       console.log "Scroll Rendered"
-      @setSize()
+      @resize()
 
-    setSize: ()->
+    resize: ()->
       direction = @model.get 'direction'
       scrollSize = 0
       scrolleeSize = 0

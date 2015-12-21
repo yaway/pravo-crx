@@ -20,7 +20,7 @@
           <ul data-ui="artworkList" class="layer-artworks"></ul>
           <div class="layer-btns"><b data-ui="btnToggleFav" class="m-fa-btn btn-favorite"><i data-ui="icoToggleFav" class="m-ico">bookmark</i></b></div>
         </div>
-        <div data-ui="receipt" class="layer-receipt is-morphed has-linear-progress">
+        <div data-ui="receipt" class="layer-receipt">
           <div data-ui="drawer" class="drawer">
             <div class="container"><b data-ui="btnUnfoldDrawer" class="m-fa-btn"><i class="m-ico">collections</i></b>
               <div class="panel">
@@ -45,23 +45,11 @@
         <div data-ui="date" class="date"></div>
       </div>
     </template>
-    <template data-tpl="dashboard">
-      <div data-ui="dashboard" class="layer-dashboard">
-        <div data-ui="gallery" class="ui-root"></div>
-        <div data-ui="clock" class="ui-root"></div>
-      </div>
-    </template>
-    <template data-tpl="mLinearProgress">
-      <div class="m-linear-progress"></div>
-    </template>
-    <template data-tpl="mCircularProgress">
-      <div data-ui="mCircularProgress" class="m-circuler-progress">
-        <svg class="svg">
-          <circle data-ui="circle" class="circle"></circle>
-        </svg>
-      </div>
-    </template>
   </head>
   <body>
+    <div data-ui="dashboard" class="layer-dashboard">
+      <div data-ui="gallery" class="ui-root"></div>
+      <div data-ui="clock" class="ui-root"></div>
+    </div>
   </body>
 </html>

@@ -19,11 +19,12 @@ require [
 ], ($,_,DashboardVC,UTL)->
   $ ()->
     console.debug 'Pravo!'
+    
     UTL.rebindContextMenu()
-    dashboard = new DashboardVC
-      template: 'dashboard'
-      position: 'append'
 
     window.Pravo = {}
     Pravo.cleanLocalArtworks = ()->
       dashboard.gallery.artworks.save {only: 'nil'}
+
+    dashboard = new DashboardVC
+      $root: $('[data-ui="dashboard"]')

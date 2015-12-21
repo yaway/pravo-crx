@@ -7,8 +7,6 @@ define [
       "id": undefined
       "idAttribute": "id"
       "url": ''
-      # "root": "../../img/artwork"
-      # "path": "0.png"
       "src": ''
       "thumb": ''
       "willBeCurrent": false

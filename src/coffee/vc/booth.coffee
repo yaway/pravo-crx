@@ -103,7 +103,7 @@ define [
         console.log "No Artworks to Render"
         return
 
-      console.log "#{@artworks.length} Booth Artworks Rendered"
+      console.debug "#{@artworks.length} Booth Artworks Rendered"
 
       @model.set 'hasArtworks',true
       for artwork in @artworks.models

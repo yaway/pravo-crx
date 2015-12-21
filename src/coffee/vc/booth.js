@@ -138,7 +138,7 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/booth', 'vc/artwork'], func
         console.log("No Artworks to Render");
         return;
       }
-      console.log(this.artworks.length + " Booth Artworks Rendered");
+      console.debug(this.artworks.length + " Booth Artworks Rendered");
       this.model.set('hasArtworks', true);
       ref = this.artworks.models;
       for (i = 0, len = ref.length; i < len; i++) {

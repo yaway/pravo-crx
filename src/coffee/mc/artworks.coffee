@@ -33,8 +33,6 @@ define [
         console.log rawArtworks
 
     fetch: (opt)->
-      console.debug 'Will Fetch Artworks'
-      
       rawArtworks = []
       callback = opt.callback or ((data)-> return data)
 
@@ -47,11 +45,10 @@ define [
             rawArtworks = JSON.parse (data.artworks or {})
             # for rawArtwork in rawArtworks
               # @add rawArtwork
-            console.debug "Local Artworks Did Fetch:"
+            console.debug "#{rawArtworks.length} Local Artworks Fetched:"
             console.log rawArtworks
             callback rawArtworks
             @trigger "didFetchFromLocal"
-
       else 
         console.debug "Will Fetch Server Artworks"
         resetProtocol = (artwork)->
@@ -60,6 +57,7 @@ define [
           artwork.url = url.replace /http\:/,"https:"
           artwork.thumb = thumb.replace /http\:/,"https:"
           return artwork
+          
         if opt.from is "konachan"
           parseRawArtwork = (refArtwork)->
             artwork =
@@ -85,9 +83,8 @@ define [
               rawArtwork = parseRawArtwork refArtwork
               rawArtworks.push rawArtwork
 
-            console.debug "Server Artworks Did Fetch:"
+            console.debug "#{rawArtworks.length} Server Artworks Fetched:"
             console.log rawArtworks
-
             callback rawArtworks
             @trigger "didFetchFromServer"
               

@@ -10,11 +10,11 @@ define [
       console.log "New Feeds"
       @on
         'willChangeIsCurrent': ()=>
-          @allSet 'isCurrent',false
+          @allSet 'isCurrent',false,{silent: true}
 
         'change:isCurrent': (m,v)=>
+          console.error v
           if v
-            @trigger 'didChangeIsCurrent'
             @save()
 
     save: (opt)->
@@ -29,8 +29,7 @@ define [
           rawData = JSON.parse data.feeds
         else
           rawData = []
-        console.debug "Local Feeds Did Fetch:"
-        console.log rawData
+        console.debug "#{rawData.length} Local Feeds Fetched"
         callback rawData
         @trigger "didFetch"
 

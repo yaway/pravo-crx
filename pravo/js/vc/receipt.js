@@ -27,21 +27,22 @@
       ReceiptVC.prototype.onClickBtnFoldDrawer = function(e) {
         console.log('BtnFoldDrawer Clicked');
         e.stopPropagation();
-        return this.model.set('isUnfolded', false);
+        return this.model.set('isDrawerUnfolded', false);
       };
 
       ReceiptVC.prototype.onClickBtnUnfoldDrawer = function(e) {
         console.log('BtnUnfoldDrawer Clicked');
         e.stopPropagation();
-        return this.model.set('isUnfolded', true);
+        return this.model.set('isDrawerUnfolded', true);
       };
 
       ReceiptVC.prototype.onMorphBtnUnfoldDrawer = function(e) {
         console.log('BtnUnfoldDrawer Morphed');
         if (this.$el.hasClass('is-unfolded')) {
-          return;
+          return this.$el.addClass('is-morphing');
+        } else {
+          return this.$el.removeClass('is-morphing');
         }
-        return this.$el.addClass('is-morphed');
       };
 
       ReceiptVC.prototype.onClickToolbarTitle = function(e) {
@@ -54,23 +55,54 @@
         ReceiptVC.__super__.initialize.call(this, opt);
         this.model = new Receipt;
         this.model.on({
-          'change:hasArtworks': (function(_this) {
+          'change:isFeedsUpdated': (function(_this) {
             return function(m, v) {
               if (v) {
-                return _this.$el.addClass('has-artworks');
-              } else {
-                return _this.$el.removeClass('has-artworks');
+                _this.renderFeeds();
+                _this.updateArtworks();
+                _this.model.set('isFeedListUnfolded', false);
+                return _this.model.set('isFeedsUpdated', false);
               }
             };
           })(this),
-          'change:isUnfolded': (function(_this) {
+          'change:isRendered': (function(_this) {
             return function(m, v) {
               if (v) {
-                _this.unfoldDrawer();
-                _this.scrollVC.setSize();
+                if (_this.model.get('isArtworksInitialized')) {
+                  return _this.$el.addClass('has-artworks');
+                } else {
+                  return _this.$el.removeClass('has-artworks');
+                }
+              }
+            };
+          })(this),
+          'change:isArtworksUpdated': (function(_this) {
+            return function(m, v) {
+              if (v) {
+                _this.artworkProgressVC.load();
+                _this.model.set('hasArtworks', true);
+                return _this.model.set('isArtworksUpdated', false);
+              }
+            };
+          })(this),
+          'change:isArtworksLoaded': (function(_this) {
+            return function(m, v) {
+              if (v) {
+                _this.renderArtworks();
+                _this.scrollVC.resize();
+                return _this.model.set('isArtworksLoaded', false);
+              }
+            };
+          })(this),
+          'change:isDrawerUnfolded': (function(_this) {
+            return function(m, v) {
+              if (v) {
+                _this.$el.addClass('is-unfolded');
+                _this.artworkProgressVC.load();
+                _this.scrollVC.resize();
                 return _this.model.set('isFeedListUnfolded', false);
               } else {
-                return _this.foldDrawer();
+                return _this.$el.removeClass('is-unfolded');
               }
             };
           })(this),
@@ -82,52 +114,18 @@
                 return _this.$el.removeClass('is-feed-list-unfolded');
               }
             };
-          })(this),
-          'change:isFeedsUpdated': (function(_this) {
-            return function(m, v) {
-              if (v) {
-                _this.renderFeeds();
-                _this.initializeArtworks();
-                _this.model.set('isFeedListUnfolded', false);
-                return _this.model.set('isFeedsUpdated', false);
-              }
-            };
-          })(this),
-          'change:isArtworksUpdated': (function(_this) {
-            return function(m, v) {
-              if (v) {
-                _this.model.set('hasArtworks', true);
-                _this.renderArtworkProgress();
-                return _this.model.set('isArtworksUpdated', false);
-              }
-            };
-          })(this),
-          'change:isArtworksLoaded': (function(_this) {
-            return function(m, v) {
-              if (v) {
-                _this.renderArtworks();
-                _this.scrollVC.setSize();
-                return _this.model.set('isArtworksLoaded', false);
-              }
-            };
           })(this)
         });
         this.initializeFeeds();
+        this.initializeArtworks();
         return this.render();
-      };
-
-      ReceiptVC.prototype.unfoldDrawer = function() {
-        this.$el.addClass('is-unfolded');
-        return this.$el.removeClass('is-morphed');
-      };
-
-      ReceiptVC.prototype.foldDrawer = function() {
-        return this.$el.removeClass('is-unfolded');
       };
 
       ReceiptVC.prototype.update = function() {
         console.log("Receipt Rendered");
-        return this.renderScroll();
+        this.renderScroll();
+        this.renderArtworkProgress();
+        return this.model.set('isRendered', true);
       };
 
       ReceiptVC.prototype.initializeFeeds = function() {
@@ -141,22 +139,14 @@
           }
         ];
         this.feeds = new Feeds;
-        this.feeds.on({
-          'didChangeIsCurrent': (function(_this) {
-            return function(v) {
-              return _this.model.set("isFeedsUpdated", true);
-            };
-          })(this)
-        });
         return this.feeds.fetch({
           callback: (function(_this) {
             return function(rawFeeds) {
               if (rawFeeds.length === 0) {
-                _this.feeds.reset(alterFeeds);
+                return _this.feeds.add(alterFeeds);
               } else {
-                _this.feeds.reset(rawFeeds);
+                return _this.feeds.add(rawFeeds);
               }
-              return _this.model.set("isFeedsUpdated", true);
             };
           })(this)
         });
@@ -185,15 +175,7 @@
         }
       };
 
-      ReceiptVC.prototype.initializeArtworks = function(opt) {
-        var feed, feedName;
-        if (opt == null) {
-          opt = {};
-        }
-        feed = opt.feed || this.feeds.findWhere({
-          'isCurrent': true
-        });
-        feedName = feed.get('name');
+      ReceiptVC.prototype.initializeArtworks = function() {
         this.artworks = new Artworks;
         this.artworks.on({
           'update': (function(_this) {
@@ -202,6 +184,19 @@
             };
           })(this)
         });
+        return this.model.set('isArtworksInitialized', true);
+      };
+
+      ReceiptVC.prototype.updateArtworks = function(opt) {
+        var feed, feedName;
+        if (opt == null) {
+          opt = {};
+        }
+        feed = opt.feed || this.feeds.findWhere({
+          isCurrent: true
+        });
+        console.error(feed);
+        feedName = feed.get('name');
         return this.artworks.fetch({
           from: feedName,
           callback: (function(_this) {
@@ -217,9 +212,8 @@
           console.log("No Artworks to Render");
           return;
         }
-        console.log(this.artworks.length + " Receipt Artworks Rendered");
         this.ui.$artworkList.empty();
-        return this.artworks.each((function(_this) {
+        this.artworks.each((function(_this) {
           return function(artwork) {
             var artworkVC;
             return artworkVC = new ArtworkThumbnailVC({
@@ -230,6 +224,7 @@
             });
           };
         })(this));
+        return console.debug(this.artworks.length + " Receipt Artworks Rendered");
       };
 
       ReceiptVC.prototype.renderScroll = function() {
@@ -245,6 +240,7 @@
 
       ReceiptVC.prototype.renderArtworkProgress = function(opt) {
         var template;
+        console.log('Artwork Progress Rendered');
         if (opt == null) {
           opt = {};
         }
@@ -256,28 +252,34 @@
         } else if (opt.indicatorType === 'circular') {
           template = 'mCircularProgress';
         }
-        this.progress = new Progress({
-          artworkType: 'thumb',
-          indicatorType: opt.indicatorType
-        });
+        if (this.progress == null) {
+          this.progress = new Progress({
+            artworkType: 'thumb',
+            indicatorType: opt.indicatorType
+          });
+        }
         this.progress.on({
           'change:isDone': (function(_this) {
             return function(m, v) {
               if (v) {
-                _this.model.set('isArtworksLoaded', true);
-                return _this.progress.set('isDone', false);
+                console.error(v);
+                return _this.model.set('isArtworksLoaded', true);
               }
             };
           })(this)
         });
-        this.artworkProgressVC = new ArtworkProgressVC({
-          $root: this.ui.$drawer,
-          model: this.progress,
-          artworks: this.artworks,
-          template: template,
-          position: 'prepend'
-        });
-        return this.artworkProgressVC.$el.addClass('top');
+        this.progress.set('isDone', false);
+        if (this.artworkProgressVC == null) {
+          this.artworkProgressVC = new ArtworkProgressVC({
+            $root: this.ui.$drawer,
+            model: this.progress,
+            artworks: this.artworks,
+            template: template,
+            position: 'prepend'
+          });
+        }
+        this.artworkProgressVC.$el.addClass('top');
+        return this.artworkProgressVC.load();
       };
 
       ReceiptVC.prototype.updateBC = function() {

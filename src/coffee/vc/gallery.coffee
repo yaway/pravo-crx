@@ -28,7 +28,5 @@ define [
         "didFoldDrawer": ()=>
           @boothVC.$el.removeClass 'blur'
 
-      @trigger 'didUpdateGallery'
-
 
   return GalleryVC

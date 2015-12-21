@@ -11,11 +11,14 @@ define(['backbone'], function(Backbone) {
       return M.__super__.constructor.apply(this, arguments);
     }
 
-    M.prototype.toggle = function(attr) {
+    M.prototype.toggle = function(attr, opt) {
+      if (opt == null) {
+        opt = {};
+      }
       if (this.get(attr)) {
-        return this.set(attr, false);
+        return this.set(attr, false, opt);
       } else {
-        return this.set(attr, true);
+        return this.set(attr, true, opt);
       }
     };
 

@@ -15,7 +15,6 @@ define [
       @artworks = opt.artworks
 
       @model ?= new Progress
-      @model.set 'total',@artworks.length
       @model.on
         'change:isDone': (m,v)=>
           if v
@@ -23,19 +22,22 @@ define [
           else
             @$el.removeClass 'is-done'
 
-      @loadArtworks()
       @render()
 
     update: ()->
       console.log 'Artwork Progress Rendered'
 
-    loadArtworks: ()->
+    load: ()->
       if (@model.get 'artworkType') is 'src'
         srcKey = 'src'
       else if (@model.get 'artworkType') is 'thumb'
         srcKey = 'thumb'
       else
         return
+
+      total = @artworks.length
+      @model.set 'total',total
+
 
       iteratee = (artwork,i)=>
         artwork.set 'isLoaded',false
@@ -44,13 +46,12 @@ define [
 
         onLoadImg = ()=>
           artwork.set 'isLoaded',true
-          console.log "Artwork #{artwork.get 'id'} Loaded"
           dones = @artworks.where
             isLoaded: true
 
           @model.set 'done',dones.length
 
-          if dones.length is (@model.get 'total')
+          if dones.length is total
             console.log 'All Artworks Loaded'
             @model.set 'isDone',true
 

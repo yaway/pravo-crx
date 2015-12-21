@@ -59,7 +59,6 @@ define(['found/c', 'mc/artwork', 'found/api', 'found/utl'], function(C, Artwork,
 
     Artworks.prototype.fetch = function(opt) {
       var apiCallback, callback, parseRawArtwork, rawArtworks, resetProtocol;
-      console.debug('Will Fetch Artworks');
       rawArtworks = [];
       callback = opt.callback || (function(data) {
         return data;
@@ -72,7 +71,7 @@ define(['found/c', 'mc/artwork', 'found/api', 'found/utl'], function(C, Artwork,
               return console.log('No Local Artworks Fetched');
             } else {
               rawArtworks = JSON.parse(data.artworks || {});
-              console.debug("Local Artworks Did Fetch:");
+              console.debug(rawArtworks.length + " Local Artworks Fetched:");
               console.log(rawArtworks);
               callback(rawArtworks);
               return _this.trigger("didFetchFromLocal");
@@ -123,7 +122,7 @@ define(['found/c', 'mc/artwork', 'found/api', 'found/utl'], function(C, Artwork,
                 rawArtwork = parseRawArtwork(refArtwork);
                 rawArtworks.push(rawArtwork);
               }
-              console.debug("Server Artworks Did Fetch:");
+              console.debug(rawArtworks.length + " Server Artworks Fetched:");
               console.log(rawArtworks);
               callback(rawArtworks);
               return _this.trigger("didFetchFromServer");

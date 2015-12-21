@@ -55,5 +55,7 @@ define [
   Utl.rebindContextMenu = ()->
     $(document).on 'contextmenu',(e)->
       e.preventDefault()
+      e.stopPropagation()
+      return false
 
   return Utl

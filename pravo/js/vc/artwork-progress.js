@@ -24,7 +24,6 @@
         if (this.model == null) {
           this.model = new Progress;
         }
-        this.model.set('total', this.artworks.length);
         this.model.on({
           'change:isDone': (function(_this) {
             return function(m, v) {
@@ -36,7 +35,6 @@
             };
           })(this)
         });
-        this.loadArtworks();
         return this.render();
       };
 
@@ -44,8 +42,8 @@
         return console.log('Artwork Progress Rendered');
       };
 
-      ArtworkProgress.prototype.loadArtworks = function() {
-        var iteratee, srcKey;
+      ArtworkProgress.prototype.load = function() {
+        var iteratee, srcKey, total;
         if ((this.model.get('artworkType')) === 'src') {
           srcKey = 'src';
         } else if ((this.model.get('artworkType')) === 'thumb') {
@@ -53,6 +51,8 @@
         } else {
           return;
         }
+        total = this.artworks.length;
+        this.model.set('total', total);
         iteratee = (function(_this) {
           return function(artwork, i) {
             var img, onLoadImg;
@@ -62,12 +62,11 @@
             onLoadImg = function() {
               var dones;
               artwork.set('isLoaded', true);
-              console.log("Artwork " + (artwork.get('id')) + " Loaded");
               dones = _this.artworks.where({
                 isLoaded: true
               });
               _this.model.set('done', dones.length);
-              if (dones.length === (_this.model.get('total'))) {
+              if (dones.length === total) {
                 console.log('All Artworks Loaded');
                 return _this.model.set('isDone', true);
               }

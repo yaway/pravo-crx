@@ -31,7 +31,7 @@ define(['found/vc', 'vc/booth', 'vc/receipt'], function(VC, BoothVC, ReceiptVC) 
           };
         })(this)
       });
-      this.receiptVC.on({
+      return this.receiptVC.on({
         "didChooseArtwork": (function(_this) {
           return function(artwork) {
             return _this.boothVC.artworks.add(artwork);
@@ -48,7 +48,6 @@ define(['found/vc', 'vc/booth', 'vc/receipt'], function(VC, BoothVC, ReceiptVC) 
           };
         })(this)
       });
-      return this.trigger('didUpdateGallery');
     };
 
     return GalleryVC;

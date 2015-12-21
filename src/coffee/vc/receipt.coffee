@@ -37,18 +37,19 @@ define [
     onClickBtnFoldDrawer: (e)=>
       console.log 'BtnFoldDrawer Clicked'
       e.stopPropagation()
-      @model.set 'isUnfolded',false
+      @model.set 'isDrawerUnfolded',false
 
     onClickBtnUnfoldDrawer: (e)=>
       console.log 'BtnUnfoldDrawer Clicked'
       e.stopPropagation()
-      @model.set 'isUnfolded',true
+      @model.set 'isDrawerUnfolded',true
 
     onMorphBtnUnfoldDrawer: (e)=>
       console.log 'BtnUnfoldDrawer Morphed'
       if @$el.hasClass 'is-unfolded'
-        return
-      @$el.addClass 'is-morphed'
+        @$el.addClass 'is-morphing'
+      else
+        @$el.removeClass 'is-morphing'
 
     onClickToolbarTitle: (e)=>
       console.log 'ToolbarTitle Clicked'
@@ -59,20 +60,41 @@ define [
       super(opt)
 
       @model = new Receipt
-      @model.on
-        'change:hasArtworks': (m,v)=>
-          if v
-            @$el.addClass 'has-artworks'
-          else
-            @$el.removeClass 'has-artworks'
 
-        'change:isUnfolded': (m,v)=>
+      @model.on
+        'change:isFeedsUpdated': (m,v)=>
           if v
-            @unfoldDrawer()
-            @scrollVC.setSize()
+            @renderFeeds()
+            @updateArtworks()
+            @model.set 'isFeedListUnfolded',false
+            @model.set 'isFeedsUpdated',false
+
+        'change:isRendered': (m,v)=>
+          if v
+            if @model.get 'isArtworksInitialized'
+              @$el.addClass 'has-artworks'
+            else@$el.removeClass 'has-artworks'
+
+        'change:isArtworksUpdated': (m,v)=>
+          if v
+            @artworkProgressVC.load()
+            @model.set 'hasArtworks',true
+            @model.set 'isArtworksUpdated',false
+
+        'change:isArtworksLoaded': (m,v)=>
+          if v
+            @renderArtworks()
+            @scrollVC.resize()
+            @model.set 'isArtworksLoaded',false
+
+        'change:isDrawerUnfolded': (m,v)=>
+          if v
+            @$el.addClass 'is-unfolded'
+            @artworkProgressVC.load()
+            @scrollVC.resize()
             @model.set 'isFeedListUnfolded',false
           else
-            @foldDrawer()
+            @$el.removeClass 'is-unfolded'
 
         'change:isFeedListUnfolded': (m,v)=>
           if v
@@ -80,57 +102,37 @@ define [
           else
             @$el.removeClass 'is-feed-list-unfolded'
 
-        'change:isFeedsUpdated': (m,v)=>
-          if v
-            @renderFeeds()
-            @initializeArtworks()
-            @model.set 'isFeedListUnfolded',false
-            @model.set 'isFeedsUpdated',false
-
-        'change:isArtworksUpdated': (m,v)=>
-          if v
-            @model.set 'hasArtworks',true
-            @renderArtworkProgress()
-            @model.set 'isArtworksUpdated',false
-
-        'change:isArtworksLoaded': (m,v)=>
-          if v
-            @renderArtworks()
-            @scrollVC.setSize()
-            @model.set 'isArtworksLoaded',false
-
       @initializeFeeds()
+      @initializeArtworks()
 
       @render()
-
-    unfoldDrawer: ()->
-      @$el.addClass 'is-unfolded'
-      @$el.removeClass 'is-morphed'
-    foldDrawer: ()->
-      @$el.removeClass 'is-unfolded'
 
     update: ()->
       console.log "Receipt Rendered"
 
       @renderScroll()
+      @renderArtworkProgress()
+
+      @model.set 'isRendered',true
 
       # @updateBC()
-      # @model.set 'isUnfolded',true
+      # @model.set 'isDrawerUnfolded',true
 
     initializeFeeds: ()=>
       alterFeeds = [{name: "unsplash",isCurrent: true},{name: "konachan"}]
       @feeds = new Feeds
-      @feeds.on
-        'didChangeIsCurrent': (v)=>
-          @model.set "isFeedsUpdated",true
+      # @feeds.on
+      #   'update': ()=>
+      #     @model.set "isFeedsUpdated",true
+        # 'change': ()=>
+        #   @model.set "isFeedsUpdated",true
 
       @feeds.fetch
         callback: (rawFeeds)=>
           if rawFeeds.length is 0
-            @feeds.reset alterFeeds
+            @feeds.add alterFeeds
           else
-            @feeds.reset rawFeeds
-          @model.set "isFeedsUpdated",true
+            @feeds.add rawFeeds
 
     renderFeeds: ()->
       @ui.$feedList.empty()
@@ -149,16 +151,18 @@ define [
       if currentFeed
         @ui.$feedName.text (currentFeed.get 'name')
 
-    initializeArtworks: (opt)->
-      opt ?= {}
-      feed = opt.feed or @feeds.findWhere({'isCurrent':true})
-      feedName = feed.get 'name'
-
+    initializeArtworks: ()->
       @artworks = new Artworks
       @artworks.on
         'update': ()=>
           @model.set 'isArtworksUpdated',true
+      @model.set 'isArtworksInitialized',true
 
+    updateArtworks: (opt)->
+      opt ?= {}
+      feed = opt.feed or @feeds.findWhere({isCurrent:true})
+      console.error feed
+      feedName = feed.get 'name'
       @artworks.fetch
         from: feedName
         callback: (rawArtworks)=>
@@ -169,8 +173,6 @@ define [
         console.log "No Artworks to Render"
         return
 
-      console.log "#{@artworks.length} Receipt Artworks Rendered"
-
       @ui.$artworkList.empty()
       @artworks.each (artwork)=>
         artworkVC = new ArtworkThumbnailVC
@@ -178,6 +180,8 @@ define [
           position: 'append'
           template: 'artworkThumbnail'
           model: artwork
+
+      console.debug "#{@artworks.length} Receipt Artworks Rendered"
 
     renderScroll: ()->
       @scroll = new Scroll
@@ -188,6 +192,7 @@ define [
         model: @scroll
 
     renderArtworkProgress: (opt)->
+      console.log 'Artwork Progress Rendered'
       opt ?= {}
       opt.indicatorType ?= 'linear'
 
@@ -196,24 +201,31 @@ define [
       else if opt.indicatorType is 'circular'
         template = 'mCircularProgress'
 
-      @progress = new Progress
+      @progress ?= new Progress
         artworkType: 'thumb'
         indicatorType: opt.indicatorType
-
       @progress.on
         'change:isDone': (m,v)=>
           if v
+            console.error v
             @model.set 'isArtworksLoaded',true
-            @progress.set 'isDone',false
-      @artworkProgressVC = new ArtworkProgressVC
+            # @progress.set 'isDone',false
+
+      @progress.set 'isDone',false
+
+      @artworkProgressVC ?= new ArtworkProgressVC
         $root: @ui.$drawer
         model: @progress
         artworks: @artworks
         template: template
         position: 'prepend'
+
       @artworkProgressVC.$el.addClass 'top'
+      @artworkProgressVC.load()  
+
     updateBC: ()->
       for className in ['is-dark','is-light','is-complex']
         if @ui.$btnTogglePanel.hasClass className
           @$el.addClass className
+
   return ReceiptVC

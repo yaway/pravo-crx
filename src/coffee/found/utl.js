@@ -55,7 +55,9 @@ define(['jquery', 'underscore'], function($, _) {
   };
   Utl.rebindContextMenu = function() {
     return $(document).on('contextmenu', function(e) {
-      return e.preventDefault();
+      e.preventDefault();
+      e.stopPropagation();
+      return false;
     });
   };
   return Utl;

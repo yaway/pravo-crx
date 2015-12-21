@@ -17,6 +17,10 @@
         total: 0
       };
 
+      Progress.prototype.initialize = function() {
+        return console.log('New Progress');
+      };
+
       return Progress;
 
     })(M);

@@ -18,13 +18,15 @@
         return this.on({
           'willChangeIsCurrent': (function(_this) {
             return function() {
-              return _this.allSet('isCurrent', false);
+              return _this.allSet('isCurrent', false, {
+                silent: true
+              });
             };
           })(this),
           'change:isCurrent': (function(_this) {
             return function(m, v) {
+              console.error(v);
               if (v) {
-                _this.trigger('didChangeIsCurrent');
                 return _this.save();
               }
             };
@@ -57,8 +59,7 @@
             } else {
               rawData = [];
             }
-            console.debug("Local Feeds Did Fetch:");
-            console.log(rawData);
+            console.debug(rawData.length + " Local Feeds Fetched");
             callback(rawData);
             return _this.trigger("didFetch");
           };

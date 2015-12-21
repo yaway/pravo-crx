@@ -20,16 +20,15 @@
       var dashboard;
       console.debug('Pravo!');
       UTL.rebindContextMenu();
-      dashboard = new DashboardVC({
-        template: 'dashboard',
-        position: 'append'
-      });
       window.Pravo = {};
-      return Pravo.cleanLocalArtworks = function() {
+      Pravo.cleanLocalArtworks = function() {
         return dashboard.gallery.artworks.save({
           only: 'nil'
         });
       };
+      return dashboard = new DashboardVC({
+        $root: $('[data-ui="dashboard"]')
+      });
     });
   });
 

@@ -31,7 +31,7 @@
             };
           })(this)
         });
-        this.receiptVC.on({
+        return this.receiptVC.on({
           "didChooseArtwork": (function(_this) {
             return function(artwork) {
               return _this.boothVC.artworks.add(artwork);
@@ -48,7 +48,6 @@
             };
           })(this)
         });
-        return this.trigger('didUpdateGallery');
       };
 
       return GalleryVC;

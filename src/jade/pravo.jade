@@ -5,7 +5,10 @@ block templates
   include ./artwork-feed
   include ./gallery
   include ./clock
-  include ./dashboard
-  include ./m-linear-progress
+include ./m-linear-progress
   include ./m-circular-progress
-block content
+
+block main
+  div.layer-dashboard(data-ui="dashboard")
+    div.ui-root(data-ui="gallery")
+    div.ui-root(data-ui="clock")
