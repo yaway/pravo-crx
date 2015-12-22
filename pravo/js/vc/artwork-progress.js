@@ -42,8 +42,15 @@
         return console.log('Artwork Progress Rendered');
       };
 
-      ArtworkProgress.prototype.load = function() {
+      ArtworkProgress.prototype.load = function(opt) {
         var iteratee, srcKey, total;
+        if (opt == null) {
+          opt = {};
+        }
+        this.resetState('isDone');
+        if (opt.infinite) {
+          return;
+        }
         if ((this.model.get('artworkType')) === 'src') {
           srcKey = 'src';
         } else if ((this.model.get('artworkType')) === 'thumb') {
@@ -68,7 +75,7 @@
               _this.model.set('done', dones.length);
               if (dones.length === total) {
                 console.log('All Artworks Loaded');
-                return _this.model.set('isDone', true);
+                return _this.setState('isDone');
               }
             };
             return img.onload = onLoadImg;

@@ -22,6 +22,7 @@ define [
             @trigger 'didChangeDistance'
         'didChangeDistance': ()=>
           @validateDistance()
+          
     validateDistance: ()->
       distance = @get 'distance'
       limit = (@get 'scrolleeSize') - (@get 'scrollSize')

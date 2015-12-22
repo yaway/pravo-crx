@@ -18,6 +18,7 @@ module.exports = function(grunt) {
     },
     stylus: {
       options: {
+        "compress": false,
         "resolve url": true
       },
       files: {

@@ -24,14 +24,14 @@
           <div data-ui="drawer" class="drawer">
             <div class="container"><b data-ui="btnUnfoldDrawer" class="m-fa-btn"><i class="m-ico">collections</i></b>
               <div class="panel">
-                <div data-ui="scroll" class="scroll">
-                  <ul data-ui="artworkList" class="artwork-list scrollee"></ul>
-                </div>
                 <div class="toolbar">
                   <div data-ui="toobarTitle" class="title"><span data-ui="feedName" class="name"></span><i class="m-ico">arrow_drop_down</i>
                     <ul data-ui="feedList" class="feed-list"></ul>
                   </div>
                   <div class="space"></div><b data-ui="btnFoldDrawer" class="m-i-btn"><i class="m-ico">close</i></b>
+                </div>
+                <div data-ui="scroll" class="scroll">
+                  <ul data-ui="artworkList" class="artwork-list scrollee"></ul>
                 </div>
               </div>
             </div>
@@ -43,6 +43,16 @@
       <div data-ui="clock" class="layer-clock">
         <div data-ui="time" class="time"></div>
         <div data-ui="date" class="date"></div>
+      </div>
+    </template>
+    <template data-tpl="mLinearProgress">
+      <div class="m-linear-progress"></div>
+    </template>
+    <template data-tpl="mCircularProgress">
+      <div data-ui="mCircularProgress" class="m-circular-progress">
+        <svg class="svg">
+          <circle data-ui="circle" class="circle"></circle>
+        </svg>
       </div>
     </template>
   </head>

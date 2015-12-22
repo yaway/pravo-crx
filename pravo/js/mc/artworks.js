@@ -51,8 +51,7 @@
         }, (function(_this) {
           return function() {
             _this.trigger("didSaveToLocal");
-            console.debug("Artworks Did Save:");
-            return console.log(rawArtworks);
+            return console.debug("Artworks Did Save");
           };
         })(this));
       };
@@ -64,22 +63,21 @@
           return data;
         });
         if (opt.from === "local") {
-          console.debug("Will Fetch Local Artworks");
+          console.log("Will Fetch Local Artworks");
           return chrome.storage.local.get('artworks', (function(_this) {
             return function(data) {
               if (!data.artworks) {
                 return console.log('No Local Artworks Fetched');
               } else {
                 rawArtworks = JSON.parse(data.artworks || {});
-                console.debug(rawArtworks.length + " Local Artworks Fetched:");
-                console.log(rawArtworks);
+                console.debug(rawArtworks.length + " Local Artworks Fetched");
                 callback(rawArtworks);
                 return _this.trigger("didFetchFromLocal");
               }
             };
           })(this));
         } else {
-          console.debug("Will Fetch Server Artworks");
+          console.log("Will Fetch Server Artworks");
           resetProtocol = function(artwork) {
             var thumb, url;
             url = artwork.url;
@@ -122,8 +120,7 @@
                   rawArtwork = parseRawArtwork(refArtwork);
                   rawArtworks.push(rawArtwork);
                 }
-                console.debug(rawArtworks.length + " Server Artworks Fetched:");
-                console.log(rawArtworks);
+                console.debug(rawArtworks.length + " Server Artworks Fetched");
                 callback(rawArtworks);
                 return _this.trigger("didFetchFromServer");
               }

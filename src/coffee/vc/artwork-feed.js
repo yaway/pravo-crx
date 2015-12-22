@@ -19,12 +19,25 @@ define(['found/vc'], function(VC) {
 
     ArtworkFeed.prototype.onClick = function() {
       this.model.trigger('willChangeIsCurrent');
-      return this.model.set('isCurrent', true);
+      return this.setState('isCurrent');
     };
 
     ArtworkFeed.prototype.initialize = function(opt) {
       ArtworkFeed.__super__.initialize.call(this, opt);
+      this.model.on({
+        'change:isCurrent': (function(_this) {
+          return function() {
+            return _this.update();
+          };
+        })(this)
+      });
       return this.render();
+    };
+
+    ArtworkFeed.prototype.update = function() {
+      if (this.getState('isCurrent')) {
+        return this.$el.addClass('is-current');
+      }
     };
 
     return ArtworkFeed;

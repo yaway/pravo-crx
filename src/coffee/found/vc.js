@@ -2,7 +2,7 @@
 var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
-define(['backbone', 'found/utl'], function(Backbone, Utl) {
+define(['backbone', 'found/m', 'found/utl'], function(Backbone, M, Utl) {
   var VC;
   VC = (function(superClass) {
     extend(VC, superClass);
@@ -15,7 +15,7 @@ define(['backbone', 'found/utl'], function(Backbone, Utl) {
       if (opt == null) {
         opt = {};
       }
-      this.model = opt.model;
+      this.model = opt.model || new M;
       if (this.ui == null) {
         this.ui = {};
       }
@@ -65,7 +65,60 @@ define(['backbone', 'found/utl'], function(Backbone, Utl) {
       });
       this.setElement($el[0]);
       this.update();
-      return $el[0];
+      return this;
+    };
+
+    VC.prototype.getState = function(k) {
+      var state;
+      state = this.model.get(k);
+      return state;
+    };
+
+    VC.prototype.setState = function(k, v, opt) {
+      if ((typeof k) === 'object') {
+        this.model.set(k, v, opt);
+      } else {
+        if (v && (typeof v) !== 'boolean') {
+          this.model.set(k, v, opt);
+        } else {
+          this.model.set(k, true, opt);
+        }
+      }
+      return this;
+    };
+
+    VC.prototype.resetState = function(k, opt) {
+      var defaults, v;
+      defaults = this.model.defaults || {};
+      v = defaults[k];
+      if (v) {
+        this.model.set(k, v, opt);
+      } else {
+        this.model.set(k, null, opt);
+      }
+      return this;
+    };
+
+    VC.prototype.toggleState = function(k, opt) {
+      if (this.model.get(k)) {
+        this.model.set(k, false, opt);
+      } else {
+        this.model.set(k, true, opt);
+      }
+      return this;
+    };
+
+    VC.prototype.checkState = function(k, v) {
+      if (v == null) {
+        v = true;
+      }
+      console.error(v);
+      console.error(this.model.get(k));
+      if ((this.model.get(k)) === v) {
+        return true;
+      } else {
+        return false;
+      }
     };
 
     return VC;

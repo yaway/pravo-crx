@@ -27,7 +27,12 @@ define [
     update: ()->
       console.log 'Artwork Progress Rendered'
 
-    load: ()->
+    load: (opt)->
+      opt ?= {}
+      @resetState 'isDone'
+      if opt.infinite
+        return
+
       if (@model.get 'artworkType') is 'src'
         srcKey = 'src'
       else if (@model.get 'artworkType') is 'thumb'
@@ -53,7 +58,7 @@ define [
 
           if dones.length is total
             console.log 'All Artworks Loaded'
-            @model.set 'isDone',true
+            @setState 'isDone'
 
         img.onload = onLoadImg
 

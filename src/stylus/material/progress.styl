@@ -3,7 +3,28 @@ $c = 2*PI*$r
 $g = 0.1*$c
 $a = $c - $g
 
-@keyframes progress
+@keyframes linear-progress-primary
+  0%
+    transform(translateX(-20%) scaleX(0.2))
+  80%
+    transform(translateX(100%) scaleX(1))
+    
+  100%
+    transform(translateX(100%) scaleX(1))
+
+
+@keyframes linear-progress-secondary
+  0%
+    opacity(0)
+    transform(translateX(-100%) scaleX(1))
+  60%
+    opacity(1)
+    transform(translateX(-100%) scaleX(1))  
+  100%
+    opacity(1)
+    transform(translateX(100%) scaleX(0.2))
+
+@keyframes circular-progress
   0%
     stroke-dasharray $g, $a
     stroke-dashoffset 0.25*$c + $g
@@ -20,7 +41,7 @@ $a = $c - $g
     stroke-dasharray $g, $a
     stroke-dashoffset -0.75*$c - $a
 
-@keyframes circle
+@keyframes circular-circle
   0%
     transform(rotate(0deg))
 
@@ -28,13 +49,24 @@ $a = $c - $g
     transform(rotate(360deg))
 
 .m-linear-progress
+  position relative
   height 4px
-  border-top 4px solid alpha(#fff,60%)
+  bg(alpha(#fff,20%))
   
-  &:before
+  &:before,
+  &:after
     content ''
-    height 0
-    border-top 4px solid #fff
+    height 4px
+    bg(alpha(#fff,80%))
+    absolute-top()
+    
+  &:before
+    transform-origin(top left)
+    animation(linear-progress-primary 2.4s linear infinite)
+  &:after
+    opacity(0)
+    transform-origin(top left)
+    animation(linear-progress-secondary 2.4s linear infinite)
     
   &.top
     absolute-top()
@@ -45,15 +77,13 @@ $a = $c - $g
   &.is-done
     display none
     
-.m-circuler-progress
-  $progress = progress 1s infinite
-  $circle = progress 3s infinite
+.m-circular-progress
   width 24px
   height 24px
   .svg
     width 24px
     height 24px
-    animation(circle linear 3.6s infinite)
+    animation(circular-circle linear 3.6s infinite)
   .circle
     width 24px
     height 24px
@@ -63,7 +93,7 @@ $a = $c - $g
     fill none
     stroke $gray
     stroke-width 4px
-    transform-origin center center
-    animation(progress linear 2.4s infinite)
+    transform-origin(center center)
+    animation(circular-progress linear 2.4s infinite)
     
     

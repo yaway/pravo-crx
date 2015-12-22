@@ -42,7 +42,6 @@ define(['found/vc', 'mc/scroll', 'jquery-mousewheel'], function(VC, Scroll, JqMo
     };
 
     ScrollVC.prototype.update = function() {
-      console.log("Scroll Rendered");
       return this.resize();
     };
 
@@ -103,6 +102,7 @@ define(['found/vc', 'mc/scroll', 'jquery-mousewheel'], function(VC, Scroll, JqMo
         };
       })(this);
       if (this.model.get('isScrollable')) {
+        this.resize();
         timer = setTimeout(scroll, 10);
         easeTimer = setTimeout(ease, 100);
         this.model.set('timer', timer);

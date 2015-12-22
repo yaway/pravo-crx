@@ -17,6 +17,7 @@ module.exports = (grunt)->
 
     stylus:
       options:
+        "compress": false
         "resolve url": true
       files:
         expand: true

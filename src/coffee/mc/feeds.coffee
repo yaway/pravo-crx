@@ -10,10 +10,9 @@ define [
       console.log "New Feeds"
       @on
         'willChangeIsCurrent': ()=>
-          @allSet 'isCurrent',false,{silent: true}
+          @allSet {isCurrent:false},{silent:true}
 
         'change:isCurrent': (m,v)=>
-          console.error v
           if v
             @save()
 

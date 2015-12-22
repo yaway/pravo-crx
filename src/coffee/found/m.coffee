@@ -2,11 +2,12 @@ define [
   'backbone'
 ],(Backbone)->
   class M extends Backbone.Model
-    toggle: (attr,opt)->
-      opt ?= {}
-      if @get attr
-        @set attr,false,opt
+    toggle: (k,opt)->
+      if @get k
+        @set k,false,opt
       else
-        @set attr,true,opt
+        @set k,true,opt
+      return this
+
         
   return M

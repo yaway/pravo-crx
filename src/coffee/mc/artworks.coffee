@@ -29,15 +29,14 @@ define [
       console.log artworksJSON
       chrome.storage.local.set {'artworks':artworksJSON},()=>
         @trigger "didSaveToLocal"
-        console.debug "Artworks Did Save:"
-        console.log rawArtworks
+        console.debug "Artworks Did Save"
 
     fetch: (opt)->
       rawArtworks = []
       callback = opt.callback or ((data)-> return data)
 
       if opt.from is "local"
-        console.debug "Will Fetch Local Artworks"
+        console.log "Will Fetch Local Artworks"
         chrome.storage.local.get 'artworks',(data)=>
           unless data.artworks
             console.log 'No Local Artworks Fetched'
@@ -45,12 +44,11 @@ define [
             rawArtworks = JSON.parse (data.artworks or {})
             # for rawArtwork in rawArtworks
               # @add rawArtwork
-            console.debug "#{rawArtworks.length} Local Artworks Fetched:"
-            console.log rawArtworks
+            console.debug "#{rawArtworks.length} Local Artworks Fetched"
             callback rawArtworks
             @trigger "didFetchFromLocal"
       else 
-        console.debug "Will Fetch Server Artworks"
+        console.log "Will Fetch Server Artworks"
         resetProtocol = (artwork)->
           url = artwork.url 
           thumb = artwork.thumb
@@ -83,8 +81,7 @@ define [
               rawArtwork = parseRawArtwork refArtwork
               rawArtworks.push rawArtwork
 
-            console.debug "#{rawArtworks.length} Server Artworks Fetched:"
-            console.log rawArtworks
+            console.debug "#{rawArtworks.length} Server Artworks Fetched"
             callback rawArtworks
             @trigger "didFetchFromServer"
               

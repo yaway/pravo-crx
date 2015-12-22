@@ -5,9 +5,9 @@ define [
     initialize: ()->
       @on
         "update": @update
-    allSet: (attrs,opt)->
-      opt ?= {}
+    allSet: (k,v,opt)->
       for model in @models
-        model.set attrs,{silent: true}
+        model.set k,v,opt
+      return this
 
   return C

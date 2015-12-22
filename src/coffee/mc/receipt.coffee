@@ -3,13 +3,15 @@ define [
 ],(M)->
   class Receipt extends M
     defaults:
-      "isRendered": false
-      "isArtworksInitialized": false
+      "isFeedsUpdating": false
+      "isFeedsUpdated": false
+      "isFeedsRendered": false
+      "isArtworksUpdating": false
       "isArtworksUpdated": false
+      "isArtworksLoading": false
       "isArtworksLoaded": false
       "isArtworksRendered": false
-      "isFeedsUpdated": false
-      "isUnfolded": false
+      "isDrawerUnfolded": false
       "isFeedListUnfolded": false
 
     initialize: ()->

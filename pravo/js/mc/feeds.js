@@ -18,14 +18,15 @@
         return this.on({
           'willChangeIsCurrent': (function(_this) {
             return function() {
-              return _this.allSet('isCurrent', false, {
+              return _this.allSet({
+                isCurrent: false
+              }, {
                 silent: true
               });
             };
           })(this),
           'change:isCurrent': (function(_this) {
             return function(m, v) {
-              console.error(v);
               if (v) {
                 return _this.save();
               }

@@ -35,18 +35,15 @@ define [
       "click [data-ui='toobarTitle']": "onClickToolbarTitle"
 
     onClickBtnFoldDrawer: (e)=>
-      console.log 'BtnFoldDrawer Clicked'
       e.stopPropagation()
-      @model.set 'isDrawerUnfolded',false
+      @resetState 'isDrawerUnfolded'
 
     onClickBtnUnfoldDrawer: (e)=>
-      console.log 'BtnUnfoldDrawer Clicked'
       e.stopPropagation()
-      @model.set 'isDrawerUnfolded',true
+      @setState 'isDrawerUnfolded'
 
     onMorphBtnUnfoldDrawer: (e)=>
-      console.log 'BtnUnfoldDrawer Morphed'
-      if @$el.hasClass 'is-unfolded'
+      if @$el.hasClass 'is-drawer-unfolded'
         @$el.addClass 'is-morphing'
       else
         @$el.removeClass 'is-morphing'
@@ -54,7 +51,7 @@ define [
     onClickToolbarTitle: (e)=>
       console.log 'ToolbarTitle Clicked'
       e.stopPropagation()
-      @model.toggle 'isFeedListUnfolded'
+      @toggleState 'isFeedListUnfolded'
 
     initialize: (opt)->
       super(opt)
@@ -62,45 +59,77 @@ define [
       @model = new Receipt
 
       @model.on
-        'change:isFeedsUpdated': (m,v)=>
-          if v
-            @renderFeeds()
-            @updateArtworks()
-            @model.set 'isFeedListUnfolded',false
-            @model.set 'isFeedsUpdated',false
-
-        'change:isRendered': (m,v)=>
-          if v
-            if @model.get 'isArtworksInitialized'
-              @$el.addClass 'has-artworks'
-            else@$el.removeClass 'has-artworks'
-
-        'change:isArtworksUpdated': (m,v)=>
-          if v
-            @artworkProgressVC.load()
-            @model.set 'hasArtworks',true
-            @model.set 'isArtworksUpdated',false
-
-        'change:isArtworksLoaded': (m,v)=>
-          if v
-            @renderArtworks()
-            @scrollVC.resize()
-            @model.set 'isArtworksLoaded',false
-
         'change:isDrawerUnfolded': (m,v)=>
           if v
-            @$el.addClass 'is-unfolded'
-            @artworkProgressVC.load()
             @scrollVC.resize()
-            @model.set 'isFeedListUnfolded',false
+            @$el.addClass 'is-drawer-unfolded'
           else
-            @$el.removeClass 'is-unfolded'
+            @$el.removeClass 'is-drawer-unfolded'
 
         'change:isFeedListUnfolded': (m,v)=>
           if v
             @$el.addClass 'is-feed-list-unfolded'
           else
             @$el.removeClass 'is-feed-list-unfolded'
+
+        'change:isFeedsUpdating': (m,v)=>
+          if v
+            console.debug 'Receipt: isFeedsUpdating'
+            @updateFeeds()
+            @resetState 'isFeedsUpdating'
+
+        'change:isFeedsUpdated': (m,v)=>
+          if v
+            console.debug 'Receipt: isFeedsUpdated'
+            @setState 'isArtworksUpdating'
+            @setState 'isFeedsRendered'
+            @resetState 'isFeedsUpdated'
+
+        'change:isFeedsRendered': (m,v)=>
+          if v
+            console.debug 'Receipt: isFeedsRendered'
+
+            @renderFeeds()
+            @resetState 'isFeedsRendered'
+
+        'change:isArtworksUpdating': (m,v)=>
+          if v
+            console.debug 'Receipt: isArtworksUpdating'
+
+            @resetState 'isFeedListUnfolded'
+
+            @updateArtworks {reset:true}
+
+            @artworkProgressVC.load {infinite:true}
+
+            @$el.addClass 'has-artworks'
+            @resetState 'isArtworksUpdating'
+
+        'change:isArtworksUpdated': (m,v)=>
+          if v
+            console.debug 'Receipt: isArtworksUpdated'
+            @artworkProgressVC.load()
+            @resetState 'isArtworksUpdated'
+
+        'change:isArtworksLoading': (m,v)=>
+          if v
+            console.debug 'Receipt: isArtworksLoading'
+            @artworkProgressVC.load()
+            @resetState 'isArtworksLoading'
+
+        'change:isArtworksLoaded': (m,v)=>
+          if v
+            console.debug 'Receipt: isArtworksLoaded'
+            @setState 'isArtworksRendered'
+            @resetState 'isArtworksLoaded'
+
+        'change:isArtworksRendered': (m,v)=>
+          if v
+            console.debug 'Receipt: isArtworksRendered'
+            @renderArtworks()
+            @scrollVC.resize()
+            @resetState 'isArtworksRendered'
+
 
       @initializeFeeds()
       @initializeArtworks()
@@ -113,20 +142,21 @@ define [
       @renderScroll()
       @renderArtworkProgress()
 
-      @model.set 'isRendered',true
-
       # @updateBC()
       # @model.set 'isDrawerUnfolded',true
 
-    initializeFeeds: ()=>
+    initializeFeeds: ()->
       alterFeeds = [{name: "unsplash",isCurrent: true},{name: "konachan"}]
       @feeds = new Feeds
-      # @feeds.on
-      #   'update': ()=>
-      #     @model.set "isFeedsUpdated",true
-        # 'change': ()=>
-        #   @model.set "isFeedsUpdated",true
+      @feeds.on
+        'update': ()=>
+          @setState "isFeedsUpdated",true
+        'change': ()=>
+          @setState "isFeedsUpdated",true
 
+      @setState 'isFeedsUpdating',true
+
+    updateFeeds: ()->
       @feeds.fetch
         callback: (rawFeeds)=>
           if rawFeeds.length is 0
@@ -155,25 +185,31 @@ define [
       @artworks = new Artworks
       @artworks.on
         'update': ()=>
-          @model.set 'isArtworksUpdated',true
-      @model.set 'isArtworksInitialized',true
+          @setState 'isArtworksUpdated',true
+        'reset': (m,v,opt)=>
+          @setState 'isArtworksUpdated',true
 
     updateArtworks: (opt)->
       opt ?= {}
       feed = opt.feed or @feeds.findWhere({isCurrent:true})
-      console.error feed
       feedName = feed.get 'name'
       @artworks.fetch
         from: feedName
         callback: (rawArtworks)=>
-          @artworks.add rawArtworks
+          if opt.reset
+            @artworks.reset rawArtworks
+          else
+            @artworks.add rawArtworks
 
     renderArtworks: ()->
       if not @artworks
         console.log "No Artworks to Render"
         return
 
+      @$el.addClass 'is-artworks-rendering'
+
       @ui.$artworkList.empty()
+
       @artworks.each (artwork)=>
         artworkVC = new ArtworkThumbnailVC
           $root: @ui.$artworkList
@@ -182,6 +218,12 @@ define [
           model: artwork
 
       console.debug "#{@artworks.length} Receipt Artworks Rendered"
+
+      timeout = ()=>
+        @$el.removeClass 'is-artworks-rendering'
+      setTimeout timeout,100
+
+      @model.set 'isArtworksRendered',true
 
     renderScroll: ()->
       @scroll = new Scroll
@@ -207,9 +249,8 @@ define [
       @progress.on
         'change:isDone': (m,v)=>
           if v
-            console.error v
-            @model.set 'isArtworksLoaded',true
-            # @progress.set 'isDone',false
+            @setState 'isArtworksLoaded',true
+            @progress.set 'isDone',false
 
       @progress.set 'isDone',false
 
