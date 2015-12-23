@@ -25,7 +25,7 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/feed', 'mc/feeds', 'mc/rece
 
     ReceiptVC.prototype.onClickBtnFoldDrawer = function(e) {
       e.stopPropagation();
-      return this.resetState('isDrawerUnfolded');
+      return this.setState('isDrawerUnfolded', false);
     };
 
     ReceiptVC.prototype.onClickBtnUnfoldDrawer = function(e) {
@@ -42,7 +42,7 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/feed', 'mc/feeds', 'mc/rece
     };
 
     ReceiptVC.prototype.onClickToolbarTitle = function(e) {
-      console.log('ToolbarTitle Clicked');
+      console.log('Toolbar Title Clicked');
       e.stopPropagation();
       return this.toggleState('isFeedListUnfolded');
     };
@@ -50,8 +50,8 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/feed', 'mc/feeds', 'mc/rece
     ReceiptVC.prototype.initialize = function(opt) {
       ReceiptVC.__super__.initialize.call(this, opt);
       this.model = new Receipt;
-      this.model.on({
-        'change:isDrawerUnfolded': (function(_this) {
+      this.on({
+        'didChangeState:isDrawerUnfolded': (function(_this) {
           return function(m, v) {
             if (v) {
               _this.scrollVC.resize();
@@ -61,16 +61,17 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/feed', 'mc/feeds', 'mc/rece
             }
           };
         })(this),
-        'change:isFeedListUnfolded': (function(_this) {
+        'didChangeState:isFeedListUnfolded': (function(_this) {
           return function(m, v) {
             if (v) {
+              console.debug('Receipt: isFeedListUnfolded');
               return _this.$el.addClass('is-feed-list-unfolded');
             } else {
               return _this.$el.removeClass('is-feed-list-unfolded');
             }
           };
         })(this),
-        'change:isFeedsUpdating': (function(_this) {
+        'didChangeState:isFeedsUpdating': (function(_this) {
           return function(m, v) {
             if (v) {
               console.debug('Receipt: isFeedsUpdating');
@@ -79,7 +80,7 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/feed', 'mc/feeds', 'mc/rece
             }
           };
         })(this),
-        'change:isFeedsUpdated': (function(_this) {
+        'didChangeState:isFeedsUpdated': (function(_this) {
           return function(m, v) {
             if (v) {
               console.debug('Receipt: isFeedsUpdated');
@@ -89,7 +90,7 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/feed', 'mc/feeds', 'mc/rece
             }
           };
         })(this),
-        'change:isFeedsRendered': (function(_this) {
+        'didChangeState:isFeedsRendered': (function(_this) {
           return function(m, v) {
             if (v) {
               console.debug('Receipt: isFeedsRendered');
@@ -98,11 +99,11 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/feed', 'mc/feeds', 'mc/rece
             }
           };
         })(this),
-        'change:isArtworksUpdating': (function(_this) {
+        'didChangeState:isArtworksUpdating': (function(_this) {
           return function(m, v) {
             if (v) {
               console.debug('Receipt: isArtworksUpdating');
-              _this.resetState('isFeedListUnfolded');
+              _this.setState('isFeedListUnfolded', false);
               _this.updateArtworks({
                 reset: true
               });
@@ -114,7 +115,7 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/feed', 'mc/feeds', 'mc/rece
             }
           };
         })(this),
-        'change:isArtworksUpdated': (function(_this) {
+        'didChangeState:isArtworksUpdated': (function(_this) {
           return function(m, v) {
             if (v) {
               console.debug('Receipt: isArtworksUpdated');
@@ -123,7 +124,7 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/feed', 'mc/feeds', 'mc/rece
             }
           };
         })(this),
-        'change:isArtworksLoading': (function(_this) {
+        'didChangeState:isArtworksLoading': (function(_this) {
           return function(m, v) {
             if (v) {
               console.debug('Receipt: isArtworksLoading');
@@ -132,7 +133,7 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/feed', 'mc/feeds', 'mc/rece
             }
           };
         })(this),
-        'change:isArtworksLoaded': (function(_this) {
+        'didChangeState:isArtworksLoaded': (function(_this) {
           return function(m, v) {
             if (v) {
               console.debug('Receipt: isArtworksLoaded');
@@ -141,7 +142,7 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/feed', 'mc/feeds', 'mc/rece
             }
           };
         })(this),
-        'change:isArtworksRendered': (function(_this) {
+        'didChangeState:isArtworksRendered': (function(_this) {
           return function(m, v) {
             if (v) {
               console.debug('Receipt: isArtworksRendered');
@@ -157,13 +158,45 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/feed', 'mc/feeds', 'mc/rece
       return this.render();
     };
 
-    ReceiptVC.prototype.update = function() {
+    ReceiptVC.prototype.render = function() {
+      ReceiptVC.__super__.render.call(this);
       console.log("Receipt Rendered");
       this.renderScroll();
       return this.renderArtworkProgress();
     };
 
     ReceiptVC.prototype.initializeFeeds = function() {
+      this.feeds = new Feeds;
+      this.feeds.on({
+        'update': (function(_this) {
+          return function() {
+            return _this.setState("isFeedsUpdated");
+          };
+        })(this),
+        'change:isCurrent': (function(_this) {
+          return function(m, v) {
+            if (v) {
+              return _this.setState("isFeedsUpdated");
+            }
+          };
+        })(this),
+        'willChange:isCurrent': (function(_this) {
+          return function(m, v) {
+            console.error(v);
+            if (v) {
+              return _this.feeds.map(function(v, i, l) {
+                var feed;
+                feed = v;
+                return feed.set('isCurrent', false);
+              });
+            }
+          };
+        })(this)
+      });
+      return this.setState('isFeedsUpdating');
+    };
+
+    ReceiptVC.prototype.updateFeeds = function() {
       var alterFeeds;
       alterFeeds = [
         {
@@ -173,23 +206,6 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/feed', 'mc/feeds', 'mc/rece
           name: "konachan"
         }
       ];
-      this.feeds = new Feeds;
-      this.feeds.on({
-        'update': (function(_this) {
-          return function() {
-            return _this.setState("isFeedsUpdated", true);
-          };
-        })(this),
-        'change': (function(_this) {
-          return function() {
-            return _this.setState("isFeedsUpdated", true);
-          };
-        })(this)
-      });
-      return this.setState('isFeedsUpdating', true);
-    };
-
-    ReceiptVC.prototype.updateFeeds = function() {
       return this.feeds.fetch({
         callback: (function(_this) {
           return function(rawFeeds) {
@@ -206,7 +222,7 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/feed', 'mc/feeds', 'mc/rece
     ReceiptVC.prototype.renderFeeds = function() {
       var currentFeed;
       this.ui.$feedList.empty();
-      console.log("Feeds Rendered");
+      console.error(this.feeds.length);
       this.feeds.each((function(_this) {
         return function(feed) {
           var feedVC;
@@ -222,8 +238,9 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/feed', 'mc/feeds', 'mc/rece
         isCurrent: true
       });
       if (currentFeed) {
-        return this.ui.$feedName.text(currentFeed.get('name'));
+        this.ui.$feedName.text(currentFeed.get('name'));
       }
+      return console.log("Feeds Rendered");
     };
 
     ReceiptVC.prototype.initializeArtworks = function() {
@@ -231,12 +248,12 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/feed', 'mc/feeds', 'mc/rece
       return this.artworks.on({
         'update': (function(_this) {
           return function() {
-            return _this.setState('isArtworksUpdated', true);
+            return _this.setState('isArtworksUpdated');
           };
         })(this),
         'reset': (function(_this) {
           return function(m, v, opt) {
-            return _this.setState('isArtworksUpdated', true);
+            return _this.setState('isArtworksUpdated');
           };
         })(this)
       });
@@ -255,10 +272,12 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/feed', 'mc/feeds', 'mc/rece
         from: feedName,
         callback: (function(_this) {
           return function(rawArtworks) {
-            if (opt.reset) {
-              return _this.artworks.reset(rawArtworks);
-            } else {
-              return _this.artworks.add(rawArtworks);
+            if (rawArtworks.length > 0) {
+              if (opt.reset) {
+                return _this.artworks.reset(rawArtworks);
+              } else {
+                return _this.artworks.add(rawArtworks);
+              }
             }
           };
         })(this)
@@ -307,7 +326,6 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/feed', 'mc/feeds', 'mc/rece
 
     ReceiptVC.prototype.renderArtworkProgress = function(opt) {
       var template;
-      console.log('Artwork Progress Rendered');
       if (opt == null) {
         opt = {};
       }
@@ -325,17 +343,6 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/feed', 'mc/feeds', 'mc/rece
           indicatorType: opt.indicatorType
         });
       }
-      this.progress.on({
-        'change:isDone': (function(_this) {
-          return function(m, v) {
-            if (v) {
-              _this.setState('isArtworksLoaded', true);
-              return _this.progress.set('isDone', false);
-            }
-          };
-        })(this)
-      });
-      this.progress.set('isDone', false);
       if (this.artworkProgressVC == null) {
         this.artworkProgressVC = new ArtworkProgressVC({
           $root: this.ui.$drawer,
@@ -345,16 +352,26 @@ define(['found/vc', 'mc/artwork', 'mc/artworks', 'mc/feed', 'mc/feeds', 'mc/rece
           position: 'prepend'
         });
       }
+      this.artworkProgressVC.on({
+        'didChangeState:isDone': (function(_this) {
+          return function(m, v) {
+            if (v) {
+              return _this.setState('isArtworksLoaded', true);
+            }
+          };
+        })(this)
+      });
+      this.artworkProgressVC.setState('isDone', false);
       this.artworkProgressVC.$el.addClass('top');
       return this.artworkProgressVC.load();
     };
 
     ReceiptVC.prototype.updateBC = function() {
-      var className, i, len, ref, results;
+      var className, j, len, ref, results;
       ref = ['is-dark', 'is-light', 'is-complex'];
       results = [];
-      for (i = 0, len = ref.length; i < len; i++) {
-        className = ref[i];
+      for (j = 0, len = ref.length; j < len; j++) {
+        className = ref[j];
         if (this.ui.$btnTogglePanel.hasClass(className)) {
           results.push(this.$el.addClass(className));
         } else {

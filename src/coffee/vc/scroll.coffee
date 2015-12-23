@@ -21,7 +21,9 @@ define [
       else
         console.error 'No Scrollee'
       @render()
-    update: ()->
+    render: ()->
+      super()
+      console.log 'Scroll Rendered'
       @resize()
 
     resize: ()->

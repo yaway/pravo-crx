@@ -52,6 +52,16 @@ define [
     tplStr = _.unescape $("[data-tpl='#{tpl}']").html()
     return tplStr
 
+  Utl.getRandomInt = (max)->
+    randomInt = Math.floor (Math.random()*max)
+    return randomInt
+  Utl.getNextInt = (current,max)->
+    if current < max-1
+      next = current+1
+    else
+      next = 0
+    return next
+
   Utl.rebindContextMenu = ()->
     $(document).on 'contextmenu',(e)->
       e.preventDefault()

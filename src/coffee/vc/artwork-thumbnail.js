@@ -53,8 +53,6 @@ define(['found/vc'], function(VC) {
       }
     };
 
-    ArtworkThumbnailVC.prototype.update = function() {};
-
     return ArtworkThumbnailVC;
 
   })(VC);

@@ -16,7 +16,8 @@ define(['found/vc', 'moment'], function(VC, moment) {
       return this.render();
     };
 
-    ClockVC.prototype.update = function() {
+    ClockVC.prototype.render = function() {
+      ClockVC.__super__.render.call(this);
       console.log('Clock Rendered');
       this.renderTime();
       return setInterval((function(_this) {

@@ -30,6 +30,5 @@ define [
       else
         @$el.removeClass 'is-chosen'
 
-    update: ()->
 
   return ArtworkThumbnailVC

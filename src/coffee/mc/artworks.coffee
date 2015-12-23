@@ -9,10 +9,6 @@ define [
     
     initialize: ()->
       console.log "New Artworks"
-      @on
-        'willChangeIsChosen': ()=>
-        'willChangeIsCurrent': ()=>
-          @allSet 'isCurrent',false
 
     save: (opt)->
       console.debug 'Will Save Artworks'
@@ -87,24 +83,5 @@ define [
               
         do (parseRawArtwork)=>
           API.fetchArtworks {},apiCallback,{from:opt.from}
-
-    loop: ()->
-      if @length < 2
-        return
-      next = @getNext()
-      next.trigger 'willChangeIsCurrent'
-      next.set 'isCurrent',true
-    getCurrent: ()->
-      current = @findWhere 
-        isCurrent: true
-      return current
-    getNext: ()->
-      current = @getCurrent()
-      currentIndex = @indexOf current
-      if currentIndex < @length-1
-        next = @at currentIndex+1
-      else
-        next = @at 0
-      return next
 
   return Artworks

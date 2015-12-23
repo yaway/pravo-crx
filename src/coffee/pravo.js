@@ -21,10 +21,19 @@ require(['jquery', 'underscore', 'vc/dashboard', 'found/utl'], function($, _, Da
     console.debug('Pravo!');
     UTL.rebindContextMenu();
     window.Pravo = {};
-    Pravo.cleanLocalArtworks = function() {
-      return dashboard.gallery.artworks.save({
+    Pravo.cleanArtworks = function() {
+      var opt;
+      opt = {
         only: 'nil'
-      });
+      };
+      return dashboard.galleryVC.boothVC.artworkListVC.c.save(opt);
+    };
+    Pravo.cleanFeeds = function() {
+      var opt;
+      opt = {
+        only: 'nil'
+      };
+      return dashboard.galleryVC.receiptVC.feeds.save(opt);
     };
     return dashboard = new DashboardVC({
       $root: $('[data-ui="dashboard"]')

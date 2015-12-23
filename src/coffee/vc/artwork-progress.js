@@ -38,7 +38,8 @@ define(['found/vc', 'mc/progress', 'vc/m-circular-progress'], function(VC, Progr
       return this.render();
     };
 
-    ArtworkProgress.prototype.update = function() {
+    ArtworkProgress.prototype.render = function() {
+      ArtworkProgress.__super__.render.call(this);
       return console.log('Artwork Progress Rendered');
     };
 

@@ -16,7 +16,8 @@ define(['found/vc', 'vc/gallery', 'vc/clock', 'background-check'], function(VC, 
       return this.render();
     };
 
-    DashboardVC.prototype.update = function() {
+    DashboardVC.prototype.render = function() {
+      DashboardVC.__super__.render.call(this);
       console.log('Dashboard Rendered');
       this.galleryVC = new GalleryVC({
         $root: this.ui.$gallery,

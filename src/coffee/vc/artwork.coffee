@@ -1,33 +1,15 @@
 define [
   'found/vc'
 ],(VC)->
-  class ArtworkVC extends VC
+  class Artwork extends VC
     initialize: (opt)->
       super(opt)
-      @model.on
-        "change:src": @onChangeSrc
-        "change:isCurrent": @onChangeIsCurrent
-        "change:isFavorite": @onChangeIsFavorite
+      @on
+        'didChangeState:isCurrent': (m,v)=>
+          if v
+            @$el.addClass 'is-current'
+          else
+            @$el.removeClass 'is-current'
       @render()
 
-    onChangeSrc: ()=>
-      @ui.$img.attr 'src',(@model.get 'src')
-
-    onChangeIsCurrent: ()=>
-      # console.log 'Artwork Changed: isCurrent'
-      @updateStateCurrent()
-
-    update: ()->
-      @updateStateCurrent()
-
-    updateStateCurrent: ()->
-      if (@model.get 'isCurrent')
-        @$el.addClass 'is-current'
-        # @model.set 'isCurrent',true
-      else
-        @$el.removeClass 'is-current'
-        # @model.set 'isCurrent',false
-
-
-
-  return ArtworkVC
+  return Artwork

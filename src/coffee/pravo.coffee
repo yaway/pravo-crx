@@ -23,8 +23,14 @@ require [
     UTL.rebindContextMenu()
 
     window.Pravo = {}
-    Pravo.cleanLocalArtworks = ()->
-      dashboard.gallery.artworks.save {only: 'nil'}
+    Pravo.cleanArtworks = ()->
+      opt =
+        only: 'nil'
+      dashboard.galleryVC.boothVC.artworkListVC.c.save opt
+    Pravo.cleanFeeds = ()->
+      opt =
+        only: 'nil'
+      dashboard.galleryVC.receiptVC.feeds.save opt
 
     dashboard = new DashboardVC
       $root: $('[data-ui="dashboard"]')

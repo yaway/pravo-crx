@@ -6,7 +6,8 @@ define [
     initialize: (opt)->
       super(opt)
       @render()
-    update: ()->
+    render: ()->
+      super()
       console.log 'Clock Rendered'
       @renderTime()
       setInterval ()=>

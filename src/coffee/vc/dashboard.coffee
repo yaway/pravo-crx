@@ -9,7 +9,9 @@ define [
     initialize: (opt)->
       super(opt)
       @render()
-    update: ()->
+      
+    render: ()->
+      super()
       console.log 'Dashboard Rendered'
       @galleryVC = new GalleryVC
         $root: @ui.$gallery

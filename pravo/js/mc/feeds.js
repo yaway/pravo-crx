@@ -16,34 +16,25 @@
       Feeds.prototype.initialize = function() {
         console.log("New Feeds");
         return this.on({
-          'willChangeIsCurrent': (function(_this) {
-            return function() {
-              return _this.allSet({
-                isCurrent: false
-              }, {
-                silent: true
-              });
-            };
-          })(this),
           'change:isCurrent': (function(_this) {
-            return function(m, v) {
-              if (v) {
-                return _this.save();
-              }
-            };
+            return function(m, v) {};
           })(this)
         });
       };
 
       Feeds.prototype.save = function(opt) {
         var data;
+        if (opt == null) {
+          opt = {};
+        }
         data = JSON.stringify(this.models);
+        if (opt.only === 'nil') {
+          data = JSON.stringify([]);
+        }
         return chrome.storage.local.set({
           'feeds': data
         }, (function(_this) {
-          return function() {
-            return _this.trigger("didSave");
-          };
+          return function() {};
         })(this));
       };
 
@@ -55,7 +46,7 @@
         return chrome.storage.local.get('feeds', (function(_this) {
           return function(data) {
             var rawData;
-            if (data.feeds) {
+            if (data.feeds && data.feeds.length > 0) {
               rawData = JSON.parse(data.feeds);
             } else {
               rawData = [];

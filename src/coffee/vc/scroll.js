@@ -41,7 +41,9 @@ define(['found/vc', 'mc/scroll', 'jquery-mousewheel'], function(VC, Scroll, JqMo
       return this.render();
     };
 
-    ScrollVC.prototype.update = function() {
+    ScrollVC.prototype.render = function() {
+      ScrollVC.__super__.render.call(this);
+      console.log('Scroll Rendered');
       return this.resize();
     };
 

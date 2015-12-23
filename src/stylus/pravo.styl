@@ -9,13 +9,7 @@ global-reset()
 $tiffany-blue = #81D8D0
 
 $font-m =
-  font-size: 16px
-  
-tiffany-wrapper()
-  color $tiffany-blue
-  border 2px solid $tiffany-blue
-  background-color alpha($tiffany-blue,0.3)
-  border-radius(4px)
+  font-size 16px
 
 html
   height 100%
@@ -61,6 +55,6 @@ body
 
 .layer-dashboard
   layer(1)
-  bg(alpha($tiffany-blue,0.3))
+  bg(alpha(#000,0.6))
   
 @import "./dashboard"

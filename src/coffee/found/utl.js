@@ -53,6 +53,20 @@ define(['jquery', 'underscore'], function($, _) {
     tplStr = _.unescape($("[data-tpl='" + tpl + "']").html());
     return tplStr;
   };
+  Utl.getRandomInt = function(max) {
+    var randomInt;
+    randomInt = Math.floor(Math.random() * max);
+    return randomInt;
+  };
+  Utl.getNextInt = function(current, max) {
+    var next;
+    if (current < max - 1) {
+      next = current + 1;
+    } else {
+      next = 0;
+    }
+    return next;
+  };
   Utl.rebindContextMenu = function() {
     return $(document).on('contextmenu', function(e) {
       e.preventDefault();

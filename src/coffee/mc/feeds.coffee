@@ -9,22 +9,21 @@ define [
     initialize: ()->
       console.log "New Feeds"
       @on
-        'willChangeIsCurrent': ()=>
-          @allSet {isCurrent:false},{silent:true}
-
         'change:isCurrent': (m,v)=>
-          if v
-            @save()
+          # if v
+            # @save()
 
     save: (opt)->
+      opt ?= {}
       data = JSON.stringify @models
+      if opt.only is 'nil'
+        data = JSON.stringify []
       chrome.storage.local.set {'feeds':data},()=>
-        @trigger "didSave"
 
     fetch: (opt)->
       callback = opt.callback or ((data)-> return data)
       chrome.storage.local.get 'feeds',(data)=>
-        if data.feeds
+        if data.feeds and data.feeds.length > 0
           rawData = JSON.parse data.feeds
         else
           rawData = []

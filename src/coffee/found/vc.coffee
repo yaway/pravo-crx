@@ -1,12 +1,14 @@
 define [
   'backbone'
   'found/m'
+  'found/c'
   'found/utl'
-],(Backbone,M,Utl)->
+],(Backbone,M,C,Utl)->
   class VC extends Backbone.View
     initialize: (opt)->
       opt ?= {}
-      @model = opt.model or new M
+      @m = opt.model or new M
+      @c = opt.collection
       @ui ?= {}
       @position = opt.position
       @root = opt.root or document.body
@@ -21,7 +23,7 @@ define [
       return @$el.find("[data-ui='#{ui}']")
 
     render: (data)->
-      data ?= @model?.attributes
+      data ?= @m?.attributes
       tpl = _.template @template
       elStr = tpl data
       $el = $(elStr)
@@ -46,47 +48,57 @@ define [
         vc.ui["$#{(@getAttribute 'data-ui')}"] = $(this)
 
       @setElement $el[0]
-      @update()
       return this
 
-
     getState: (k)->
-      state = @model.get k
+      state = @m.get k
       return state
 
     setState: (k,v,opt)->
       if (typeof k) is 'object'
-        @model.set k,v,opt
+        v ?= {}
+        for kk in k
+          if not opt.silent
+            @m.trigger "willChange:#{kk}",@m,k[kk]
+            @trigger "willChangeState:#{kk}",@m,k[kk]
+          @m.set kk,k[kk],opt
+          if not opt.silent
+            @m.trigger "didChange:#{kk}",@m,k[kk]
+            @trigger "didChangeState:#{kk}",@m,k[kk]
       else
-        if v and (typeof v) isnt 'boolean'
-          @model.set k,v,opt
-        else
-          @model.set k,true,opt
+        v ?= true
+        opt ?= {}
+        if not opt.silent
+          @m.trigger "willChange:#{k}",@m,v
+          @trigger "willChangeState:#{k}",@m,v
+        @m.set k,v,opt
+        if not opt.silent
+          @m.trigger "didChange:#{k}",@m,v
+          @trigger "didChangeState:#{k}",@m,v
       return this
     
 
     resetState: (k,opt)->
-      defaults = @model.defaults or {}
+      defaults = @m.defaults or {}
       v = defaults[k]
       if v
-        @model.set k,v,opt
+        @m.set k,v,opt
       else
-        @model.set k,null,opt
-
+        @m.set k,null,opt
       return this
 
     toggleState: (k,opt)->
-      if @model.get k
-        @model.set k,false,opt
+      if @getState k
+        @setState k,false,opt
       else
-        @model.set k,true,opt
+        @setState k,true,opt
       return this
 
     checkState: (k,v)->
       v ?= true
       console.error v
-      console.error @model.get k
-      if (@model.get k) is v
+      console.error @m.get k
+      if (@m.get k) is v
         return true
       else
         return false

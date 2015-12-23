@@ -16,7 +16,8 @@
         return this.render();
       };
 
-      GalleryVC.prototype.update = function() {
+      GalleryVC.prototype.render = function() {
+        GalleryVC.__super__.render.call(this);
         console.log("Gallery Rendered");
         this.boothVC = new BoothVC({
           $root: this.ui.$booth
@@ -24,27 +25,14 @@
         this.receiptVC = new ReceiptVC({
           $root: this.ui.$receipt
         });
-        this.boothVC.on({
-          "didClickArtwork": (function(_this) {
-            return function() {
-              return console.log('Booth Artwork Clicked');
-            };
-          })(this)
-        });
         return this.receiptVC.on({
-          "didChooseArtwork": (function(_this) {
-            return function(artwork) {
-              return _this.boothVC.artworks.add(artwork);
-            };
-          })(this),
-          "didUnfoldDrawer": (function(_this) {
-            return function() {
-              return _this.boothVC.$el.addClass('blur');
-            };
-          })(this),
-          "didFoldDrawer": (function(_this) {
-            return function() {
-              return _this.boothVC.$el.removeClass('blur');
+          'didChangeState:isDrawerUnfolded': (function(_this) {
+            return function(m, v) {
+              if (v) {
+                return _this.boothVC.setState('blur');
+              } else {
+                return _this.boothVC.setState('blur', false);
+              }
             };
           })(this)
         });

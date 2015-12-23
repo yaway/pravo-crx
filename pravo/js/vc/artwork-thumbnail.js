@@ -53,8 +53,6 @@
         }
       };
 
-      ArtworkThumbnailVC.prototype.update = function() {};
-
       return ArtworkThumbnailVC;
 
     })(VC);

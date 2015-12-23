@@ -14,17 +14,7 @@
       Artworks.prototype.model = Artwork;
 
       Artworks.prototype.initialize = function() {
-        console.log("New Artworks");
-        return this.on({
-          'willChangeIsChosen': (function(_this) {
-            return function() {};
-          })(this),
-          'willChangeIsCurrent': (function(_this) {
-            return function() {
-              return _this.allSet('isCurrent', false);
-            };
-          })(this)
-        });
+        return console.log("New Artworks");
       };
 
       Artworks.prototype.save = function(opt) {
@@ -134,36 +124,6 @@
             };
           })(this)(parseRawArtwork);
         }
-      };
-
-      Artworks.prototype.loop = function() {
-        var next;
-        if (this.length < 2) {
-          return;
-        }
-        next = this.getNext();
-        next.trigger('willChangeIsCurrent');
-        return next.set('isCurrent', true);
-      };
-
-      Artworks.prototype.getCurrent = function() {
-        var current;
-        current = this.findWhere({
-          isCurrent: true
-        });
-        return current;
-      };
-
-      Artworks.prototype.getNext = function() {
-        var current, currentIndex, next;
-        current = this.getCurrent();
-        currentIndex = this.indexOf(current);
-        if (currentIndex < this.length - 1) {
-          next = this.at(currentIndex + 1);
-        } else {
-          next = this.at(0);
-        }
-        return next;
       };
 
       return Artworks;

@@ -18,20 +18,26 @@ define(['found/vc'], function(VC) {
     };
 
     ArtworkFeed.prototype.onClick = function() {
-      this.model.trigger('willChangeIsCurrent');
       return this.setState('isCurrent');
     };
 
     ArtworkFeed.prototype.initialize = function(opt) {
       ArtworkFeed.__super__.initialize.call(this, opt);
-      this.model.on({
-        'change:isCurrent': (function(_this) {
-          return function() {
-            return _this.update();
+      this.on({
+        'didChangeState:isCurrent': (function(_this) {
+          return function(m, v) {
+            if (v) {
+              return _this.update();
+            }
           };
         })(this)
       });
       return this.render();
+    };
+
+    ArtworkFeed.prototype.render = function() {
+      ArtworkFeed.__super__.render.call(this);
+      return this.update();
     };
 
     ArtworkFeed.prototype.update = function() {

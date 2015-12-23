@@ -9,5 +9,4 @@ define [
         @set k,true,opt
       return this
 
-        
   return M

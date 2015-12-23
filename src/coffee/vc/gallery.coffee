@@ -9,24 +9,20 @@ define [
       super(opt)
       @render()
 
-    update: ()->
+    render: ()->
+      super()
       console.log "Gallery Rendered"
       @boothVC = new BoothVC
         $root: @ui.$booth
+
       @receiptVC = new ReceiptVC
         $root: @ui.$receipt
-
-      @boothVC.on
-        "didClickArtwork": ()=>
-          console.log 'Booth Artwork Clicked'
-
       @receiptVC.on
-        "didChooseArtwork": (artwork)=>
-          @boothVC.artworks.add artwork
-        "didUnfoldDrawer": ()=>
-          @boothVC.$el.addClass 'blur'
-        "didFoldDrawer": ()=>
-          @boothVC.$el.removeClass 'blur'
+        'didChangeState:isDrawerUnfolded':(m,v)=>
+          if v
+            @boothVC.setState 'blur'
+          else
+            @boothVC.setState 'blur',false
 
 
   return GalleryVC

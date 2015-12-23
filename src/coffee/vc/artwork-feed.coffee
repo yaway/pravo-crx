@@ -5,14 +5,17 @@ define [
     events:
       'click': 'onClick'
     onClick: ()=>
-      @model.trigger 'willChangeIsCurrent'
       @setState 'isCurrent'
     initialize: (opt)->
       super(opt)
-      @model.on
-        'change:isCurrent': ()=>
-          @update()
+      @on
+        'didChangeState:isCurrent': (m,v)=>
+          if v
+            @update()
       @render()
+    render: ()->
+      super()
+      @update()
     update: ()->
       if @getState 'isCurrent'
         @$el.addClass 'is-current'

@@ -24,7 +24,8 @@ define [
 
       @render()
 
-    update: ()->
+    render: ()->
+      super()
       console.log 'Artwork Progress Rendered'
 
     load: (opt)->
