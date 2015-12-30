@@ -31,10 +31,10 @@
 
       BoothVC.prototype.render = function() {
         BoothVC.__super__.render.call(this);
-        console.log("Booth Rendered");
-        return this.artworkListVC = new ArtworkListVC({
+        this.artworkListVC = new ArtworkListVC({
           $root: this.ui.$artworkList
         });
+        return console.log("Booth Rendered");
       };
 
       return BoothVC;

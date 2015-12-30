@@ -12,6 +12,7 @@ define [
 
     initialize: ()->
       console.log "New Scroll"
+      super()
       @on
         "willChangeDisance": ()=>
           @set 'lastDistence',(@get 'distance')

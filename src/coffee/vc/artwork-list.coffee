@@ -17,15 +17,14 @@ define [
 
     initialize: (opt)->
       opt ?= {}
+      opt.model ?= new List
+      opt.collection ?= new Artworks
       super(opt)
-      @m = new List
-      @c = opt.artworks or new Artworks
       @c.on
         'willChange:isCurrent':(m,v)=>
           if v
             @vc.map (v,i,l)=>
-              artworkVC = v
-              artworkVC.setState 'isCurrent',false
+              v.setState 'isCurrent',false
 
       @on
         'didChangeState:isFetched':(m,v)=>

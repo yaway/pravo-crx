@@ -49,8 +49,8 @@ define [
 
     render: ()->
       super()
-      console.log "Booth Rendered"
       @artworkListVC = new ArtworkListVC
         $root: @ui.$artworkList
+      console.log "Booth Rendered"
 
   return BoothVC

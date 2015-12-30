@@ -30,8 +30,6 @@ define(['backbone', 'found/m', 'found/c', 'found/utl'], function(Backbone, M, C,
       }
     };
 
-    VC.prototype.update = function() {};
-
     VC.prototype.getUI = function(ui) {
       return this.$el.find("[data-ui='" + ui + "']");
     };
@@ -75,21 +73,22 @@ define(['backbone', 'found/m', 'found/c', 'found/utl'], function(Backbone, M, C,
     };
 
     VC.prototype.setState = function(k, v, opt) {
-      var i, kk, len;
+      var kk, kv;
       if ((typeof k) === 'object') {
         if (v == null) {
           v = {};
         }
-        for (i = 0, len = k.length; i < len; i++) {
-          kk = k[i];
+        opt = v;
+        for (kk in k) {
+          kv = k[kk];
           if (!opt.silent) {
-            this.m.trigger("willChange:" + kk, this.m, k[kk]);
-            this.trigger("willChangeState:" + kk, this.m, k[kk]);
+            this.m.trigger("willChange:" + kk, this.m, kv);
+            this.trigger("willChangeState:" + kk, this, kv);
           }
           this.m.set(kk, k[kk], opt);
           if (!opt.silent) {
-            this.m.trigger("didChange:" + kk, this.m, k[kk]);
-            this.trigger("didChangeState:" + kk, this.m, k[kk]);
+            this.m.trigger("didChange:" + kk, this.m, kv);
+            this.trigger("didChangeState:" + kk, this, kv);
           }
         }
       } else {
@@ -101,12 +100,12 @@ define(['backbone', 'found/m', 'found/c', 'found/utl'], function(Backbone, M, C,
         }
         if (!opt.silent) {
           this.m.trigger("willChange:" + k, this.m, v);
-          this.trigger("willChangeState:" + k, this.m, v);
+          this.trigger("willChangeState:" + k, this, v);
         }
         this.m.set(k, v, opt);
         if (!opt.silent) {
           this.m.trigger("didChange:" + k, this.m, v);
-          this.trigger("didChangeState:" + k, this.m, v);
+          this.trigger("didChangeState:" + k, this, v);
         }
       }
       return this;

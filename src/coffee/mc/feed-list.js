@@ -2,22 +2,21 @@
 var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
-define(['found/m'], function(M) {
-  var Receipt;
-  Receipt = (function(superClass) {
-    extend(Receipt, superClass);
+define(['mc/list'], function(List) {
+  var FeedList;
+  FeedList = (function(superClass) {
+    extend(FeedList, superClass);
 
-    function Receipt() {
-      return Receipt.__super__.constructor.apply(this, arguments);
+    function FeedList() {
+      return FeedList.__super__.constructor.apply(this, arguments);
     }
 
-    Receipt.prototype.defaults = {
-      hasArtworks: false,
-      isDrawerUnfolded: false
+    FeedList.prototype.defaults = {
+      isUnfolded: false
     };
 
-    return Receipt;
+    return FeedList;
 
-  })(M);
-  return Receipt;
+  })(List);
+  return FeedList;
 });

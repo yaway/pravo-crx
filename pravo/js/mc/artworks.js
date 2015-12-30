@@ -13,10 +13,6 @@
 
       Artworks.prototype.model = Artwork;
 
-      Artworks.prototype.initialize = function() {
-        return console.log("New Artworks");
-      };
-
       Artworks.prototype.save = function(opt) {
         var artworksJSON, rawArtworks;
         console.debug('Will Save Artworks');
@@ -61,13 +57,12 @@
               } else {
                 rawArtworks = JSON.parse(data.artworks || {});
                 console.debug(rawArtworks.length + " Local Artworks Fetched");
-                callback(rawArtworks);
-                return _this.trigger("didFetchFromLocal");
+                return callback(rawArtworks);
               }
             };
           })(this));
         } else {
-          console.log("Will Fetch Server Artworks");
+          console.error("Will Fetch Server Artworks");
           resetProtocol = function(artwork) {
             var thumb, url;
             url = artwork.url;
@@ -110,19 +105,14 @@
                   rawArtwork = parseRawArtwork(refArtwork);
                   rawArtworks.push(rawArtwork);
                 }
-                console.debug(rawArtworks.length + " Server Artworks Fetched");
-                callback(rawArtworks);
-                return _this.trigger("didFetchFromServer");
+                console.error(rawArtworks.length + " Server Artworks Fetched");
+                return callback(rawArtworks);
               }
             };
           })(this);
-          return (function(_this) {
-            return function(parseRawArtwork) {
-              return API.fetchArtworks({}, apiCallback, {
-                from: opt.from
-              });
-            };
-          })(this)(parseRawArtwork);
+          return API.fetchArtworks({}, apiCallback, {
+            from: opt.from
+          });
         }
       };
 

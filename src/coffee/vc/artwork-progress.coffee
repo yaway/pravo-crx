@@ -1,26 +1,24 @@
 define [
   'found/vc'
-  'mc/progress'
-  'vc/m-circular-progress'
-],(VC,Progress,MCircularProgressVC)->
-  class ArtworkProgress extends VC
+  'mc/artwork-progress'
+],(VC,ArtworkProgress)->
+  class ArtworkProgressVC extends VC
     initialize: (opt)->
       opt ?= {}
+      opt.model ?= new ArtworkProgress
+
+      if (opt.model.get 'indicatorType') is 'linear'
+        opt.template = 'mLinearProgress'
+      else if (opt.model.get 'indicatorType') is 'circular'
+        opt.template = 'mCircularProgress'
       super(opt)
 
-      if not opt.artworks
-        console.log "No Artwork to Load"
-        return
-
-      @artworks = opt.artworks
-
-      @model ?= new Progress
-      @model.on
-        'change:isDone': (m,v)=>
+      @on
+        'didChangeState:isLoading': (m,v)=>
           if v
-            @$el.addClass 'is-done'
+            @$el.addClass 'is-loading'
           else
-            @$el.removeClass 'is-done'
+            @$el.removeClass 'is-loading'
 
       @render()
 
@@ -28,42 +26,44 @@ define [
       super()
       console.log 'Artwork Progress Rendered'
 
-    load: (opt)->
-      opt ?= {}
-      @resetState 'isDone'
-      if opt.infinite
+    load: (c)->
+      @setState 'isLoading',true
+      @setState 'isDone',false
+
+      if @getState 'infinite'
         return
 
-      if (@model.get 'artworkType') is 'src'
+      if (@getState 'artworkType') is 'src'
         srcKey = 'src'
-      else if (@model.get 'artworkType') is 'thumb'
+      else if (@getState 'artworkType') is 'thumb'
         srcKey = 'thumb'
       else
         return
 
-      total = @artworks.length
-      @model.set 'total',total
+      total = @c.length
+      @setState 'total',total
 
 
-      iteratee = (artwork,i)=>
+      iteratee = (v,i)=>
+        artwork = v
         artwork.set 'isLoaded',false
         img = new Image
         img.src = artwork.get srcKey
 
         onLoadImg = ()=>
           artwork.set 'isLoaded',true
-          dones = @artworks.where
+          dones = @c.where
             isLoaded: true
 
-          @model.set 'done',dones.length
+          @setState 'done',dones.length
 
           if dones.length is total
             console.log 'All Artworks Loaded'
-            @setState 'isDone'
+            @setState 'isDone',true
+            @setState 'isLoading',false
 
         img.onload = onLoadImg
 
-      @artworks.forEach iteratee
+      @c.forEach iteratee
 
-
-  return ArtworkProgress
+  return ArtworkProgressVC

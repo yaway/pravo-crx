@@ -2,35 +2,35 @@
 var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
-define(['found/vc', 'mc/progress', 'vc/m-circular-progress'], function(VC, Progress, MCircularProgressVC) {
-  var ArtworkProgress;
-  ArtworkProgress = (function(superClass) {
-    extend(ArtworkProgress, superClass);
+define(['found/vc', 'mc/artwork-progress'], function(VC, ArtworkProgress) {
+  var ArtworkProgressVC;
+  ArtworkProgressVC = (function(superClass) {
+    extend(ArtworkProgressVC, superClass);
 
-    function ArtworkProgress() {
-      return ArtworkProgress.__super__.constructor.apply(this, arguments);
+    function ArtworkProgressVC() {
+      return ArtworkProgressVC.__super__.constructor.apply(this, arguments);
     }
 
-    ArtworkProgress.prototype.initialize = function(opt) {
+    ArtworkProgressVC.prototype.initialize = function(opt) {
       if (opt == null) {
         opt = {};
       }
-      ArtworkProgress.__super__.initialize.call(this, opt);
-      if (!opt.artworks) {
-        console.log("No Artwork to Load");
-        return;
+      if (opt.model == null) {
+        opt.model = new ArtworkProgress;
       }
-      this.artworks = opt.artworks;
-      if (this.model == null) {
-        this.model = new Progress;
+      if ((opt.model.get('indicatorType')) === 'linear') {
+        opt.template = 'mLinearProgress';
+      } else if ((opt.model.get('indicatorType')) === 'circular') {
+        opt.template = 'mCircularProgress';
       }
-      this.model.on({
-        'change:isDone': (function(_this) {
+      ArtworkProgressVC.__super__.initialize.call(this, opt);
+      this.on({
+        'didChangeState:isLoading': (function(_this) {
           return function(m, v) {
             if (v) {
-              return _this.$el.addClass('is-done');
+              return _this.$el.addClass('is-loading');
             } else {
-              return _this.$el.removeClass('is-done');
+              return _this.$el.removeClass('is-loading');
             }
           };
         })(this)
@@ -38,55 +38,55 @@ define(['found/vc', 'mc/progress', 'vc/m-circular-progress'], function(VC, Progr
       return this.render();
     };
 
-    ArtworkProgress.prototype.render = function() {
-      ArtworkProgress.__super__.render.call(this);
+    ArtworkProgressVC.prototype.render = function() {
+      ArtworkProgressVC.__super__.render.call(this);
       return console.log('Artwork Progress Rendered');
     };
 
-    ArtworkProgress.prototype.load = function(opt) {
+    ArtworkProgressVC.prototype.load = function(c) {
       var iteratee, srcKey, total;
-      if (opt == null) {
-        opt = {};
-      }
-      this.resetState('isDone');
-      if (opt.infinite) {
+      this.setState('isLoading', true);
+      this.setState('isDone', false);
+      if (this.getState('infinite')) {
         return;
       }
-      if ((this.model.get('artworkType')) === 'src') {
+      if ((this.getState('artworkType')) === 'src') {
         srcKey = 'src';
-      } else if ((this.model.get('artworkType')) === 'thumb') {
+      } else if ((this.getState('artworkType')) === 'thumb') {
         srcKey = 'thumb';
       } else {
         return;
       }
-      total = this.artworks.length;
-      this.model.set('total', total);
+      total = this.c.length;
+      this.setState('total', total);
       iteratee = (function(_this) {
-        return function(artwork, i) {
-          var img, onLoadImg;
+        return function(v, i) {
+          var artwork, img, onLoadImg;
+          artwork = v;
           artwork.set('isLoaded', false);
           img = new Image;
           img.src = artwork.get(srcKey);
           onLoadImg = function() {
             var dones;
             artwork.set('isLoaded', true);
-            dones = _this.artworks.where({
+            dones = _this.c.where({
               isLoaded: true
             });
-            _this.model.set('done', dones.length);
+            _this.setState('done', dones.length);
             if (dones.length === total) {
               console.log('All Artworks Loaded');
-              return _this.setState('isDone');
+              _this.setState('isDone', true);
+              return _this.setState('isLoading', false);
             }
           };
           return img.onload = onLoadImg;
         };
       })(this);
-      return this.artworks.forEach(iteratee);
+      return this.c.forEach(iteratee);
     };
 
-    return ArtworkProgress;
+    return ArtworkProgressVC;
 
   })(VC);
-  return ArtworkProgress;
+  return ArtworkProgressVC;
 });

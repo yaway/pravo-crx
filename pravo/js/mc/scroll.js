@@ -22,6 +22,7 @@
 
       Scroll.prototype.initialize = function() {
         console.log("New Scroll");
+        Scroll.__super__.initialize.call(this);
         return this.on({
           "willChangeDisance": (function(_this) {
             return function() {

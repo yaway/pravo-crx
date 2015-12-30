@@ -11,8 +11,14 @@ define(['found/m'], function(M) {
       return List.__super__.constructor.apply(this, arguments);
     }
 
-    List.prototype.initialize = function() {
-      return console.log("New List");
+    List.prototype.defaults = {
+      from: 'local',
+      current: 0,
+      reset: true,
+      willFetch: false,
+      didFetch: false,
+      willRender: false,
+      didRender: false
     };
 
     return List;

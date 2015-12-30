@@ -6,6 +6,5 @@ define [
       isDone: false
       done: 0
       total: 0
-    initialize: ()->
-      console.log 'New Progress'
+      infinite: false
   return Progress

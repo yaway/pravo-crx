@@ -26,9 +26,7 @@
         this.on({
           'didChangeState:isCurrent': (function(_this) {
             return function(m, v) {
-              if (v) {
-                return _this.update();
-              }
+              return _this.update();
             };
           })(this)
         });

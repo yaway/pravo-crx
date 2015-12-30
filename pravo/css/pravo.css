@@ -140,6 +140,7 @@ a img {
   cursor: pointer;
 }
 .m-linear-progress {
+  display: none;
   position: relative;
   height: 4px;
   background-color: rgba(255,255,255,0.2);
@@ -148,6 +149,11 @@ a img {
 .m-linear-progress:after {
   content: '';
   height: 4px;
+  -webkit-transform-origin: left center;
+  -moz-transform-origin: left center;
+  -o-transform-origin: left center;
+  -ms-transform-origin: left center;
+  transform-origin: left center;
   background-color: rgba(255,255,255,0.8);
   position: absolute;
   top: 0;
@@ -155,11 +161,6 @@ a img {
   right: 0;
 }
 .m-linear-progress:before {
-  -webkit-transform-origin: top left;
-  -moz-transform-origin: top left;
-  -o-transform-origin: top left;
-  -ms-transform-origin: top left;
-  transform-origin: top left;
   -webkit-animation: linear-progress-primary 2.4s linear infinite;
   -moz-animation: linear-progress-primary 2.4s linear infinite;
   -o-animation: linear-progress-primary 2.4s linear infinite;
@@ -170,11 +171,6 @@ a img {
   opacity: 0;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
   filter: alpha(opacity=0);
-  -webkit-transform-origin: top left;
-  -moz-transform-origin: top left;
-  -o-transform-origin: top left;
-  -ms-transform-origin: top left;
-  transform-origin: top left;
   -webkit-animation: linear-progress-secondary 2.4s linear infinite;
   -moz-animation: linear-progress-secondary 2.4s linear infinite;
   -o-animation: linear-progress-secondary 2.4s linear infinite;
@@ -195,8 +191,8 @@ a img {
   right: 0;
   bottom: -4px;
 }
-.m-linear-progress.is-done {
-  display: none;
+.m-linear-progress.is-loading {
+  display: block;
 }
 .m-circular-progress {
   width: 24px;
@@ -812,11 +808,11 @@ body {
 }
 .layer-receipt .m-fa-btn {
   display: none;
-  -webkit-transition: all 0.2s ease-in-out;
-  -moz-transition: all 0.2s ease-in-out;
-  -o-transition: all 0.2s ease-in-out;
-  -ms-transition: all 0.2s ease-in-out;
-  transition: all 0.2s ease-in-out;
+  -webkit-transition: all 0.2s ease-out;
+  -moz-transition: all 0.2s ease-out;
+  -o-transition: all 0.2s ease-out;
+  -ms-transition: all 0.2s ease-out;
+  transition: all 0.2s ease-out;
   position: absolute;
   bottom: 8px;
   right: 20px;
@@ -950,6 +946,9 @@ body {
   color: #fff;
   padding: 8px 0;
 }
+.layer-receipt .feed-list.is-unfolded {
+  display: block;
+}
 .layer-receipt .feed-list .feed {
   cursor: pointer;
   -webkit-user-select: none;
@@ -983,6 +982,11 @@ body {
   display: block;
 }
 .layer-receipt.is-drawer-unfolded .m-fa-btn {
+  -webkit-transition: all 0.2s ease-in;
+  -moz-transition: all 0.2s ease-in;
+  -o-transition: all 0.2s ease-in;
+  -ms-transition: all 0.2s ease-in;
+  transition: all 0.2s ease-in;
   -webkit-transform: translateX(-720px) scale(60);
   -moz-transform: translateX(-720px) scale(60);
   -o-transform: translateX(-720px) scale(60);
@@ -1078,17 +1082,7 @@ body {
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
   filter: alpha(opacity=0);
 }
-.layer-receipt.is-feed-list-unfolded .feed-list {
-  display: block;
-}
-.layer-receipt.is-feed-list-unfolded .toolbar .title .m-ico {
-  -webkit-transform: rotate(-180deg);
-  -moz-transform: rotate(-180deg);
-  -o-transform: rotate(-180deg);
-  -ms-transform: rotate(-180deg);
-  transform: rotate(-180deg);
-}
-.layer-receipt.is-artworks-rendering .artwork-thumbnail {
+.layer-receipt.is-artwork-list-rendering .artwork-thumbnail {
   -webkit-transition: all 0.4s ease-out;
   -moz-transition: all 0.4s ease-out;
   -o-transition: all 0.4s ease-out;

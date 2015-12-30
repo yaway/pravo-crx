@@ -11,6 +11,23 @@
         return M.__super__.constructor.apply(this, arguments);
       }
 
+      M.prototype.initialize = function() {
+        var defaults, opt;
+        M.__super__.initialize.call(this);
+        defaults = this.getDefaults();
+        opt = {
+          silent: true
+        };
+        return this.set(defaults, opt);
+      };
+
+      M.prototype.getDefaults = function() {
+        var defaults, superDefaults;
+        superDefaults = this.__proto__.__proto__.defaults;
+        defaults = this.defaults;
+        return _.extend(superDefaults, defaults);
+      };
+
       M.prototype.toggle = function(k, opt) {
         if (this.get(k)) {
           this.set(k, false, opt);

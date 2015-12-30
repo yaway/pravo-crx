@@ -49,6 +49,7 @@ $a = $c - $g
     transform(rotate(360deg))
 
 .m-linear-progress
+  display none
   position relative
   height 4px
   bg(alpha(#fff,20%))
@@ -57,15 +58,14 @@ $a = $c - $g
   &:after
     content ''
     height 4px
+    transform-origin(left center)
     bg(alpha(#fff,80%))
     absolute-top()
     
   &:before
-    transform-origin(top left)
     animation(linear-progress-primary 2.4s linear infinite)
   &:after
     opacity(0)
-    transform-origin(top left)
     animation(linear-progress-secondary 2.4s linear infinite)
     
   &.top
@@ -74,8 +74,8 @@ $a = $c - $g
   &.bottom
     absolute-bottom()
     bottom -4px
-  &.is-done
-    display none
+  &.is-loading
+    display block
     
 .m-circular-progress
   width 24px

@@ -1,7 +1,7 @@
 .layer-receipt
   .m-fa-btn
     display none
-    transition(all,0.2s,ease-in-out)
+    transition(all,0.2s,ease-out)
     absolute(bottom 8px right 20px)
     .m-ico
       transition(all,0.2s,ease-in)
@@ -61,6 +61,8 @@
     bg(alpha(#000,0.9))
     color #fff
     padding: 8px 0
+    &.is-unfolded
+      display block
     .feed
       pointer()
       height 48px
@@ -86,6 +88,7 @@
       
   &.is-drawer-unfolded
     .m-fa-btn
+      transition(all,0.2s,ease-in)
       transform(translateX(-720px) scale(60))
       bg(alpha(#000,0.6))
       .m-ico
@@ -137,16 +140,8 @@
     .m-fa-btn
       .m-ico
         opacity(0)
-
-  &.is-feed-list-unfolded
-    .feed-list
-      display block
-    .toolbar
-      .title
-        .m-ico
-          transform(rotate(-180deg))
           
-  &.is-artworks-rendering
+  &.is-artwork-list-rendering
     .artwork-thumbnail
       transition(all,0.4s,ease-out)
       opacity(0)

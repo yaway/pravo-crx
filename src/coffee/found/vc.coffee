@@ -17,7 +17,6 @@ define [
         @template = Utl.getTpl opt.template
       else
         @template = ''
-    update: ()->
 
     getUI: (ui)->
       return @$el.find("[data-ui='#{ui}']")
@@ -57,24 +56,25 @@ define [
     setState: (k,v,opt)->
       if (typeof k) is 'object'
         v ?= {}
-        for kk in k
+        opt = v
+        for kk,kv of k
           if not opt.silent
-            @m.trigger "willChange:#{kk}",@m,k[kk]
-            @trigger "willChangeState:#{kk}",@m,k[kk]
+            @m.trigger "willChange:#{kk}",@m,kv
+            @trigger "willChangeState:#{kk}",this,kv
           @m.set kk,k[kk],opt
           if not opt.silent
-            @m.trigger "didChange:#{kk}",@m,k[kk]
-            @trigger "didChangeState:#{kk}",@m,k[kk]
+            @m.trigger "didChange:#{kk}",@m,kv
+            @trigger "didChangeState:#{kk}",this,kv
       else
         v ?= true
         opt ?= {}
         if not opt.silent
           @m.trigger "willChange:#{k}",@m,v
-          @trigger "willChangeState:#{k}",@m,v
+          @trigger "willChangeState:#{k}",this,v
         @m.set k,v,opt
         if not opt.silent
           @m.trigger "didChange:#{k}",@m,v
-          @trigger "didChangeState:#{k}",@m,v
+          @trigger "didChangeState:#{k}",this,v
       return this
     
 

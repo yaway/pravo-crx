@@ -6,9 +6,6 @@ define [
 ],(C,Artwork,API,Utl)->
   class Artworks extends C
     model: Artwork
-    
-    initialize: ()->
-      console.log "New Artworks"
 
     save: (opt)->
       console.debug 'Will Save Artworks'
@@ -42,9 +39,8 @@ define [
               # @add rawArtwork
             console.debug "#{rawArtworks.length} Local Artworks Fetched"
             callback rawArtworks
-            @trigger "didFetchFromLocal"
-      else 
-        console.log "Will Fetch Server Artworks"
+      else
+        console.error "Will Fetch Server Artworks"
         resetProtocol = (artwork)->
           url = artwork.url 
           thumb = artwork.thumb
@@ -77,11 +73,9 @@ define [
               rawArtwork = parseRawArtwork refArtwork
               rawArtworks.push rawArtwork
 
-            console.debug "#{rawArtworks.length} Server Artworks Fetched"
+            console.error "#{rawArtworks.length} Server Artworks Fetched"
             callback rawArtworks
-            @trigger "didFetchFromServer"
               
-        do (parseRawArtwork)=>
-          API.fetchArtworks {},apiCallback,{from:opt.from}
+        API.fetchArtworks {},apiCallback,{from:opt.from}
 
   return Artworks

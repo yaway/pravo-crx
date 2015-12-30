@@ -10,8 +10,7 @@ define [
       super(opt)
       @on
         'didChangeState:isCurrent': (m,v)=>
-          if v
-            @update()
+          @update()
       @render()
     render: ()->
       super()

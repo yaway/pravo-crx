@@ -14,11 +14,8 @@ define(['found/m'], function(M) {
     Progress.prototype.defaults = {
       isDone: false,
       done: 0,
-      total: 0
-    };
-
-    Progress.prototype.initialize = function() {
-      return console.log('New Progress');
+      total: 0,
+      infinite: false
     };
 
     return Progress;

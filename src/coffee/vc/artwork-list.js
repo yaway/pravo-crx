@@ -27,17 +27,19 @@ define(['found/vc', 'mc/list', 'mc/artwork', 'mc/artworks', 'vc/artwork', 'found
       if (opt == null) {
         opt = {};
       }
+      if (opt.model == null) {
+        opt.model = new List;
+      }
+      if (opt.collection == null) {
+        opt.collection = new Artworks;
+      }
       ArtworkListVC.__super__.initialize.call(this, opt);
-      this.m = new List;
-      this.c = opt.artworks || new Artworks;
       this.c.on({
         'willChange:isCurrent': (function(_this) {
           return function(m, v) {
             if (v) {
               return _this.vc.map(function(v, i, l) {
-                var artworkVC;
-                artworkVC = v;
-                return artworkVC.setState('isCurrent', false);
+                return v.setState('isCurrent', false);
               });
             }
           };

@@ -8,21 +8,22 @@ define [
   API = new APIFactory
 
   roots =
-    konachan: 'https://konachan.com/'
     unsplash: 'https://api.unsplash.com/'
+    konachan: 'https://konachan.com/'
+    yandere: 'https://yande.re/'
 
   create = API.create.bind API
 
-  GET = "GET"
-  POST = "POST"
+  # GET = "GET"
+  # POST = "POST"
 
-  API.signUp = create
-    method: POST
-    path: 'me/register'
+  # API.signUp = create
+  #   method: POST
+  #   path: 'me/register'
 
-  API.signIn = create
-    method: POST
-    path: 'me/session'
+  # API.signIn = create
+  #   method: POST
+  #   path: 'me/session'
 
 
   API.fetchArtworks = (data,callback,opt)=>
