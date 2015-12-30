@@ -10,8 +10,8 @@ define [
       console.log "New Feeds"
       @on
         'change:isCurrent': (m,v)=>
-          # if v
-            # @save()
+          if v
+            @save()
 
     save: (opt)->
       opt ?= {}

@@ -40,7 +40,7 @@ define [
             console.debug "#{rawArtworks.length} Local Artworks Fetched"
             callback rawArtworks
       else
-        console.error "Will Fetch Server Artworks"
+        console.debug "Will Fetch Server Artworks"
         resetProtocol = (artwork)->
           url = artwork.url 
           thumb = artwork.thumb
@@ -73,7 +73,7 @@ define [
               rawArtwork = parseRawArtwork refArtwork
               rawArtworks.push rawArtwork
 
-            console.error "#{rawArtworks.length} Server Artworks Fetched"
+            console.debug "#{rawArtworks.length} Server Artworks Fetched"
             callback rawArtworks
               
         API.fetchArtworks {},apiCallback,{from:opt.from}

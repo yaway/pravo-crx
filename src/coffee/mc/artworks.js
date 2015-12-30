@@ -62,7 +62,7 @@ define(['found/c', 'mc/artwork', 'found/api', 'found/utl'], function(C, Artwork,
           };
         })(this));
       } else {
-        console.error("Will Fetch Server Artworks");
+        console.debug("Will Fetch Server Artworks");
         resetProtocol = function(artwork) {
           var thumb, url;
           url = artwork.url;
@@ -105,7 +105,7 @@ define(['found/c', 'mc/artwork', 'found/api', 'found/utl'], function(C, Artwork,
                 rawArtwork = parseRawArtwork(refArtwork);
                 rawArtworks.push(rawArtwork);
               }
-              console.error(rawArtworks.length + " Server Artworks Fetched");
+              console.debug(rawArtworks.length + " Server Artworks Fetched");
               return callback(rawArtworks);
             }
           };

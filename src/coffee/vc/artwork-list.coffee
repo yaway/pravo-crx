@@ -9,11 +9,18 @@ define [
   class ArtworkListVC extends VC
     events:
       "click [data-ui='artwork']": 'onClickArtwork'
+      "contextmenu [data-ui='artwork']": 'onRightClickArtwork'
 
     onClickArtwork: (e)=>
       console.log 'Artwork Clicked'
       e.stopPropagation()
       @loop()
+
+    onRightClickArtwork: (e)=>
+      console.log 'Artwork Clicked'
+      e.stopPropagation()
+      e.preventDefault()
+      @random()
 
     initialize: (opt)->
       opt ?= {}
@@ -27,14 +34,24 @@ define [
               v.setState 'isCurrent',false
 
       @on
-        'didChangeState:isFetched':(m,v)=>
+        'didChangeState:isFetched':(vc,v)=>
           if v
             @setState 'isRendered'
             @resetState 'isFetched'
-        'didChangeState:isRendered':(m,v)=>
+        'didChangeState:isRendered':(vc,v)=>
           if v
             @render()
             @resetState 'isRendered'
+        'didChangeState:current':(vc,v)=>
+          @vc[v].setState 'isCurrent'
+        'didChangeState:isCurrentFav':(vc,v)=>
+          current = @getState 'current'
+          if v
+            @vc[current].setState 'isFavorite'
+          else
+            @vc[current].setState 'isFavorite',false
+          @c.save()
+
 
       @fetch()
 
@@ -69,9 +86,7 @@ define [
 
       current = @getState 'current'
       if not current
-        @setState 'current',(Utl.getRandomInt @vc.length)
-        current = @getState 'current'
-        @vc[current].setState 'isCurrent'
+        @random()
       console.debug "#{@c.length} Artworks Rendered"
 
     loop: ()->
@@ -80,7 +95,9 @@ define [
         return
       current = @getState 'current'
       next = Utl.getNextInt current,length
-      @vc[next].setState 'isCurrent'
       @setState 'current',next
+
+    random: ()->
+      @setState 'current',(Utl.getRandomInt @vc.length)
 
   return ArtworkListVC

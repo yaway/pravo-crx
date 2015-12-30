@@ -9,18 +9,27 @@ define(['found/vc', 'mc/list', 'mc/artwork', 'mc/artworks', 'vc/artwork', 'found
     extend(ArtworkListVC, superClass);
 
     function ArtworkListVC() {
+      this.onRightClickArtwork = bind(this.onRightClickArtwork, this);
       this.onClickArtwork = bind(this.onClickArtwork, this);
       return ArtworkListVC.__super__.constructor.apply(this, arguments);
     }
 
     ArtworkListVC.prototype.events = {
-      "click [data-ui='artwork']": 'onClickArtwork'
+      "click [data-ui='artwork']": 'onClickArtwork',
+      "contextmenu [data-ui='artwork']": 'onRightClickArtwork'
     };
 
     ArtworkListVC.prototype.onClickArtwork = function(e) {
       console.log('Artwork Clicked');
       e.stopPropagation();
       return this.loop();
+    };
+
+    ArtworkListVC.prototype.onRightClickArtwork = function(e) {
+      console.log('Artwork Clicked');
+      e.stopPropagation();
+      e.preventDefault();
+      return this.random();
     };
 
     ArtworkListVC.prototype.initialize = function(opt) {
@@ -47,7 +56,7 @@ define(['found/vc', 'mc/list', 'mc/artwork', 'mc/artworks', 'vc/artwork', 'found
       });
       this.on({
         'didChangeState:isFetched': (function(_this) {
-          return function(m, v) {
+          return function(vc, v) {
             if (v) {
               _this.setState('isRendered');
               return _this.resetState('isFetched');
@@ -55,11 +64,28 @@ define(['found/vc', 'mc/list', 'mc/artwork', 'mc/artworks', 'vc/artwork', 'found
           };
         })(this),
         'didChangeState:isRendered': (function(_this) {
-          return function(m, v) {
+          return function(vc, v) {
             if (v) {
               _this.render();
               return _this.resetState('isRendered');
             }
+          };
+        })(this),
+        'didChangeState:current': (function(_this) {
+          return function(vc, v) {
+            return _this.vc[v].setState('isCurrent');
+          };
+        })(this),
+        'didChangeState:isCurrentFav': (function(_this) {
+          return function(vc, v) {
+            var current;
+            current = _this.getState('current');
+            if (v) {
+              _this.vc[current].setState('isFavorite');
+            } else {
+              _this.vc[current].setState('isFavorite', false);
+            }
+            return _this.c.save();
           };
         })(this)
       });
@@ -107,9 +133,7 @@ define(['found/vc', 'mc/list', 'mc/artwork', 'mc/artworks', 'vc/artwork', 'found
       })(this));
       current = this.getState('current');
       if (!current) {
-        this.setState('current', Utl.getRandomInt(this.vc.length));
-        current = this.getState('current');
-        this.vc[current].setState('isCurrent');
+        this.random();
       }
       return console.debug(this.c.length + " Artworks Rendered");
     };
@@ -122,8 +146,11 @@ define(['found/vc', 'mc/list', 'mc/artwork', 'mc/artworks', 'vc/artwork', 'found
       }
       current = this.getState('current');
       next = Utl.getNextInt(current, length);
-      this.vc[next].setState('isCurrent');
       return this.setState('current', next);
+    };
+
+    ArtworkListVC.prototype.random = function() {
+      return this.setState('current', Utl.getRandomInt(this.vc.length));
     };
 
     return ArtworkListVC;

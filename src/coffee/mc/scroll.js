@@ -47,7 +47,7 @@ define(['found/m'], function(M) {
     };
 
     Scroll.prototype.validateDistance = function() {
-      var distance, isValid, limit;
+      var distance, isScrolledToEnd, isValid, limit;
       distance = this.get('distance');
       limit = (this.get('scrolleeSize')) - (this.get('scrollSize'));
       isValid = false;
@@ -55,9 +55,11 @@ define(['found/m'], function(M) {
         this.set('distance', 0);
       } else if (distance < -limit) {
         this.set('distance', -limit);
+        isScrolledToEnd = true;
       } else {
         isValid = true;
       }
+      this.set('isScrolledToEnd', isScrolledToEnd || false);
       return this.set("isScrollable", isValid);
     };
 

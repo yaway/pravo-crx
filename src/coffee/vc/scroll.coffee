@@ -26,6 +26,11 @@ define [
       console.log 'Scroll Rendered'
       @resize()
 
+    reset: ()->
+      @setState 'distance',0
+      @move()
+      @resize()
+
     resize: ()->
       direction = @model.get 'direction'
       scrollSize = 0
@@ -39,6 +44,12 @@ define [
       @model.set 'scrollSize',scrollSize
       @model.set 'scrolleeSize',scrolleeSize
 
+    move: ()=>
+      if (@model.get 'direction') is 'v'
+        @$scrollee.css {"transform": "translateX(#{@model.get 'distance'}px)"}
+      else
+        @$scrollee.css {"transform": "translateY(#{@model.get 'distance'}px)"}
+
     scroll: (delta)->
       timer = @model.get 'timer'
       easeTimer = @model.get 'easeTimer'
@@ -50,17 +61,12 @@ define [
         distance = @model.get 'distance'
         @model.trigger 'willChangeDisance'
         @model.set 'distance',distance+delta
-        move()
+        @move()
       ease = ()=>
         @$el.addClass 'is-eased'
         @model.trigger 'willChangeDisance'
         @model.set 'distance',(@model.get 'distance')+delta*4
-        move()
-      move = ()=>
-        if (@model.get 'direction') is 'v'
-          @$scrollee.css {"transform": "translateX(#{@model.get 'distance'}px)"}
-        else
-          @$scrollee.css {"transform": "translateY(#{@model.get 'distance'}px)"}
+        @move()
       if @model.get 'isScrollable'
         @resize()
         timer = setTimeout scroll, 10

@@ -14,18 +14,41 @@ define(['found/vc', 'mc/booth', 'vc/artwork-list', 'found/utl'], function(VC, Bo
     }
 
     BoothVC.prototype.events = {
-      "click [data-ui='artwork']": 'onClickArtwork'
+      "click [data-ui='artwork']": 'onClickArtwork',
+      "click [data-ui='btnToggleFav']": 'onClickBtnToggleFav'
     };
 
     BoothVC.prototype.onClickBtnToggleFav = function(e) {
       e.stopPropagation();
       console.log('BtnFav Clicked');
-      return console.log(currentArtwork);
+      return this.toggleState('isCurrentFav');
     };
 
     BoothVC.prototype.initialize = function(opt) {
       BoothVC.__super__.initialize.call(this, opt);
-      this.model = new Booth;
+      this.m = new Booth;
+      this.on({
+        'didChangeState:isCurrentFav': (function(_this) {
+          return function(m, v) {
+            if (v) {
+              _this.$el.addClass('is-favorite');
+              return _this.ui.$icoToggleFav.text('bookmark');
+            } else {
+              _this.$el.removeClass('is-favorite');
+              return _this.ui.$icoToggleFav.text('bookmark_border');
+            }
+          };
+        })(this),
+        'didChangeState:blur': (function(_this) {
+          return function(m, v) {
+            if (v) {
+              return _this.$el.addClass('blur');
+            } else {
+              return _this.$el.removeClass('blur');
+            }
+          };
+        })(this)
+      });
       return this.render();
     };
 
@@ -34,6 +57,7 @@ define(['found/vc', 'mc/booth', 'vc/artwork-list', 'found/utl'], function(VC, Bo
       this.artworkListVC = new ArtworkListVC({
         $root: this.ui.$artworkList
       });
+      this.setState('isCurrentFav');
       return console.log("Booth Rendered");
     };
 

@@ -17,7 +17,11 @@
         console.log("New Feeds");
         return this.on({
           'change:isCurrent': (function(_this) {
-            return function(m, v) {};
+            return function(m, v) {
+              if (v) {
+                return _this.save();
+              }
+            };
           })(this)
         });
       };

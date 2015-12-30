@@ -940,11 +940,10 @@ body {
 .layer-receipt .feed-list {
   display: none;
   position: absolute;
-  top: 0;
+  top: 8px;
   left: 8px;
   background-color: rgba(0,0,0,0.9);
   color: #fff;
-  padding: 8px 0;
 }
 .layer-receipt .feed-list.is-unfolded {
   display: block;

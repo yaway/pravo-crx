@@ -16,10 +16,6 @@ define [
       "isChosen": false
 
     initialize: ()->
-      @on
-        'change:willBeCurrent': @onChangeWillBeCurrent
-        'change:isCurrent': @onChangeIsCurrent
-
       if (@get 'url') is ''
         @set "src","#{@get 'root'}/#{@get 'path'}"
       else

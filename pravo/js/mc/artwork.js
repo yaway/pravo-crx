@@ -25,10 +25,6 @@
       };
 
       Artwork.prototype.initialize = function() {
-        this.on({
-          'change:willBeCurrent': this.onChangeWillBeCurrent,
-          'change:isCurrent': this.onChangeIsCurrent
-        });
         if ((this.get('url')) === '') {
           return this.set("src", (this.get('root')) + "/" + (this.get('path')));
         } else {

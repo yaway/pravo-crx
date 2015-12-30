@@ -9,6 +9,7 @@ define(['found/vc', 'mc/scroll', 'jquery-mousewheel'], function(VC, Scroll, JqMo
     extend(ScrollVC, superClass);
 
     function ScrollVC() {
+      this.move = bind(this.move, this);
       this.onMousewheel = bind(this.onMousewheel, this);
       return ScrollVC.__super__.constructor.apply(this, arguments);
     }
@@ -47,6 +48,12 @@ define(['found/vc', 'mc/scroll', 'jquery-mousewheel'], function(VC, Scroll, JqMo
       return this.resize();
     };
 
+    ScrollVC.prototype.reset = function() {
+      this.setState('distance', 0);
+      this.move();
+      return this.resize();
+    };
+
     ScrollVC.prototype.resize = function() {
       var direction, scrollSize, scrolleeSize;
       direction = this.model.get('direction');
@@ -63,8 +70,20 @@ define(['found/vc', 'mc/scroll', 'jquery-mousewheel'], function(VC, Scroll, JqMo
       return this.model.set('scrolleeSize', scrolleeSize);
     };
 
+    ScrollVC.prototype.move = function() {
+      if ((this.model.get('direction')) === 'v') {
+        return this.$scrollee.css({
+          "transform": "translateX(" + (this.model.get('distance')) + "px)"
+        });
+      } else {
+        return this.$scrollee.css({
+          "transform": "translateY(" + (this.model.get('distance')) + "px)"
+        });
+      }
+    };
+
     ScrollVC.prototype.scroll = function(delta) {
-      var ease, easeTimer, move, scroll, timer;
+      var ease, easeTimer, scroll, timer;
       timer = this.model.get('timer');
       easeTimer = this.model.get('easeTimer');
       if (timer) {
@@ -79,7 +98,7 @@ define(['found/vc', 'mc/scroll', 'jquery-mousewheel'], function(VC, Scroll, JqMo
           distance = _this.model.get('distance');
           _this.model.trigger('willChangeDisance');
           _this.model.set('distance', distance + delta);
-          return move();
+          return _this.move();
         };
       })(this);
       ease = (function(_this) {
@@ -87,20 +106,7 @@ define(['found/vc', 'mc/scroll', 'jquery-mousewheel'], function(VC, Scroll, JqMo
           _this.$el.addClass('is-eased');
           _this.model.trigger('willChangeDisance');
           _this.model.set('distance', (_this.model.get('distance')) + delta * 4);
-          return move();
-        };
-      })(this);
-      move = (function(_this) {
-        return function() {
-          if ((_this.model.get('direction')) === 'v') {
-            return _this.$scrollee.css({
-              "transform": "translateX(" + (_this.model.get('distance')) + "px)"
-            });
-          } else {
-            return _this.$scrollee.css({
-              "transform": "translateY(" + (_this.model.get('distance')) + "px)"
-            });
-          }
+          return _this.move();
         };
       })(this);
       if (this.model.get('isScrollable')) {

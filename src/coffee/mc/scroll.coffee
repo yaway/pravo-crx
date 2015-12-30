@@ -32,8 +32,10 @@ define [
         @set 'distance',0
       else if distance < -limit
         @set 'distance',-limit
+        isScrolledToEnd = true
       else
         isValid = true
+      @set 'isScrolledToEnd',(isScrolledToEnd or false)
       @set "isScrollable",isValid
 
   return Scroll

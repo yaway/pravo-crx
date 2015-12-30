@@ -52,7 +52,8 @@ define [
     initialize: (opt)->
       super(opt)
 
-      @model = new Receipt
+      @m = new Receipt
+      @c = new Artworks
 
       @on
         'didChangeState:hasArtworks': (vc,v)=>
@@ -63,12 +64,10 @@ define [
 
         'didChangeState:isDrawerUnfolded': (mv,v)=>
           if v
-            @scrollVC.resize()
+            @scrollVC.reset()
             @$el.addClass 'is-drawer-unfolded'
           else
             @$el.removeClass 'is-drawer-unfolded'
-
-      @c = new Artworks
 
       @render()
 
@@ -82,21 +81,19 @@ define [
       @renderArtworkProgress()
 
       @listenTo @feedListVC,'didChangeState:current',(vc,v)=>
-        if v
-          feed = vc.getState 'current'
-          @ui.$feedName.text feed
-          @artworkListVC.setState 'from',feed
-          @artworkListVC.fetch()
+        @ui.$feedName.text v
+        @artworkListVC.setState 'from',v
+        @artworkListVC.fetch()
 
       @listenTo @artworkListVC,'didChangeState:willFetch',(vc,v)=>
         if v
-          opt =
-            infinite: true
-          @artworkProgressVC.load opt
+          @artworkProgressVC.setState 'infinite'
+          @artworkProgressVC.load()
 
       @listenTo @artworkListVC,'didChangeState:didFetch',(vc,v)=>
         if v
           @setState 'hasArtworks'
+          @artworkProgressVC.setState 'infinite',false
           @artworkProgressVC.load()
 
       @listenTo @artworkListVC,'didChangeState:willRender',(vc,v)=>
@@ -109,12 +106,14 @@ define [
             @$el.removeClass 'is-artwork-list-rendering'
           setTimeout timeout,200
 
-          @scrollVC.resize()
+          @scrollVC.reset()
 
       @listenTo @artworkProgressVC,'didChangeState:isDone',(vc,v)=>
         if v
           @artworkListVC.render()
 
+      @listenTo @scrollVC,'didChangeState:isScrolledToEnd',(vc,v)=>
+        console.log v
       # @model.set 'isDrawerUnfolded',true
 
     renderFeedList: ()->

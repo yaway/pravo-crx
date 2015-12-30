@@ -49,7 +49,8 @@ define(['found/vc', 'mc/artworks', 'mc/feeds', 'mc/receipt', 'mc/scroll', 'mc/ar
 
     ReceiptVC.prototype.initialize = function(opt) {
       ReceiptVC.__super__.initialize.call(this, opt);
-      this.model = new Receipt;
+      this.m = new Receipt;
+      this.c = new Artworks;
       this.on({
         'didChangeState:hasArtworks': (function(_this) {
           return function(vc, v) {
@@ -63,7 +64,7 @@ define(['found/vc', 'mc/artworks', 'mc/feeds', 'mc/receipt', 'mc/scroll', 'mc/ar
         'didChangeState:isDrawerUnfolded': (function(_this) {
           return function(mv, v) {
             if (v) {
-              _this.scrollVC.resize();
+              _this.scrollVC.reset();
               return _this.$el.addClass('is-drawer-unfolded');
             } else {
               return _this.$el.removeClass('is-drawer-unfolded');
@@ -71,7 +72,6 @@ define(['found/vc', 'mc/artworks', 'mc/feeds', 'mc/receipt', 'mc/scroll', 'mc/ar
           };
         })(this)
       });
-      this.c = new Artworks;
       return this.render();
     };
 
@@ -84,23 +84,16 @@ define(['found/vc', 'mc/artworks', 'mc/feeds', 'mc/receipt', 'mc/scroll', 'mc/ar
       this.renderArtworkProgress();
       this.listenTo(this.feedListVC, 'didChangeState:current', (function(_this) {
         return function(vc, v) {
-          var feed;
-          if (v) {
-            feed = vc.getState('current');
-            _this.ui.$feedName.text(feed);
-            _this.artworkListVC.setState('from', feed);
-            return _this.artworkListVC.fetch();
-          }
+          _this.ui.$feedName.text(v);
+          _this.artworkListVC.setState('from', v);
+          return _this.artworkListVC.fetch();
         };
       })(this));
       this.listenTo(this.artworkListVC, 'didChangeState:willFetch', (function(_this) {
         return function(vc, v) {
-          var opt;
           if (v) {
-            opt = {
-              infinite: true
-            };
-            return _this.artworkProgressVC.load(opt);
+            _this.artworkProgressVC.setState('infinite');
+            return _this.artworkProgressVC.load();
           }
         };
       })(this));
@@ -108,6 +101,7 @@ define(['found/vc', 'mc/artworks', 'mc/feeds', 'mc/receipt', 'mc/scroll', 'mc/ar
         return function(vc, v) {
           if (v) {
             _this.setState('hasArtworks');
+            _this.artworkProgressVC.setState('infinite', false);
             return _this.artworkProgressVC.load();
           }
         };
@@ -127,15 +121,20 @@ define(['found/vc', 'mc/artworks', 'mc/feeds', 'mc/receipt', 'mc/scroll', 'mc/ar
               return _this.$el.removeClass('is-artwork-list-rendering');
             };
             setTimeout(timeout, 200);
-            return _this.scrollVC.resize();
+            return _this.scrollVC.reset();
           }
         };
       })(this));
-      return this.listenTo(this.artworkProgressVC, 'didChangeState:isDone', (function(_this) {
+      this.listenTo(this.artworkProgressVC, 'didChangeState:isDone', (function(_this) {
         return function(vc, v) {
           if (v) {
             return _this.artworkListVC.render();
           }
+        };
+      })(this));
+      return this.listenTo(this.scrollVC, 'didChangeState:isScrolledToEnd', (function(_this) {
+        return function(vc, v) {
+          return console.log(v);
         };
       })(this));
     };

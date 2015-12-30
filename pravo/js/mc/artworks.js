@@ -62,7 +62,7 @@
             };
           })(this));
         } else {
-          console.error("Will Fetch Server Artworks");
+          console.debug("Will Fetch Server Artworks");
           resetProtocol = function(artwork) {
             var thumb, url;
             url = artwork.url;
@@ -105,7 +105,7 @@
                   rawArtwork = parseRawArtwork(refArtwork);
                   rawArtworks.push(rawArtwork);
                 }
-                console.error(rawArtworks.length + " Server Artworks Fetched");
+                console.debug(rawArtworks.length + " Server Artworks Fetched");
                 return callback(rawArtworks);
               }
             };
