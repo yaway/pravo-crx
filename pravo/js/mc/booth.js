@@ -16,10 +16,6 @@
         "ableToLoop": true
       };
 
-      Booth.prototype.initialize = function() {
-        return console.log("New Booth");
-      };
-
       return Booth;
 
     })(M);

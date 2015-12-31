@@ -1,9 +1,10 @@
 define [
   'found/vc'
   'mc/booth'
+  'mc/artworks'
   'vc/artwork-list'
   'found/utl'
-],(VC,Booth,ArtworkListVC,Utl)->
+],(VC,Booth,Artworks,ArtworkListVC,Utl)->
   class BoothVC extends VC
     events:
       "click [data-ui='artwork']": 'onClickArtwork'
@@ -12,21 +13,22 @@ define [
     onClickBtnToggleFav: (e)=>
       e.stopPropagation()
       console.log 'BtnFav Clicked'
-      @toggleState 'isCurrentFav'
+      @artworkListVC.toggleState 'isCurrentFavorite'
+      saveOpt =
+        only: 'fav'
+      @c.save saveOpt
 
     initialize: (opt)->
       super(opt)
       @m = new Booth
+      @c = new Artworks
       @on
-        'didChangeState:isCurrentFav':(m,v)=>
+        'didChangeState:hasArtworks': (vc,v)=>
           if v
-            @$el.addClass 'is-favorite'
-            @ui.$icoToggleFav.text 'bookmark'
+            @$el.addClass 'has-artworks'
           else
-            @$el.removeClass 'is-favorite'
-            @ui.$icoToggleFav.text 'bookmark_border'
-
-        'didChangeState:blur':(m,v)=>
+            @$el.removeClass 'has-artworks'
+        'didChangeState:blur': (vc,v)=>
           if v
             @$el.addClass 'blur'
           else
@@ -37,7 +39,21 @@ define [
       super()
       @artworkListVC = new ArtworkListVC
         $root: @ui.$artworkList
-      @setState 'isCurrentFav'
-      console.log "Booth Rendered"
+        collection: @c
+
+      @listenTo @artworkListVC,'didChangeState:didRender',(vc,v)=>
+        if vc.c.length is 0
+          @setState 'hasArtworks',false
+        else
+          @setState 'hasArtworks',true
+
+      @listenTo @artworkListVC,'didChangeState:isCurrentFavorite',(vc,v)=>
+        if v
+          @$el.addClass 'is-favorite'
+          @ui.$icoToggleFav.text 'bookmark'
+        else
+          @$el.removeClass 'is-favorite'
+          @ui.$icoToggleFav.text 'bookmark_border'
+
 
   return BoothVC

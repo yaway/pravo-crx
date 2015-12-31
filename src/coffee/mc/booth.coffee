@@ -5,8 +5,5 @@ define [
     defaults:
       "hasArtworks": false
       "ableToLoop": true
-
-    initialize: ()->
-      console.log "New Booth"
       
   return Booth

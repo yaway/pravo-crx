@@ -8,37 +8,36 @@ define [
     model: Artwork
 
     save: (opt)->
+      opt ?= {}
       console.debug 'Will Save Artworks'
 
-      rawArtworks = Utl.deepCopy @models
-      _.map rawArtworks,(artwork)=>
-        artwork.isCurrent = false
-        return artwork
+      rawArtworks = Utl.cloneObj @models
+      # _.map rawArtworks,(artwork)=>
+      #   artwork.isCurrent = false
+      #   return artwork
       if opt.only is "fav"
-        rawArtworks = _.where rawArtworks,{isFavorite: true}
+        props =
+          isFavorite: true
+        rawArtworks = _.where rawArtworks,props
       else if opt.only is "nil"
         rawArtworks = []
-      artworksJSON = JSON.stringify rawArtworks
-      console.log artworksJSON
-      chrome.storage.local.set {'artworks':artworksJSON},()=>
-        @trigger "didSaveToLocal"
-        console.debug "Artworks Did Save"
+      # artworksJSON = JSON.stringify rawArtworks
+      data =
+        artworks:rawArtworks
+      chrome.storage.local.set data,()=>
+        console.debug "Did Save Artworks"
 
     fetch: (opt)->
+      opt ?= {}
       rawArtworks = []
       callback = opt.callback or ((data)-> return data)
 
       if opt.from is "local"
-        console.log "Will Fetch Local Artworks"
+        console.debug "Will Fetch Local Artworks"
         chrome.storage.local.get 'artworks',(data)=>
-          unless data.artworks
-            console.log 'No Local Artworks Fetched'
-          else
-            rawArtworks = JSON.parse (data.artworks or {})
-            # for rawArtwork in rawArtworks
-              # @add rawArtwork
-            console.debug "#{rawArtworks.length} Local Artworks Fetched"
-            callback rawArtworks
+          raw = data.artworks or []
+          console.debug "#{raw.length} Local Artworks Fetched"
+          callback raw
       else
         console.debug "Will Fetch Server Artworks"
         resetProtocol = (artwork)->

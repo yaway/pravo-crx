@@ -40,13 +40,20 @@ define(['found/vc', 'mc/artwork-progress'], function(VC, ArtworkProgress) {
 
     ArtworkProgressVC.prototype.render = function() {
       ArtworkProgressVC.__super__.render.call(this);
-      return console.log('Artwork Progress Rendered');
+      return console.log("Artwork Progress Rendered:" + (this.getState('indicatorType')));
     };
 
     ArtworkProgressVC.prototype.load = function(c) {
-      var iteratee, srcKey, total;
+      var iteratee, srcKey, timeout, total;
       this.setState('isLoading', true);
       this.setState('isDone', false);
+      timeout = (function(_this) {
+        return function() {
+          console.log('Artworks Failed to Load:timeout');
+          return _this.setState('isLoading', false);
+        };
+      })(this);
+      setTimeout(timeout, 1000 * 10);
       if (this.getState('infinite')) {
         return;
       }
@@ -74,6 +81,7 @@ define(['found/vc', 'mc/artwork-progress'], function(VC, ArtworkProgress) {
             });
             _this.setState('done', dones.length);
             if (dones.length === total) {
+              clearTimeout(timeout);
               console.log('All Artworks Loaded');
               _this.setState('isDone', true);
               return _this.setState('isLoading', false);

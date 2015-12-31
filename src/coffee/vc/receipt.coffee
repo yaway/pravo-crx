@@ -61,10 +61,9 @@ define [
             @$el.addClass 'has-artworks'
           else
             @$el.removeClass 'has-artworks'
-
         'didChangeState:isDrawerUnfolded': (mv,v)=>
           if v
-            @scrollVC.reset()
+            @scrollVC.refresh()
             @$el.addClass 'is-drawer-unfolded'
           else
             @$el.removeClass 'is-drawer-unfolded'
@@ -78,7 +77,8 @@ define [
       @renderFeedList()
       @renderArtworkList()
       @renderScroll()
-      @renderArtworkProgress()
+      @renderRefreshProgress()
+      @renderFetchProgress()
 
       @listenTo @feedListVC,'didChangeState:current',(vc,v)=>
         @ui.$feedName.text v
@@ -87,14 +87,14 @@ define [
 
       @listenTo @artworkListVC,'didChangeState:willFetch',(vc,v)=>
         if v
-          @artworkProgressVC.setState 'infinite'
-          @artworkProgressVC.load()
+          @refreshProgressVC.setState 'infinite'
+          @refreshProgressVC.load()
 
       @listenTo @artworkListVC,'didChangeState:didFetch',(vc,v)=>
         if v
           @setState 'hasArtworks'
-          @artworkProgressVC.setState 'infinite',false
-          @artworkProgressVC.load()
+          @refreshProgressVC.setState 'infinite',false
+          @refreshProgressVC.load()
 
       @listenTo @artworkListVC,'didChangeState:willRender',(vc,v)=>
         if v
@@ -104,16 +104,19 @@ define [
         if v
           timeout = ()=>
             @$el.removeClass 'is-artwork-list-rendering'
-          setTimeout timeout,200
+          setTimeout timeout,4
 
-          @scrollVC.reset()
+          @scrollVC.refresh()
+          @fetchProgressVC.setState 'isLoading',false
 
-      @listenTo @artworkProgressVC,'didChangeState:isDone',(vc,v)=>
+      @listenTo @refreshProgressVC,'didChangeState:isDone',(vc,v)=>
         if v
           @artworkListVC.render()
 
-      @listenTo @scrollVC,'didChangeState:isScrolledToEnd',(vc,v)=>
-        console.log v
+      @listenTo @scrollVC,'didChangeState:didScrollToEnd',(vc,v)=>
+          if v
+            @fetchProgressVC.load()
+
       # @model.set 'isDrawerUnfolded',true
 
     renderFeedList: ()->
@@ -129,23 +132,38 @@ define [
         $root: @ui.$artworkList
         collection: @c
 
-    renderScroll: (scroll)->
-      scroll ?= new Scroll
+    renderScroll: ()->
+      scroll = new Scroll
         direction: 'v'
       @scrollVC = new ScrollVC
         $root: @ui.$scroll
         $scrollee: @ui.$artworkList
         model: scroll
 
-    renderArtworkProgress: (progress)->
-      progress ?= new ArtworkProgress
-      @artworkProgressVC ?= new ArtworkProgressVC
+    renderRefreshProgress: ()->
+      progress = new ArtworkProgress
+        artworkType: 'thumb'
+        indicatorType: 'linear'
+      @refreshProgressVC = new ArtworkProgressVC
         $root: @ui.$drawer
         model: progress
         collection: @c
         position: 'prepend'
 
-      @artworkProgressVC.$el.addClass 'top'
-      @artworkProgressVC.load()
+      @refreshProgressVC.$el.addClass 'top'
+      @refreshProgressVC.load()
+
+    renderFetchProgress: ()->
+      progress = new ArtworkProgress
+        artworkType: 'thumb'
+        indicatorType: 'circular'
+        infinite: true
+      @fetchProgressVC = new ArtworkProgressVC
+        $root: @ui.$scroll
+        model: progress
+        collection: @c
+        position: 'append'
+
+      @fetchProgressVC.$el.addClass 'right'
 
   return ReceiptVC

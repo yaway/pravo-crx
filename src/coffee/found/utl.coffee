@@ -1,7 +1,5 @@
 define [
-  'jquery'
-  'underscore'
-],($,_)->
+],()->
   Utl = {}
   Utl.resolveURL = ()->
     console.log arguments
@@ -44,13 +42,9 @@ define [
       canvas = null
     img.src = src
  
-  Utl.deepCopy = (obj)->
+  Utl.cloneObj = (obj)->
     newObj = JSON.parse (JSON.stringify obj)
     return newObj
-
-  Utl.getTpl = (tpl)->
-    tplStr = _.unescape $("[data-tpl='#{tpl}']").html()
-    return tplStr
 
   Utl.getRandomInt = (max)->
     randomInt = Math.floor (Math.random()*max)
@@ -61,11 +55,5 @@ define [
     else
       next = 0
     return next
-
-  Utl.rebindContextMenu = ()->
-    $(document).on 'contextmenu',(e)->
-      e.preventDefault()
-      e.stopPropagation()
-      return false
 
   return Utl

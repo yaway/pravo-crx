@@ -19,8 +19,7 @@
 
       ArtworkThumbnailListVC.prototype.onClickArtwork = function(e) {
         console.log('Artwork Clicked');
-        e.stopPropagation();
-        return this.loop();
+        return e.stopPropagation();
       };
 
       ArtworkThumbnailListVC.prototype.initialize = function(opt) {
@@ -34,19 +33,6 @@
           opt.collection = new Artworks;
         }
         ArtworkThumbnailListVC.__super__.initialize.call(this, opt);
-        this.c.on({
-          'willChange:isCurrent': (function(_this) {
-            return function(m, v) {
-              if (v) {
-                return _this.vc.map(function(v, i, l) {
-                  var artworkVC;
-                  artworkVC = v;
-                  return artworkVC.setState('isCurrent', false);
-                });
-              }
-            };
-          })(this)
-        });
         return this.fetch();
       };
 
@@ -89,16 +75,17 @@
       };
 
       ArtworkThumbnailListVC.prototype.render = function() {
-        var current;
         this.setState('didRender', false);
         this.setState('willRender');
         ArtworkThumbnailListVC.__super__.render.call(this);
         if (this.c.length === 0) {
           console.log("No Artworks to Render");
+          this.setState('willRender', false);
+          this.setState('didRender');
           return;
         }
-        this.vc = [];
         this.$el.empty();
+        this.vc = [];
         this.c.map((function(_this) {
           return function(v, i, l) {
             var artworkVC, m;
@@ -109,19 +96,21 @@
               template: 'artworkThumbnail',
               model: m
             });
-            if (m.get('isCurrent')) {
-              _this.setState('current', i);
-            }
             return _this.vc.push(artworkVC);
           };
         })(this));
-        current = this.getState('current');
-        if (!current) {
-          this.setState('current', Utl.getRandomInt(this.vc.length));
-          current = this.getState('current');
-          this.vc[current].setState('isCurrent');
-        }
-        console.debug(this.c.length + " Artwork Thumbnails Rendered");
+        this.vc.map((function(_this) {
+          return function(v, i, l) {
+            var vc;
+            vc = v;
+            return vc.on({
+              'didChangeState:isChosen': function(vc, v) {
+                return console.error(v);
+              }
+            });
+          };
+        })(this));
+        console.log(this.c.length + " Artwork Thumbnails Rendered");
         this.setState('willRender', false);
         return this.setState('didRender');
       };

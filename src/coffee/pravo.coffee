@@ -15,22 +15,15 @@ require [
   'jquery'
   'underscore'
   'vc/dashboard'
-  'found/utl'
-], ($,_,DashboardVC,UTL)->
+], ($,_,DashboardVC)->
   $ ()->
     console.debug 'Pravo!'
-    
-    UTL.rebindContextMenu()
 
     window.Pravo = {}
-    Pravo.cleanArtworks = ()->
-      opt =
-        only: 'nil'
-      dashboard.galleryVC.boothVC.artworkListVC.c.save opt
-    Pravo.cleanFeeds = ()->
-      opt =
-        only: 'nil'
-      dashboard.galleryVC.receiptVC.feeds.save opt
+    Pravo.clearLocalStore = ()->
+      callback = ()->
+        console.debug 'Local Store Cleared'
+      chrome.storage.local.clear callback
 
     dashboard = new DashboardVC
       $root: $('[data-ui="dashboard"]')

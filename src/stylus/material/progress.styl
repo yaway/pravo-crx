@@ -78,12 +78,13 @@ $a = $c - $g
     display block
     
 .m-circular-progress
+  display none
   width 24px
   height 24px
   .svg
     width 24px
     height 24px
-    animation(circular-circle linear 3.6s infinite)
+    animation(circular-circle linear 2.4s infinite)
   .circle
     width 24px
     height 24px
@@ -91,9 +92,13 @@ $a = $c - $g
     cy 12px
     r $r
     fill none
-    stroke $gray
+    stroke alpha(#fff,80%)
     stroke-width 4px
     transform-origin(center center)
-    animation(circular-progress linear 2.4s infinite)
+    animation(circular-progress ease 3.6s infinite)
+  &.right
+    absolute(top right)
+  &.is-loading
+    display block
     
     

@@ -9,7 +9,6 @@ define(['found/vc'], function(VC) {
     extend(ArtworkThumbnailVC, superClass);
 
     function ArtworkThumbnailVC() {
-      this.onChangeIsChosen = bind(this.onChangeIsChosen, this);
       this.onClick = bind(this.onClick, this);
       return ArtworkThumbnailVC.__super__.constructor.apply(this, arguments);
     }
@@ -19,17 +18,22 @@ define(['found/vc'], function(VC) {
     };
 
     ArtworkThumbnailVC.prototype.onClick = function() {
-      this.model.trigger('willChangeIsCurrent');
-      this.model.set('isCurrent', true);
-      this.model.trigger('willChangeIsChosen');
-      return this.model.set('isChosen', true);
+      this.setState('isChosen');
+      return this.setState('isCurrent');
     };
 
     ArtworkThumbnailVC.prototype.initialize = function(opt) {
       ArtworkThumbnailVC.__super__.initialize.call(this, opt);
-      this.model.on({
-        'change:isChosen': this.onChangeIsChosen,
-        'change:isCurrent': this.onChangeIsCurrent
+      this.on({
+        'didChangeState:isChosen': (function(_this) {
+          return function(vc, v) {
+            if (v) {
+              return _this.$el.addClass('is-chosen');
+            } else {
+              return _this.$el.removeClass('is-chosen');
+            }
+          };
+        })(this)
       });
       return this.lazyRender();
     };
@@ -43,14 +47,6 @@ define(['found/vc'], function(VC) {
           return _this.render();
         };
       })(this);
-    };
-
-    ArtworkThumbnailVC.prototype.onChangeIsChosen = function() {
-      if (this.model.get('isChosen')) {
-        return this.$el.addClass('is-chosen');
-      } else {
-        return this.$el.removeClass('is-chosen');
-      }
     };
 
     return ArtworkThumbnailVC;

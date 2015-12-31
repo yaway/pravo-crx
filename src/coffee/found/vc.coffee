@@ -14,9 +14,13 @@ define [
       @root = opt.root or document.body
       @$root = opt.$root or $(@root)
       if opt.template
-        @template = Utl.getTpl opt.template
+        @template = @getTemplate opt.template
       else
         @template = ''
+
+    getTemplate: (tpl)->
+      tplStr = _.unescape $("[data-tpl='#{tpl}']").html()
+      return tplStr
 
     getUI: (ui)->
       return @$el.find("[data-ui='#{ui}']")

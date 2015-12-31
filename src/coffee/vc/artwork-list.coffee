@@ -27,35 +27,39 @@ define [
       opt.model ?= new List
       opt.collection ?= new Artworks
       super(opt)
-      @c.on
-        'willChange:isCurrent':(m,v)=>
-          if v
-            @vc.map (v,i,l)=>
-              v.setState 'isCurrent',false
 
       @on
-        'didChangeState:isFetched':(vc,v)=>
-          if v
-            @setState 'isRendered'
-            @resetState 'isFetched'
-        'didChangeState:isRendered':(vc,v)=>
-          if v
-            @render()
-            @resetState 'isRendered'
         'didChangeState:current':(vc,v)=>
           @vc[v].setState 'isCurrent'
-        'didChangeState:isCurrentFav':(vc,v)=>
+          if @vc[v].getState 'isFavorite'
+            @setState 'isCurrentFavorite'
+          else
+            @setState 'isCurrentFavorite',false
+
+        'didChangeState:isCurrentFavorite':(vc,v)=>
           current = @getState 'current'
           if v
             @vc[current].setState 'isFavorite'
           else
             @vc[current].setState 'isFavorite',false
-          @c.save()
 
+        'didChangeState:didFetch':(vc,v)=>
+          @render()
+
+
+      @c.on
+        'willChange:isCurrent':(m,v)=>
+          if v
+            @vc.map (v,i,l)=>
+              v.setState 'isCurrent',false
+        'add':(m)=>
+            @render()
 
       @fetch()
 
+
     fetch: ()->
+      @setState 'didFetch',false
       @c.fetch
         from: "local"
         callback: (rawArtworks)=>
@@ -63,31 +67,38 @@ define [
           # lack = limit - rawArtworks.length
           if rawArtworks.length > 0
             @c.add rawArtworks
-            @setState 'isFetched'
+          @setState 'didFetch'
 
     render: ()->
+      @setState 'didRender',false
       super()
       if @c.length is 0
         console.log "No Artworks to Render"
+        @setState 'didRender'
         return
-      @vc = []
+
       @$el.empty()
+      @vc = []
+            
 
       @c.map (v,i,l)=>
-        artwork = v
+        m = v
         artworkVC = new ArtworkVC
           $root: @$el
           position: 'append'
           template: 'artwork'
-          model: artwork
-        if artwork.get 'isCurrent'
-          @setState 'current',i
+          model: m
         @vc.push artworkVC
+        if m.get 'isCurrent'
+          @setState 'current',i
 
       current = @getState 'current'
       if not current
         @random()
-      console.debug "#{@c.length} Artworks Rendered"
+
+
+      console.log "#{@c.length} Artworks Rendered"
+      @setState 'didRender'
 
     loop: ()->
       length = @vc.length

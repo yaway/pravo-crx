@@ -1,8 +1,10 @@
 define [
+  'underscore'
   'found/vc'
   'vc/booth'
   'vc/receipt'
-],(VC,BoothVC,ReceiptVC)->
+  'found/utl'
+],(_,VC,BoothVC,ReceiptVC,Utl)->
   class GalleryVC extends VC
 
     initialize: (opt)->
@@ -17,12 +19,27 @@ define [
 
       @receiptVC = new ReceiptVC
         $root: @ui.$receipt
-      @receiptVC.on
-        'didChangeState:isDrawerUnfolded':(m,v)=>
+
+      @listenTo @receiptVC.c,'didChange:isCurrent',(m,v)=>
+        @boothVC.c.add m
+
+
+      @listenTo @receiptVC,'didChangeState:hasArtworks',(vc,v)=>
+        if @boothVC.getState 'hasArtworks'
+          return
+
+        predicate = (m,i)->
+          return true
+        artworks = @receiptVC.c.filter predicate
+        @boothVC.c.add artworks
+
+      @listenTo @receiptVC,'didChangeState:isDrawerUnfolded',(vc,v)=>
           if v
             @boothVC.setState 'blur'
           else
             @boothVC.setState 'blur',false
 
+    receipt: (artworks)->
+      @boothVC.c.add arr[0]
 
   return GalleryVC

@@ -1,5 +1,5 @@
 (function() {
-  define(['jquery', 'underscore'], function($, _) {
+  define([], function() {
     var Utl;
     Utl = {};
     Utl.resolveURL = function() {
@@ -43,15 +43,10 @@
       };
       return img.src = src;
     };
-    Utl.deepCopy = function(obj) {
+    Utl.cloneObj = function(obj) {
       var newObj;
       newObj = JSON.parse(JSON.stringify(obj));
       return newObj;
-    };
-    Utl.getTpl = function(tpl) {
-      var tplStr;
-      tplStr = _.unescape($("[data-tpl='" + tpl + "']").html());
-      return tplStr;
     };
     Utl.getRandomInt = function(max) {
       var randomInt;
@@ -66,13 +61,6 @@
         next = 0;
       }
       return next;
-    };
-    Utl.rebindContextMenu = function() {
-      return $(document).on('contextmenu', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        return false;
-      });
     };
     return Utl;
   });

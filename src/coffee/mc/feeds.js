@@ -14,7 +14,7 @@ define(['found/c', 'mc/feed', 'found/utl'], function(C, Feed, Utl) {
     Feeds.prototype.model = Feed;
 
     Feeds.prototype.initialize = function() {
-      console.log("New Feeds");
+      Feeds.__super__.initialize.call(this);
       return this.on({
         'change:isCurrent': (function(_this) {
           return function(m, v) {
@@ -27,18 +27,21 @@ define(['found/c', 'mc/feed', 'found/utl'], function(C, Feed, Utl) {
     };
 
     Feeds.prototype.save = function(opt) {
-      var data;
+      var data, raw, rawFeeds;
       if (opt == null) {
         opt = {};
       }
-      data = JSON.stringify(this.models);
+      raw = Utl.cloneObj(this.models);
       if (opt.only === 'nil') {
-        data = JSON.stringify([]);
+        rawFeeds = [];
       }
-      return chrome.storage.local.set({
-        'feeds': data
-      }, (function(_this) {
-        return function() {};
+      data = {
+        feeds: raw
+      };
+      return chrome.storage.local.set(data, (function(_this) {
+        return function() {
+          return console.debug("Did Save Feeds");
+        };
       })(this));
     };
 
@@ -49,15 +52,10 @@ define(['found/c', 'mc/feed', 'found/utl'], function(C, Feed, Utl) {
       });
       return chrome.storage.local.get('feeds', (function(_this) {
         return function(data) {
-          var rawData;
-          if (data.feeds && data.feeds.length > 0) {
-            rawData = JSON.parse(data.feeds);
-          } else {
-            rawData = [];
-          }
-          console.debug(rawData.length + " Local Feeds Fetched");
-          callback(rawData);
-          return _this.trigger("didFetch");
+          var raw;
+          raw = data.feeds || [];
+          console.debug(raw.length + " Local Feeds Fetched");
+          return callback(raw);
         };
       })(this));
     };

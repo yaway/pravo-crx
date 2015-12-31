@@ -5,34 +5,43 @@ define [
 ],(VC,Scroll,JqMousewheel)->
   class ScrollVC extends VC
     events:
-      "mousewheel": "onMousewheel"
+      "mousewheel": 'onMousewheel'
+      "transitionend": 'onMove'
     onMousewheel: (e)=>
       delta = e.deltaY
       @scroll(delta)
+    onMove: (e)=>
+      if e.target is @$scrollee[0]
+        e.stopPropagation()
+        if @getState 'isScrollingToEnd'
+          @setState 'didScrollToEnd'
+        else
+          @setState 'didScrollToEnd',false
+
     initialize: (opt)->
+      @m = opt.model or new Scroll
       super(opt)
-      @model ?= new Scroll
-      if opt.direction
-        @model.set 'direction',opt.direction
       if opt.$scrollee
         @$scrollee = opt.$scrollee
       else if @ui.$scrollee
         @$scrollee = @ui.$scrollee
       else
-        console.error 'No Scrollee'
+        console.debug 'No Scrollee'
+
       @render()
+
     render: ()->
       super()
       console.log 'Scroll Rendered'
       @resize()
 
-    reset: ()->
+    refresh: ()->
       @setState 'distance',0
       @move()
       @resize()
 
     resize: ()->
-      direction = @model.get 'direction'
+      direction = @getState 'direction'
       scrollSize = 0
       scrolleeSize = 0
       if direction is 'h'
@@ -41,39 +50,54 @@ define [
       else
         scrollSize = @$el.width()
         scrolleeSize = @$scrollee.width()+56
-      @model.set 'scrollSize',scrollSize
-      @model.set 'scrolleeSize',scrolleeSize
+      @setState 'scrollSize',scrollSize
+      @setState 'scrolleeSize',scrolleeSize
 
     move: ()=>
-      if (@model.get 'direction') is 'v'
-        @$scrollee.css {"transform": "translateX(#{@model.get 'distance'}px)"}
+      @validateDistance()
+      if (@getState 'direction') is 'v'
+        @$scrollee.css {"transform": "translateX(#{@getState 'distance'}px)"}
       else
-        @$scrollee.css {"transform": "translateY(#{@model.get 'distance'}px)"}
+        @$scrollee.css {"transform": "translateY(#{@getState 'distance'}px)"}
 
     scroll: (delta)->
-      timer = @model.get 'timer'
-      easeTimer = @model.get 'easeTimer'
+      timer = @getState 'timer'
+      easeTimer = @getState 'easeTimer'
       if timer
         clearTimeout timer
         if easeTimer
           clearTimeout easeTimer
-      scroll = ()=>
-        distance = @model.get 'distance'
-        @model.trigger 'willChangeDisance'
-        @model.set 'distance',distance+delta
+      move = ()=>
+        distance = @getState 'distance'
+        @setState 'distance',distance+delta
         @move()
       ease = ()=>
         @$el.addClass 'is-eased'
-        @model.trigger 'willChangeDisance'
-        @model.set 'distance',(@model.get 'distance')+delta*4
+        @setState 'distance',(@getState 'distance')+delta*4
         @move()
-      if @model.get 'isScrollable'
+      if @getState 'isScrollable'
         @resize()
-        timer = setTimeout scroll, 10
-        easeTimer = setTimeout ease, 100
-        @model.set 'timer',timer
-        @model.set 'easeTimer',easeTimer
+        timer = setTimeout move, 8
+        easeTimer = setTimeout ease, 80
+        @setState 'timer',timer
+        @setState 'easeTimer',easeTimer
       else
-        scroll()
+        move()
+
+    validateDistance: ()->
+      distance = @getState 'distance'
+      limit = (@getState 'scrolleeSize') - (@getState 'scrollSize')
+      isValid = false
+      opt =
+        silent: true
+      if distance > 0 
+        @setState 'distance',0,opt
+      else if distance < -limit
+        @setState 'distance',-limit,opt
+        isScrollingToEnd = true
+      else
+        isValid = true
+      @setState 'isScrollingToEnd',(isScrollingToEnd or false)
+      @setState "isScrollable",isValid
 
   return ScrollVC

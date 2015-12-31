@@ -64,7 +64,7 @@ define(['found/vc', 'mc/artworks', 'mc/feeds', 'mc/receipt', 'mc/scroll', 'mc/ar
         'didChangeState:isDrawerUnfolded': (function(_this) {
           return function(mv, v) {
             if (v) {
-              _this.scrollVC.reset();
+              _this.scrollVC.refresh();
               return _this.$el.addClass('is-drawer-unfolded');
             } else {
               return _this.$el.removeClass('is-drawer-unfolded');
@@ -81,7 +81,8 @@ define(['found/vc', 'mc/artworks', 'mc/feeds', 'mc/receipt', 'mc/scroll', 'mc/ar
       this.renderFeedList();
       this.renderArtworkList();
       this.renderScroll();
-      this.renderArtworkProgress();
+      this.renderRefreshProgress();
+      this.renderFetchProgress();
       this.listenTo(this.feedListVC, 'didChangeState:current', (function(_this) {
         return function(vc, v) {
           _this.ui.$feedName.text(v);
@@ -92,8 +93,8 @@ define(['found/vc', 'mc/artworks', 'mc/feeds', 'mc/receipt', 'mc/scroll', 'mc/ar
       this.listenTo(this.artworkListVC, 'didChangeState:willFetch', (function(_this) {
         return function(vc, v) {
           if (v) {
-            _this.artworkProgressVC.setState('infinite');
-            return _this.artworkProgressVC.load();
+            _this.refreshProgressVC.setState('infinite');
+            return _this.refreshProgressVC.load();
           }
         };
       })(this));
@@ -101,8 +102,8 @@ define(['found/vc', 'mc/artworks', 'mc/feeds', 'mc/receipt', 'mc/scroll', 'mc/ar
         return function(vc, v) {
           if (v) {
             _this.setState('hasArtworks');
-            _this.artworkProgressVC.setState('infinite', false);
-            return _this.artworkProgressVC.load();
+            _this.refreshProgressVC.setState('infinite', false);
+            return _this.refreshProgressVC.load();
           }
         };
       })(this));
@@ -120,21 +121,24 @@ define(['found/vc', 'mc/artworks', 'mc/feeds', 'mc/receipt', 'mc/scroll', 'mc/ar
             timeout = function() {
               return _this.$el.removeClass('is-artwork-list-rendering');
             };
-            setTimeout(timeout, 200);
-            return _this.scrollVC.reset();
+            setTimeout(timeout, 4);
+            _this.scrollVC.refresh();
+            return _this.fetchProgressVC.setState('isLoading', false);
           }
         };
       })(this));
-      this.listenTo(this.artworkProgressVC, 'didChangeState:isDone', (function(_this) {
+      this.listenTo(this.refreshProgressVC, 'didChangeState:isDone', (function(_this) {
         return function(vc, v) {
           if (v) {
             return _this.artworkListVC.render();
           }
         };
       })(this));
-      return this.listenTo(this.scrollVC, 'didChangeState:isScrolledToEnd', (function(_this) {
+      return this.listenTo(this.scrollVC, 'didChangeState:didScrollToEnd', (function(_this) {
         return function(vc, v) {
-          return console.log(v);
+          if (v) {
+            return _this.fetchProgressVC.load();
+          }
         };
       })(this));
     };
@@ -156,12 +160,11 @@ define(['found/vc', 'mc/artworks', 'mc/feeds', 'mc/receipt', 'mc/scroll', 'mc/ar
       });
     };
 
-    ReceiptVC.prototype.renderScroll = function(scroll) {
-      if (scroll == null) {
-        scroll = new Scroll({
-          direction: 'v'
-        });
-      }
+    ReceiptVC.prototype.renderScroll = function() {
+      var scroll;
+      scroll = new Scroll({
+        direction: 'v'
+      });
       return this.scrollVC = new ScrollVC({
         $root: this.ui.$scroll,
         $scrollee: this.ui.$artworkList,
@@ -169,20 +172,36 @@ define(['found/vc', 'mc/artworks', 'mc/feeds', 'mc/receipt', 'mc/scroll', 'mc/ar
       });
     };
 
-    ReceiptVC.prototype.renderArtworkProgress = function(progress) {
-      if (progress == null) {
-        progress = new ArtworkProgress;
-      }
-      if (this.artworkProgressVC == null) {
-        this.artworkProgressVC = new ArtworkProgressVC({
-          $root: this.ui.$drawer,
-          model: progress,
-          collection: this.c,
-          position: 'prepend'
-        });
-      }
-      this.artworkProgressVC.$el.addClass('top');
-      return this.artworkProgressVC.load();
+    ReceiptVC.prototype.renderRefreshProgress = function() {
+      var progress;
+      progress = new ArtworkProgress({
+        artworkType: 'thumb',
+        indicatorType: 'linear'
+      });
+      this.refreshProgressVC = new ArtworkProgressVC({
+        $root: this.ui.$drawer,
+        model: progress,
+        collection: this.c,
+        position: 'prepend'
+      });
+      this.refreshProgressVC.$el.addClass('top');
+      return this.refreshProgressVC.load();
+    };
+
+    ReceiptVC.prototype.renderFetchProgress = function() {
+      var progress;
+      progress = new ArtworkProgress({
+        artworkType: 'thumb',
+        indicatorType: 'circular',
+        infinite: true
+      });
+      this.fetchProgressVC = new ArtworkProgressVC({
+        $root: this.ui.$scroll,
+        model: progress,
+        collection: this.c,
+        position: 'append'
+      });
+      return this.fetchProgressVC.$el.addClass('right');
     };
 
     return ReceiptVC;

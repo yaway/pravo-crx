@@ -1,5 +1,8 @@
 .layer-booth
   overflow hidden
+
+  .layer-artworks
+    layer(1)
   
   .artwork
     display none
@@ -16,19 +19,31 @@
     &.is-current
       display block
 
-  .layer-artworks
-    layer(1)
-
   .layer-btns
     layer(2)
     flex-direction(column)
     align-items(center)
     justify-content(flex-end)
     margin-bottom 10px
-  
+
+  &.has-artworks
+    .m-fa-btn
+      pointer-events auto
+      transition(all,0.2s)
+      opacity(1)
+      transform(scale(1))
+      .m-ico
+        transition(all,0.2s,0.1s)
+        opacity(1)
+  &,
   &.blur
     .m-fa-btn
-      display none
+      pointer-events none
+      transition(all,0.2s)
+      opacity(0)
+      transform(scale(0.6))
+      .m-ico
+        opacity(0)
     
 
 

@@ -5,18 +5,17 @@ define [
     events:
       'click': 'onClick'
     onClick: ()=>
-      @model.trigger 'willChangeIsCurrent'
-      @model.set 'isCurrent',true
-      @model.trigger 'willChangeIsChosen'
-      # @model.toggle 'isChosen'
-      @model.set 'isChosen',true
+      @setState 'isChosen'
+      @setState 'isCurrent'
     initialize: (opt)->
       super(opt)
-      @model.on
-        'change:isChosen': @onChangeIsChosen
-        'change:isCurrent': @onChangeIsCurrent
+      @on
+        'didChangeState:isChosen':(vc,v)=>
+          if v
+            @$el.addClass 'is-chosen'
+          else
+            @$el.removeClass 'is-chosen'
       @lazyRender()
-
 
     lazyRender: ()->
       img = new Image
@@ -24,11 +23,6 @@ define [
       img.onload = ()=>
         @render()
 
-    onChangeIsChosen: ()=>
-      if @model.get 'isChosen'
-        @$el.addClass 'is-chosen'
-      else
-        @$el.removeClass 'is-chosen'
 
 
   return ArtworkThumbnailVC

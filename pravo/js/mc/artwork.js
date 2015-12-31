@@ -17,10 +17,8 @@
         "url": '',
         "src": '',
         "thumb": '',
-        "willBeCurrent": false,
         "isCurrent": false,
         "isFavorite": false,
-        "willBeChosen": false,
         "isChosen": false
       };
 

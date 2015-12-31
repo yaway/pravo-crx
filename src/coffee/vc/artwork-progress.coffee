@@ -24,11 +24,17 @@ define [
 
     render: ()->
       super()
-      console.log 'Artwork Progress Rendered'
+      console.log "Artwork Progress Rendered:#{@getState 'indicatorType'}"
 
     load: (c)->
       @setState 'isLoading',true
       @setState 'isDone',false
+
+      timeout = ()=>
+        console.log 'Artworks Failed to Load:timeout'
+        @setState 'isLoading',false
+
+      setTimeout timeout,1000*10
 
       if @getState 'infinite'
         return
@@ -42,7 +48,6 @@ define [
 
       total = @c.length
       @setState 'total',total
-
 
       iteratee = (v,i)=>
         artwork = v
@@ -58,6 +63,7 @@ define [
           @setState 'done',dones.length
 
           if dones.length is total
+            clearTimeout timeout
             console.log 'All Artworks Loaded'
             @setState 'isDone',true
             @setState 'isLoading',false

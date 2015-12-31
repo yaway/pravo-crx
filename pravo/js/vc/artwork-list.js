@@ -43,6 +43,34 @@
           opt.collection = new Artworks;
         }
         ArtworkListVC.__super__.initialize.call(this, opt);
+        this.on({
+          'didChangeState:current': (function(_this) {
+            return function(vc, v) {
+              _this.vc[v].setState('isCurrent');
+              if (_this.vc[v].getState('isFavorite')) {
+                return _this.setState('isCurrentFavorite');
+              } else {
+                return _this.setState('isCurrentFavorite', false);
+              }
+            };
+          })(this),
+          'didChangeState:isCurrentFavorite': (function(_this) {
+            return function(vc, v) {
+              var current;
+              current = _this.getState('current');
+              if (v) {
+                return _this.vc[current].setState('isFavorite');
+              } else {
+                return _this.vc[current].setState('isFavorite', false);
+              }
+            };
+          })(this),
+          'didChangeState:didFetch': (function(_this) {
+            return function(vc, v) {
+              return _this.render();
+            };
+          })(this)
+        });
         this.c.on({
           'willChange:isCurrent': (function(_this) {
             return function(m, v) {
@@ -52,40 +80,10 @@
                 });
               }
             };
-          })(this)
-        });
-        this.on({
-          'didChangeState:isFetched': (function(_this) {
-            return function(vc, v) {
-              if (v) {
-                _this.setState('isRendered');
-                return _this.resetState('isFetched');
-              }
-            };
           })(this),
-          'didChangeState:isRendered': (function(_this) {
-            return function(vc, v) {
-              if (v) {
-                _this.render();
-                return _this.resetState('isRendered');
-              }
-            };
-          })(this),
-          'didChangeState:current': (function(_this) {
-            return function(vc, v) {
-              return _this.vc[v].setState('isCurrent');
-            };
-          })(this),
-          'didChangeState:isCurrentFav': (function(_this) {
-            return function(vc, v) {
-              var current;
-              current = _this.getState('current');
-              if (v) {
-                _this.vc[current].setState('isFavorite');
-              } else {
-                _this.vc[current].setState('isFavorite', false);
-              }
-              return _this.c.save();
+          'add': (function(_this) {
+            return function(m) {
+              return _this.render();
             };
           })(this)
         });
@@ -93,14 +91,15 @@
       };
 
       ArtworkListVC.prototype.fetch = function() {
+        this.setState('didFetch', false);
         return this.c.fetch({
           from: "local",
           callback: (function(_this) {
             return function(rawArtworks) {
               if (rawArtworks.length > 0) {
                 _this.c.add(rawArtworks);
-                return _this.setState('isFetched');
               }
+              return _this.setState('didFetch');
             };
           })(this)
         });
@@ -108,34 +107,37 @@
 
       ArtworkListVC.prototype.render = function() {
         var current;
+        this.setState('didRender', false);
         ArtworkListVC.__super__.render.call(this);
         if (this.c.length === 0) {
           console.log("No Artworks to Render");
+          this.setState('didRender');
           return;
         }
-        this.vc = [];
         this.$el.empty();
+        this.vc = [];
         this.c.map((function(_this) {
           return function(v, i, l) {
-            var artwork, artworkVC;
-            artwork = v;
+            var artworkVC, m;
+            m = v;
             artworkVC = new ArtworkVC({
               $root: _this.$el,
               position: 'append',
               template: 'artwork',
-              model: artwork
+              model: m
             });
-            if (artwork.get('isCurrent')) {
-              _this.setState('current', i);
+            _this.vc.push(artworkVC);
+            if (m.get('isCurrent')) {
+              return _this.setState('current', i);
             }
-            return _this.vc.push(artworkVC);
           };
         })(this));
         current = this.getState('current');
         if (!current) {
           this.random();
         }
-        return console.debug(this.c.length + " Artworks Rendered");
+        console.log(this.c.length + " Artworks Rendered");
+        return this.setState('didRender');
       };
 
       ArtworkListVC.prototype.loop = function() {

@@ -10,12 +10,14 @@ define(['found/vc', 'mc/scroll', 'jquery-mousewheel'], function(VC, Scroll, JqMo
 
     function ScrollVC() {
       this.move = bind(this.move, this);
+      this.onMove = bind(this.onMove, this);
       this.onMousewheel = bind(this.onMousewheel, this);
       return ScrollVC.__super__.constructor.apply(this, arguments);
     }
 
     ScrollVC.prototype.events = {
-      "mousewheel": "onMousewheel"
+      "mousewheel": 'onMousewheel',
+      "transitionend": 'onMove'
     };
 
     ScrollVC.prototype.onMousewheel = function(e) {
@@ -24,20 +26,26 @@ define(['found/vc', 'mc/scroll', 'jquery-mousewheel'], function(VC, Scroll, JqMo
       return this.scroll(delta);
     };
 
+    ScrollVC.prototype.onMove = function(e) {
+      if (e.target === this.$scrollee[0]) {
+        e.stopPropagation();
+        if (this.getState('isScrollingToEnd')) {
+          return this.setState('didScrollToEnd');
+        } else {
+          return this.setState('didScrollToEnd', false);
+        }
+      }
+    };
+
     ScrollVC.prototype.initialize = function(opt) {
+      this.m = opt.model || new Scroll;
       ScrollVC.__super__.initialize.call(this, opt);
-      if (this.model == null) {
-        this.model = new Scroll;
-      }
-      if (opt.direction) {
-        this.model.set('direction', opt.direction);
-      }
       if (opt.$scrollee) {
         this.$scrollee = opt.$scrollee;
       } else if (this.ui.$scrollee) {
         this.$scrollee = this.ui.$scrollee;
       } else {
-        console.error('No Scrollee');
+        console.debug('No Scrollee');
       }
       return this.render();
     };
@@ -48,7 +56,7 @@ define(['found/vc', 'mc/scroll', 'jquery-mousewheel'], function(VC, Scroll, JqMo
       return this.resize();
     };
 
-    ScrollVC.prototype.reset = function() {
+    ScrollVC.prototype.refresh = function() {
       this.setState('distance', 0);
       this.move();
       return this.resize();
@@ -56,7 +64,7 @@ define(['found/vc', 'mc/scroll', 'jquery-mousewheel'], function(VC, Scroll, JqMo
 
     ScrollVC.prototype.resize = function() {
       var direction, scrollSize, scrolleeSize;
-      direction = this.model.get('direction');
+      direction = this.getState('direction');
       scrollSize = 0;
       scrolleeSize = 0;
       if (direction === 'h') {
@@ -66,58 +74,77 @@ define(['found/vc', 'mc/scroll', 'jquery-mousewheel'], function(VC, Scroll, JqMo
         scrollSize = this.$el.width();
         scrolleeSize = this.$scrollee.width() + 56;
       }
-      this.model.set('scrollSize', scrollSize);
-      return this.model.set('scrolleeSize', scrolleeSize);
+      this.setState('scrollSize', scrollSize);
+      return this.setState('scrolleeSize', scrolleeSize);
     };
 
     ScrollVC.prototype.move = function() {
-      if ((this.model.get('direction')) === 'v') {
+      this.validateDistance();
+      if ((this.getState('direction')) === 'v') {
         return this.$scrollee.css({
-          "transform": "translateX(" + (this.model.get('distance')) + "px)"
+          "transform": "translateX(" + (this.getState('distance')) + "px)"
         });
       } else {
         return this.$scrollee.css({
-          "transform": "translateY(" + (this.model.get('distance')) + "px)"
+          "transform": "translateY(" + (this.getState('distance')) + "px)"
         });
       }
     };
 
     ScrollVC.prototype.scroll = function(delta) {
-      var ease, easeTimer, scroll, timer;
-      timer = this.model.get('timer');
-      easeTimer = this.model.get('easeTimer');
+      var ease, easeTimer, move, timer;
+      timer = this.getState('timer');
+      easeTimer = this.getState('easeTimer');
       if (timer) {
         clearTimeout(timer);
         if (easeTimer) {
           clearTimeout(easeTimer);
         }
       }
-      scroll = (function(_this) {
+      move = (function(_this) {
         return function() {
           var distance;
-          distance = _this.model.get('distance');
-          _this.model.trigger('willChangeDisance');
-          _this.model.set('distance', distance + delta);
+          distance = _this.getState('distance');
+          _this.setState('distance', distance + delta);
           return _this.move();
         };
       })(this);
       ease = (function(_this) {
         return function() {
           _this.$el.addClass('is-eased');
-          _this.model.trigger('willChangeDisance');
-          _this.model.set('distance', (_this.model.get('distance')) + delta * 4);
+          _this.setState('distance', (_this.getState('distance')) + delta * 4);
           return _this.move();
         };
       })(this);
-      if (this.model.get('isScrollable')) {
+      if (this.getState('isScrollable')) {
         this.resize();
-        timer = setTimeout(scroll, 10);
-        easeTimer = setTimeout(ease, 100);
-        this.model.set('timer', timer);
-        return this.model.set('easeTimer', easeTimer);
+        timer = setTimeout(move, 8);
+        easeTimer = setTimeout(ease, 80);
+        this.setState('timer', timer);
+        return this.setState('easeTimer', easeTimer);
       } else {
-        return scroll();
+        return move();
       }
+    };
+
+    ScrollVC.prototype.validateDistance = function() {
+      var distance, isScrollingToEnd, isValid, limit, opt;
+      distance = this.getState('distance');
+      limit = (this.getState('scrolleeSize')) - (this.getState('scrollSize'));
+      isValid = false;
+      opt = {
+        silent: true
+      };
+      if (distance > 0) {
+        this.setState('distance', 0, opt);
+      } else if (distance < -limit) {
+        this.setState('distance', -limit, opt);
+        isScrollingToEnd = true;
+      } else {
+        isValid = true;
+      }
+      this.setState('isScrollingToEnd', isScrollingToEnd || false);
+      return this.setState("isScrollable", isValid);
     };
 
     return ScrollVC;

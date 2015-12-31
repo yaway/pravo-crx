@@ -1,11 +1,11 @@
 .layer-receipt
   .m-fa-btn
-    display none
-    transition(all,0.2s,ease-out)
+    pointer-events(none)
     absolute(bottom 8px right 20px)
+    transform(scale(0.6))
+    opacity(0)
     .m-ico
-      transition(all,0.2s,ease-in)
-      opacity(1)
+      opacity(0)
   
   .m-i-btn
     absolute(top 8px right 8px)
@@ -84,7 +84,13 @@
     
   &.has-artworks
     .m-fa-btn
-      display block
+      pointer-events(auto)
+      transition(all,0.2s)
+      transform(scale(1))
+      opacity(1)
+      .m-ico
+        transition(all,0.2s,0.1s)
+        opacity(1)
       
   &.is-drawer-unfolded
     .m-fa-btn
@@ -154,9 +160,9 @@
   .scrollee
     transition(all,0.1s,ease-in)
     
-.m-circuler-progress
-  oh = 120px
-  ih = 24px
-  t = (oh - ih) / 2
-  absolute(top t right 16px)
-  
+  .m-circular-progress
+    oh = 120px
+    ih = 24px
+    t = (oh - ih) / 2
+    absolute(top t right 16px)
+    

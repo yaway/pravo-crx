@@ -13,19 +13,12 @@ define [
     onClickArtwork: (e)=>
       console.log 'Artwork Clicked'
       e.stopPropagation()
-      @loop()
 
     initialize: (opt)->
       opt ?= {}
       opt.model ?= new ArtworkThumbnailList
       opt.collection ?= new Artworks
       super(opt)
-      @c.on
-        'willChange:isCurrent':(m,v)=>
-          if v
-            @vc.map (v,i,l)=>
-              artworkVC = v
-              artworkVC.setState 'isCurrent',false
       @fetch()
 
     fetch: (c)->
@@ -62,9 +55,12 @@ define [
       super()
       if @c.length is 0
         console.log "No Artworks to Render"
+        @setState 'willRender',false
+        @setState 'didRender'
         return
-      @vc = []
+
       @$el.empty()
+      @vc = []
 
       @c.map (v,i,l)=>
         m = v
@@ -73,16 +69,17 @@ define [
           position: 'append'
           template: 'artworkThumbnail'
           model: m
-        if m.get 'isCurrent'
-          @setState 'current',i
         @vc.push artworkVC
+        
+      @vc.map (v,i,l)=>
+        vc = v
+        vc.on
+          'didChangeState:isChosen':(vc,v)=>
+            console.error v
+            # if v
+              # vc.setState 'isCurrent'
 
-      current = @getState 'current'
-      if not current
-        @setState 'current',(Utl.getRandomInt @vc.length)
-        current = @getState 'current'
-        @vc[current].setState 'isCurrent'
-      console.debug "#{@c.length} Artwork Thumbnails Rendered"
+      console.log "#{@c.length} Artwork Thumbnails Rendered"
 
       @setState 'willRender',false
       @setState 'didRender'

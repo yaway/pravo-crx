@@ -4,8 +4,8 @@ define [
   class Artwork extends VC
     initialize: (opt)->
       super(opt)
-      @on
-        'didChangeState:isCurrent': (m,v)=>
+      @m.on
+        'change:isCurrent': (m,v)=>
           if v
             @$el.addClass 'is-current'
           else

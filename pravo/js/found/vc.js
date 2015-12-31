@@ -24,10 +24,16 @@
         this.root = opt.root || document.body;
         this.$root = opt.$root || $(this.root);
         if (opt.template) {
-          return this.template = Utl.getTpl(opt.template);
+          return this.template = this.getTemplate(opt.template);
         } else {
           return this.template = '';
         }
+      };
+
+      VC.prototype.getTemplate = function(tpl) {
+        var tplStr;
+        tplStr = _.unescape($("[data-tpl='" + tpl + "']").html());
+        return tplStr;
       };
 
       VC.prototype.getUI = function(ui) {

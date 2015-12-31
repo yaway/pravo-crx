@@ -14,51 +14,47 @@
       Artworks.prototype.model = Artwork;
 
       Artworks.prototype.save = function(opt) {
-        var artworksJSON, rawArtworks;
+        var data, props, rawArtworks;
+        if (opt == null) {
+          opt = {};
+        }
         console.debug('Will Save Artworks');
-        rawArtworks = Utl.deepCopy(this.models);
-        _.map(rawArtworks, (function(_this) {
-          return function(artwork) {
-            artwork.isCurrent = false;
-            return artwork;
-          };
-        })(this));
+        rawArtworks = Utl.cloneObj(this.models);
         if (opt.only === "fav") {
-          rawArtworks = _.where(rawArtworks, {
+          props = {
             isFavorite: true
-          });
+          };
+          rawArtworks = _.where(rawArtworks, props);
         } else if (opt.only === "nil") {
           rawArtworks = [];
         }
-        artworksJSON = JSON.stringify(rawArtworks);
-        console.log(artworksJSON);
-        return chrome.storage.local.set({
-          'artworks': artworksJSON
-        }, (function(_this) {
+        data = {
+          artworks: rawArtworks
+        };
+        return chrome.storage.local.set(data, (function(_this) {
           return function() {
-            _this.trigger("didSaveToLocal");
-            return console.debug("Artworks Did Save");
+            return console.debug("Did Save Artworks");
           };
         })(this));
       };
 
       Artworks.prototype.fetch = function(opt) {
         var apiCallback, callback, parseRawArtwork, rawArtworks, resetProtocol;
+        if (opt == null) {
+          opt = {};
+        }
         rawArtworks = [];
         callback = opt.callback || (function(data) {
           return data;
         });
         if (opt.from === "local") {
-          console.log("Will Fetch Local Artworks");
+          console.debug("Will Fetch Local Artworks");
           return chrome.storage.local.get('artworks', (function(_this) {
             return function(data) {
-              if (!data.artworks) {
-                return console.log('No Local Artworks Fetched');
-              } else {
-                rawArtworks = JSON.parse(data.artworks || {});
-                console.debug(rawArtworks.length + " Local Artworks Fetched");
-                return callback(rawArtworks);
-              }
+              var raw;
+              raw = data.artworks || [];
+              console.debug(raw.length + " Local Artworks Fetched");
+              return callback(raw);
             };
           })(this));
         } else {

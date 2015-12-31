@@ -13,8 +13,8 @@ define(['found/vc'], function(VC) {
 
     Artwork.prototype.initialize = function(opt) {
       Artwork.__super__.initialize.call(this, opt);
-      this.on({
-        'didChangeState:isCurrent': (function(_this) {
+      this.m.on({
+        'change:isCurrent': (function(_this) {
           return function(m, v) {
             if (v) {
               return _this.$el.addClass('is-current');

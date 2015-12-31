@@ -14,53 +14,10 @@ define(['found/m'], function(M) {
     Scroll.prototype.defaults = {
       "direction": "h",
       "distance": 0,
-      "lastDistence": 0,
+      "validDistance": 0,
       "scrollSize": 0,
       "scrolleeSize": 0,
       "isScrollable": false
-    };
-
-    Scroll.prototype.initialize = function() {
-      console.log("New Scroll");
-      Scroll.__super__.initialize.call(this);
-      return this.on({
-        "willChangeDisance": (function(_this) {
-          return function() {
-            return _this.set('lastDistence', _this.get('distance'));
-          };
-        })(this),
-        'change:distance': (function(_this) {
-          return function() {
-            if ((_this.get('distance')) === (_this.get('lastDistence'))) {
-
-            } else {
-              return _this.trigger('didChangeDistance');
-            }
-          };
-        })(this),
-        'didChangeDistance': (function(_this) {
-          return function() {
-            return _this.validateDistance();
-          };
-        })(this)
-      });
-    };
-
-    Scroll.prototype.validateDistance = function() {
-      var distance, isScrolledToEnd, isValid, limit;
-      distance = this.get('distance');
-      limit = (this.get('scrolleeSize')) - (this.get('scrollSize'));
-      isValid = false;
-      if (distance > 0) {
-        this.set('distance', 0);
-      } else if (distance < -limit) {
-        this.set('distance', -limit);
-        isScrolledToEnd = true;
-      } else {
-        isValid = true;
-      }
-      this.set('isScrolledToEnd', isScrolledToEnd || false);
-      return this.set("isScrollable", isValid);
     };
 
     return Scroll;
