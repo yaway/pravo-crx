@@ -43,11 +43,14 @@
           opt.collection = new Artworks;
         }
         ArtworkListVC.__super__.initialize.call(this, opt);
+        this.vc = [];
         this.on({
           'didChangeState:current': (function(_this) {
             return function(vc, v) {
-              _this.vc[v].setState('isCurrent');
-              if (_this.vc[v].getState('isFavorite')) {
+              var artworkVC;
+              artworkVC = _this.vc[v];
+              artworkVC.setState('isCurrent');
+              if (artworkVC.getState('isFavorite')) {
                 return _this.setState('isCurrentFavorite');
               } else {
                 return _this.setState('isCurrentFavorite', false);
@@ -80,11 +83,6 @@
                 });
               }
             };
-          })(this),
-          'add': (function(_this) {
-            return function(m) {
-              return _this.render();
-            };
           })(this)
         });
         return this.fetch();
@@ -114,30 +112,49 @@
           this.setState('didRender');
           return;
         }
-        this.$el.empty();
         this.vc = [];
-        this.c.map((function(_this) {
-          return function(v, i, l) {
-            var artworkVC, m;
-            m = v;
-            artworkVC = new ArtworkVC({
-              $root: _this.$el,
-              position: 'append',
-              template: 'artwork',
-              model: m
-            });
-            _this.vc.push(artworkVC);
-            if (m.get('isCurrent')) {
-              return _this.setState('current', i);
-            }
-          };
-        })(this));
+        this.$el.empty();
+        this.add(this.c);
         current = this.getState('current');
         if (!current) {
           this.random();
         }
         console.log(this.c.length + " Artworks Rendered");
         return this.setState('didRender');
+      };
+
+      ArtworkListVC.prototype.add = function(mc) {
+        var artworks;
+        console.error(mc);
+        if (mc instanceof Artwork) {
+          artworks = new Artworks(mc);
+        } else if (mc instanceof Artworks) {
+          artworks = mc;
+        }
+        return artworks.map((function(_this) {
+          return function(artwork, i, artworks) {
+            var artworkVC;
+            if (!_this.c.contains(artwork)) {
+              _this.c.add(artwork);
+              artworkVC = new ArtworkVC({
+                $root: _this.$el,
+                position: 'append',
+                template: 'artwork',
+                model: artwork
+              });
+              _this.vc.push(artworkVC);
+            }
+            if (artwork.get('isCurrent')) {
+              return _this.setCurrent(artwork);
+            }
+          };
+        })(this));
+      };
+
+      ArtworkListVC.prototype.setCurrent = function(artwork) {
+        var index;
+        index = this.c.models.indexOf(artwork);
+        return this.setState('current', index);
       };
 
       ArtworkListVC.prototype.loop = function() {

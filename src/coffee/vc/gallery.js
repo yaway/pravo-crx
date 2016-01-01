@@ -2,7 +2,7 @@
 var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
-define(['underscore', 'found/vc', 'vc/booth', 'vc/receipt', 'found/utl'], function(_, VC, BoothVC, ReceiptVC, Utl) {
+define(['underscore', 'found/vc', 'mc/artworks', 'vc/booth', 'vc/receipt', 'found/utl'], function(_, VC, Artworks, BoothVC, ReceiptVC, Utl) {
   var GalleryVC;
   GalleryVC = (function(superClass) {
     extend(GalleryVC, superClass);
@@ -25,22 +25,30 @@ define(['underscore', 'found/vc', 'vc/booth', 'vc/receipt', 'found/utl'], functi
       this.receiptVC = new ReceiptVC({
         $root: this.ui.$receipt
       });
-      this.listenTo(this.receiptVC.c, 'didChange:isCurrent', (function(_this) {
+      this.listenTo(this.receiptVC.c, 'didChange:isChosen', (function(_this) {
         return function(m, v) {
-          return _this.boothVC.c.add(m);
+          if (v) {
+            return _this.boothVC.artworkListVC.add(m);
+          }
         };
       })(this));
       this.listenTo(this.receiptVC, 'didChangeState:hasArtworks', (function(_this) {
         return function(vc, v) {
-          var artworks, predicate;
+          var artworks, predicate, rawArtworks;
           if (_this.boothVC.getState('hasArtworks')) {
             return;
           }
           predicate = function(m, i) {
             return true;
           };
-          artworks = _this.receiptVC.c.filter(predicate);
-          return _this.boothVC.c.add(artworks);
+          rawArtworks = _this.receiptVC.c.filter(predicate);
+          artworks = new Artworks(rawArtworks);
+          _this.boothVC.artworkListVC.add(artworks);
+          console.error(_this.boothVC.artworkListVC.getState('current'));
+          if (artworks.length > 0) {
+            _this.boothVC.setState('hasArtworks');
+            return _this.boothVC.artworkListVC.random();
+          }
         };
       })(this));
       return this.listenTo(this.receiptVC, 'didChangeState:isDrawerUnfolded', (function(_this) {

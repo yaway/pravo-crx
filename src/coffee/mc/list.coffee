@@ -4,7 +4,7 @@ define [
   class List extends M
     defaults:
       from: 'local'
-      current: 0
+      current: null
       reset: true
       willFetch: false
       didFetch: false

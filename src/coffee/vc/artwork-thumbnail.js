@@ -18,8 +18,7 @@ define(['found/vc'], function(VC) {
     };
 
     ArtworkThumbnailVC.prototype.onClick = function() {
-      this.setState('isChosen');
-      return this.setState('isCurrent');
+      return this.setState('isChosen');
     };
 
     ArtworkThumbnailVC.prototype.initialize = function(opt) {

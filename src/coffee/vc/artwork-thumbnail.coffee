@@ -6,7 +6,6 @@ define [
       'click': 'onClick'
     onClick: ()=>
       @setState 'isChosen'
-      @setState 'isCurrent'
     initialize: (opt)->
       super(opt)
       @on

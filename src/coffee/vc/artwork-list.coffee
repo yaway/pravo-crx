@@ -27,11 +27,13 @@ define [
       opt.model ?= new List
       opt.collection ?= new Artworks
       super(opt)
+      @vc = []
 
       @on
         'didChangeState:current':(vc,v)=>
-          @vc[v].setState 'isCurrent'
-          if @vc[v].getState 'isFavorite'
+          artworkVC = @vc[v]
+          artworkVC.setState 'isCurrent'
+          if artworkVC.getState 'isFavorite'
             @setState 'isCurrentFavorite'
           else
             @setState 'isCurrentFavorite',false
@@ -46,17 +48,12 @@ define [
         'didChangeState:didFetch':(vc,v)=>
           @render()
 
-
       @c.on
         'willChange:isCurrent':(m,v)=>
           if v
             @vc.map (v,i,l)=>
               v.setState 'isCurrent',false
-        'add':(m)=>
-            @render()
-
       @fetch()
-
 
     fetch: ()->
       @setState 'didFetch',false
@@ -69,6 +66,7 @@ define [
             @c.add rawArtworks
           @setState 'didFetch'
 
+
     render: ()->
       @setState 'didRender',false
       super()
@@ -77,28 +75,39 @@ define [
         @setState 'didRender'
         return
 
-      @$el.empty()
       @vc = []
-            
-
-      @c.map (v,i,l)=>
-        m = v
-        artworkVC = new ArtworkVC
-          $root: @$el
-          position: 'append'
-          template: 'artwork'
-          model: m
-        @vc.push artworkVC
-        if m.get 'isCurrent'
-          @setState 'current',i
+      @$el.empty()
+      
+      @add @c
 
       current = @getState 'current'
       if not current
         @random()
 
-
       console.log "#{@c.length} Artworks Rendered"
       @setState 'didRender'
+
+    add: (mc)->
+      console.error mc
+      if mc instanceof Artwork
+        artworks = new Artworks mc
+      else if mc instanceof Artworks
+        artworks = mc
+      artworks.map (artwork,i,artworks)=>
+        unless @c.contains artwork
+          @c.add artwork
+          artworkVC = new ArtworkVC
+            $root: @$el
+            position: 'append'
+            template: 'artwork'
+            model: artwork
+          @vc.push artworkVC
+        if artwork.get 'isCurrent'
+          @setCurrent artwork
+
+    setCurrent: (artwork)->
+      index = @c.models.indexOf artwork
+      @setState 'current',index
 
     loop: ()->
       length = @vc.length
