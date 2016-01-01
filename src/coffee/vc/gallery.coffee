@@ -24,8 +24,10 @@ define [
       @listenTo @receiptVC.c,'didChange:isChosen',(m,v)=>
         if v
           @boothVC.artworkListVC.add m
+          m.vc.artworkVC.setState 'isCurrent',true
 
       @listenTo @receiptVC,'didChangeState:hasArtworks',(vc,v)=>
+        console.error v
         if @boothVC.getState 'hasArtworks'
           return
 

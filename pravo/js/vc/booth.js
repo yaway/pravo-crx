@@ -62,12 +62,14 @@
           $root: this.ui.$artworkList,
           collection: this.c
         });
-        this.listenTo(this.artworkListVC, 'didChangeState:didRender', (function(_this) {
+        this.listenTo(this.artworkListVC, 'didChangeState:didAdd', (function(_this) {
           return function(vc, v) {
-            if (vc.c.length === 0) {
-              return _this.setState('hasArtworks', false);
-            } else {
-              return _this.setState('hasArtworks', true);
+            if (v) {
+              if (vc.c.length > 0) {
+                return _this.setState('hasArtworks', true);
+              } else {
+                return _this.setState('hasArtworks', false);
+              }
             }
           };
         })(this));

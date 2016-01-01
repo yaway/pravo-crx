@@ -62,5 +62,32 @@ define([], function() {
     }
     return next;
   };
+  Utl.capStr = function(str) {
+    var newStr;
+    newStr = "" + (str.charAt(0).toUpperCase()) + (str.slice(1));
+    return newStr;
+  };
+  Utl.capToCamel = function(str) {
+    var newStr;
+    newStr = "" + (str.charAt(0).toLowerCase()) + (str.slice(1));
+    return newStr;
+  };
+  Utl.slugToCamel = function(str) {
+    var newStr;
+    newStr = str.replace(/-[a-z]/ig, function(match) {
+      return match.substring(1).toUpperCase();
+    });
+    return newStr;
+  };
+  Utl.camelToSlug = function(str) {
+    var newStr;
+    newStr = str.replace(/[a-z][A-Z]/g, function(match) {
+      var res;
+      res = match[0] + "-" + (match[1].toLowerCase());
+      return res;
+    });
+    newStr = newStr.toLowerCase();
+    return newStr;
+  };
   return Utl;
 });

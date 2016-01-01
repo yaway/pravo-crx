@@ -41,11 +41,12 @@ define [
         $root: @ui.$artworkList
         collection: @c
 
-      @listenTo @artworkListVC,'didChangeState:didRender',(vc,v)=>
-        if vc.c.length is 0
-          @setState 'hasArtworks',false
-        else
-          @setState 'hasArtworks',true
+      @listenTo @artworkListVC,'didChangeState:didAdd',(vc,v)=>
+        if v
+          if vc.c.length > 0
+            @setState 'hasArtworks',true
+          else
+            @setState 'hasArtworks',false
 
       @listenTo @artworkListVC,'didChangeState:isCurrentFavorite',(vc,v)=>
         if v

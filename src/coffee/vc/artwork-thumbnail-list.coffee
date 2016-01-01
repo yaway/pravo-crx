@@ -71,14 +71,6 @@ define [
           model: m
         @vc.push artworkVC
         
-      @vc.map (v,i,l)=>
-        vc = v
-        vc.on
-          'didChangeState:isChosen':(vc,v)=>
-            console.error v
-            # if v
-              # vc.setState 'isCurrent'
-
       console.log "#{@c.length} Artwork Thumbnails Rendered"
 
       @setState 'willRender',false

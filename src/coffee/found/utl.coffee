@@ -56,4 +56,21 @@ define [
       next = 0
     return next
 
+  Utl.capStr = (str)->
+    newStr = "#{str.charAt(0).toUpperCase()}#{str.slice(1)}"
+    return newStr
+  Utl.capToCamel = (str)->
+    newStr = "#{str.charAt(0).toLowerCase()}#{str.slice(1)}"
+    return newStr
+  Utl.slugToCamel = (str)->
+    newStr = str.replace /-[a-z]/ig,(match)->
+      return match.substring(1).toUpperCase()
+    return newStr
+  Utl.camelToSlug = (str)->
+    newStr = str.replace /[a-z][A-Z]/g,(match)->
+      res = "#{match[0]}-#{match[1].toLowerCase()}"
+      return res
+    newStr = newStr.toLowerCase()
+    return newStr
+
   return Utl

@@ -31,12 +31,13 @@ define [
 
       @on
         'didChangeState:current':(vc,v)=>
-          artworkVC = @vc[v]
-          artworkVC.setState 'isCurrent'
-          if artworkVC.getState 'isFavorite'
-            @setState 'isCurrentFavorite'
-          else
-            @setState 'isCurrentFavorite',false
+          if @vc.length > 0
+            artworkVC = @vc[v]
+            artworkVC.setState 'isCurrent'
+            if artworkVC.getState 'isFavorite'
+              @setState 'isCurrentFavorite'
+            else
+              @setState 'isCurrentFavorite',false
 
         'didChangeState:isCurrentFavorite':(vc,v)=>
           current = @getState 'current'
@@ -45,14 +46,13 @@ define [
           else
             @vc[current].setState 'isFavorite',false
 
-        'didChangeState:didFetch':(vc,v)=>
-          @render()
-
       @c.on
         'willChange:isCurrent':(m,v)=>
           if v
             @vc.map (v,i,l)=>
               v.setState 'isCurrent',false
+
+      @render()
       @fetch()
 
     fetch: ()->
@@ -63,9 +63,9 @@ define [
           # limit = 5
           # lack = limit - rawArtworks.length
           if rawArtworks.length > 0
-            @c.add rawArtworks
+            artworks = new Artworks rawArtworks
+            @add artworks
           @setState 'didFetch'
-
 
     render: ()->
       @setState 'didRender',false
@@ -81,29 +81,35 @@ define [
       @add @c
 
       current = @getState 'current'
-      if not current
-        @random()
+      # if not current
+      #   @random()
 
       console.log "#{@c.length} Artworks Rendered"
       @setState 'didRender'
 
     add: (mc)->
-      console.error mc
+      @setState 'didAdd',false
       if mc instanceof Artwork
         artworks = new Artworks mc
       else if mc instanceof Artworks
         artworks = mc
-      artworks.map (artwork,i,artworks)=>
-        unless @c.contains artwork
-          @c.add artwork
+      artworks.map (artwork,i)=>
+        if @c.contains artwork
+          @vc.map (artworkVC,i)=>
+            console.error artworkVC.m is artwork
+        else
           artworkVC = new ArtworkVC
             $root: @$el
             position: 'append'
             template: 'artwork'
             model: artwork
+
+          @c.add artwork
           @vc.push artworkVC
+
         if artwork.get 'isCurrent'
           @setCurrent artwork
+      @setState 'didAdd'
 
     setCurrent: (artwork)->
       index = @c.models.indexOf artwork

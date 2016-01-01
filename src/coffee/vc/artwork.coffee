@@ -1,7 +1,7 @@
 define [
   'found/vc'
 ],(VC)->
-  class Artwork extends VC
+  class ArtworkVC extends VC
     initialize: (opt)->
       super(opt)
       @m.on
@@ -12,4 +12,4 @@ define [
             @$el.removeClass 'is-current'
       @render()
 
-  return Artwork
+  return ArtworkVC

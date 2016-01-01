@@ -20,14 +20,11 @@
         if (this.ui == null) {
           this.ui = {};
         }
-        this.position = opt.position;
+        this.pos = opt.position;
         this.root = opt.root || document.body;
         this.$root = opt.$root || $(this.root);
-        if (opt.template) {
-          return this.template = this.getTemplate(opt.template);
-        } else {
-          return this.template = '';
-        }
+        this.initVCofM(opt);
+        return this.initTemplate(opt);
       };
 
       VC.prototype.getTemplate = function(tpl) {
@@ -40,21 +37,48 @@
         return this.$el.find("[data-ui='" + ui + "']");
       };
 
-      VC.prototype.render = function(data) {
-        var $el, elStr, ref, tpl, vc;
+      VC.prototype.initVCofM = function(opt) {
+        var base, vcName;
+        if ((base = this.m).vc == null) {
+          base.vc = {};
+        }
+        vcName = this.constructor.name;
+        vcName = Utl.capToCamel(vcName);
+        return this.m.vc[vcName] = this;
+      };
+
+      VC.prototype.initTemplate = function(opt) {
+        if (opt.template) {
+          return this.template = this.getTemplate(opt.template);
+        } else {
+          return this.template = '';
+        }
+      };
+
+      VC.prototype.initUI = function() {
+        var vc;
+        vc = this;
+        return this.$el.find('[data-ui]').each(function() {
+          vc.ui[this.getAttribute('data-ui')] = this;
+          return vc.ui["$" + (this.getAttribute('data-ui'))] = $(this);
+        });
+      };
+
+      VC.prototype.initEl = function(data) {
+        var $el, elStr, ref, tpl;
         if (data == null) {
           data = (ref = this.m) != null ? ref.attributes : void 0;
         }
         tpl = _.template(this.template);
         elStr = tpl(data);
         $el = $(elStr);
-        if (this.position === 'append') {
+        if (this.pos === 'append') {
           this.$root.append($el);
-        } else if (this.position === 'prepend') {
+        } else if (this.pos === 'prepend') {
           this.$root.prepend($el);
-        } else if (this.position === 'before') {
+        } else if (this.pos === 'before') {
           this.$root.before($el);
-        } else if (this.position === 'after') {
+        } else if (this.pos === 'after') {
           this.$root.after($el);
         } else {
           if (this.template === '') {
@@ -63,12 +87,12 @@
             this.$root.replaceWith($el);
           }
         }
-        vc = this;
-        $el.find('[data-ui]').each(function() {
-          vc.ui[this.getAttribute('data-ui')] = this;
-          return vc.ui["$" + (this.getAttribute('data-ui'))] = $(this);
-        });
-        this.setElement($el[0]);
+        return this.setElement($el[0]);
+      };
+
+      VC.prototype.render = function(data) {
+        this.initEl(data);
+        this.initUI();
         return this;
       };
 
@@ -149,6 +173,16 @@
         } else {
           return false;
         }
+      };
+
+      VC.prototype.dispatch = function(events) {
+        var k, results, v;
+        results = [];
+        for (k in events) {
+          v = events[k];
+          results.push(console.error(k));
+        }
+        return results;
       };
 
       return VC;

@@ -48,12 +48,14 @@ define(['found/vc', 'mc/list', 'mc/artwork', 'mc/artworks', 'vc/artwork', 'found
         'didChangeState:current': (function(_this) {
           return function(vc, v) {
             var artworkVC;
-            artworkVC = _this.vc[v];
-            artworkVC.setState('isCurrent');
-            if (artworkVC.getState('isFavorite')) {
-              return _this.setState('isCurrentFavorite');
-            } else {
-              return _this.setState('isCurrentFavorite', false);
+            if (_this.vc.length > 0) {
+              artworkVC = _this.vc[v];
+              artworkVC.setState('isCurrent');
+              if (artworkVC.getState('isFavorite')) {
+                return _this.setState('isCurrentFavorite');
+              } else {
+                return _this.setState('isCurrentFavorite', false);
+              }
             }
           };
         })(this),
@@ -66,11 +68,6 @@ define(['found/vc', 'mc/list', 'mc/artwork', 'mc/artworks', 'vc/artwork', 'found
             } else {
               return _this.vc[current].setState('isFavorite', false);
             }
-          };
-        })(this),
-        'didChangeState:didFetch': (function(_this) {
-          return function(vc, v) {
-            return _this.render();
           };
         })(this)
       });
@@ -85,6 +82,7 @@ define(['found/vc', 'mc/list', 'mc/artwork', 'mc/artworks', 'vc/artwork', 'found
           };
         })(this)
       });
+      this.render();
       return this.fetch();
     };
 
@@ -94,8 +92,10 @@ define(['found/vc', 'mc/list', 'mc/artwork', 'mc/artworks', 'vc/artwork', 'found
         from: "local",
         callback: (function(_this) {
           return function(rawArtworks) {
+            var artworks;
             if (rawArtworks.length > 0) {
-              _this.c.add(rawArtworks);
+              artworks = new Artworks(rawArtworks);
+              _this.add(artworks);
             }
             return _this.setState('didFetch');
           };
@@ -116,32 +116,33 @@ define(['found/vc', 'mc/list', 'mc/artwork', 'mc/artworks', 'vc/artwork', 'found
       this.$el.empty();
       this.add(this.c);
       current = this.getState('current');
-      if (!current) {
-        this.random();
-      }
       console.log(this.c.length + " Artworks Rendered");
       return this.setState('didRender');
     };
 
     ArtworkListVC.prototype.add = function(mc) {
       var artworks;
-      console.error(mc);
+      this.setState('didAdd', false);
       if (mc instanceof Artwork) {
         artworks = new Artworks(mc);
       } else if (mc instanceof Artworks) {
         artworks = mc;
       }
-      return artworks.map((function(_this) {
-        return function(artwork, i, artworks) {
+      artworks.map((function(_this) {
+        return function(artwork, i) {
           var artworkVC;
-          if (!_this.c.contains(artwork)) {
-            _this.c.add(artwork);
+          if (_this.c.contains(artwork)) {
+            _this.vc.map(function(artworkVC, i) {
+              return console.error(artworkVC.m === artwork);
+            });
+          } else {
             artworkVC = new ArtworkVC({
               $root: _this.$el,
               position: 'append',
               template: 'artwork',
               model: artwork
             });
+            _this.c.add(artwork);
             _this.vc.push(artworkVC);
           }
           if (artwork.get('isCurrent')) {
@@ -149,6 +150,7 @@ define(['found/vc', 'mc/list', 'mc/artwork', 'mc/artworks', 'vc/artwork', 'found
           }
         };
       })(this));
+      return this.setState('didAdd');
     };
 
     ArtworkListVC.prototype.setCurrent = function(artwork) {

@@ -3,16 +3,16 @@
     hasProp = {}.hasOwnProperty;
 
   define(['found/vc'], function(VC) {
-    var Artwork;
-    Artwork = (function(superClass) {
-      extend(Artwork, superClass);
+    var ArtworkVC;
+    ArtworkVC = (function(superClass) {
+      extend(ArtworkVC, superClass);
 
-      function Artwork() {
-        return Artwork.__super__.constructor.apply(this, arguments);
+      function ArtworkVC() {
+        return ArtworkVC.__super__.constructor.apply(this, arguments);
       }
 
-      Artwork.prototype.initialize = function(opt) {
-        Artwork.__super__.initialize.call(this, opt);
+      ArtworkVC.prototype.initialize = function(opt) {
+        ArtworkVC.__super__.initialize.call(this, opt);
         this.m.on({
           'change:isCurrent': (function(_this) {
             return function(m, v) {
@@ -27,10 +27,10 @@
         return this.render();
       };
 
-      return Artwork;
+      return ArtworkVC;
 
     })(VC);
-    return Artwork;
+    return ArtworkVC;
   });
 
 }).call(this);

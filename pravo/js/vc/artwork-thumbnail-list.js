@@ -99,17 +99,6 @@
             return _this.vc.push(artworkVC);
           };
         })(this));
-        this.vc.map((function(_this) {
-          return function(v, i, l) {
-            var vc;
-            vc = v;
-            return vc.on({
-              'didChangeState:isChosen': function(vc, v) {
-                return console.error(v);
-              }
-            });
-          };
-        })(this));
         console.log(this.c.length + " Artwork Thumbnails Rendered");
         this.setState('willRender', false);
         return this.setState('didRender');

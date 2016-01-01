@@ -28,13 +28,15 @@ define(['underscore', 'found/vc', 'mc/artworks', 'vc/booth', 'vc/receipt', 'foun
       this.listenTo(this.receiptVC.c, 'didChange:isChosen', (function(_this) {
         return function(m, v) {
           if (v) {
-            return _this.boothVC.artworkListVC.add(m);
+            _this.boothVC.artworkListVC.add(m);
+            return m.vc.artworkVC.setState('isCurrent', true);
           }
         };
       })(this));
       this.listenTo(this.receiptVC, 'didChangeState:hasArtworks', (function(_this) {
         return function(vc, v) {
           var artworks, predicate, rawArtworks;
+          console.error(v);
           if (_this.boothVC.getState('hasArtworks')) {
             return;
           }
