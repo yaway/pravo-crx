@@ -189,7 +189,19 @@
       };
 
       ArtworkListVC.prototype.random = function() {
-        return this.setState('current', Utl.getRandomInt(this.vc.length));
+        var current, length, random;
+        length = this.vc.length;
+        if (length < 2) {
+          return;
+        }
+        current = this.getState('current');
+        random = Utl.getRandomInt(length);
+        console.error(random);
+        if (random === current) {
+          this.random();
+          return;
+        }
+        return this.setState('current', random);
       };
 
       return ArtworkListVC;

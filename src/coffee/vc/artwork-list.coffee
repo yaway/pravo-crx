@@ -140,6 +140,15 @@ define [
       @setState 'current',next
 
     random: ()->
-      @setState 'current',(Utl.getRandomInt @vc.length)
+      length = @vc.length
+      if length < 2
+        return
+      current = @getState 'current'
+      random = Utl.getRandomInt length
+      console.error random
+      if random is current
+        @random()
+        return
+      @setState 'current',random
 
   return ArtworkListVC
