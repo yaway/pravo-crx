@@ -94,10 +94,18 @@ define [
         artworks = new Artworks mc
       else if mc instanceof Artworks
         artworks = mc
+
       artworks.map (artwork,i)=>
+        artworkId = artwork.get 'id'
+        filter =
+          id: artworkId
+        isContained = (@c.where filter).length > 0
+        console.error isContained
         if @c.contains artwork
           @vc.map (artworkVC,i)=>
             console.error artworkVC.m is artwork
+        else if isContained
+          console.error isContained
         else
           artworkVC = new ArtworkVC
             $root: @$el
@@ -112,9 +120,16 @@ define [
           @setCurrent artwork
       @setState 'didAdd'
 
-    setCurrent: (artwork)->
-      index = @c.models.indexOf artwork
-      @setState 'current',index
+    setCurrent: (m)->
+      artworkId = m.get 'id'
+      filter =
+        id: artworkId
+      artwork = @c.findWhere filter
+      if artwork
+        index = @c.models.indexOf artwork
+        @setState 'current',index
+      else
+        console.error m
 
     loop: ()->
       length = @vc.length

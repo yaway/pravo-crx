@@ -131,11 +131,19 @@ define(['found/vc', 'mc/list', 'mc/artwork', 'mc/artworks', 'vc/artwork', 'found
       }
       artworks.map((function(_this) {
         return function(artwork, i) {
-          var artworkVC;
+          var artworkId, artworkVC, filter, isContained;
+          artworkId = artwork.get('id');
+          filter = {
+            id: artworkId
+          };
+          isContained = (_this.c.where(filter)).length > 0;
+          console.error(isContained);
           if (_this.c.contains(artwork)) {
             _this.vc.map(function(artworkVC, i) {
               return console.error(artworkVC.m === artwork);
             });
+          } else if (isContained) {
+            console.error(isContained);
           } else {
             artworkVC = new ArtworkVC({
               $root: _this.$el,
@@ -154,10 +162,19 @@ define(['found/vc', 'mc/list', 'mc/artwork', 'mc/artworks', 'vc/artwork', 'found
       return this.setState('didAdd');
     };
 
-    ArtworkListVC.prototype.setCurrent = function(artwork) {
-      var index;
-      index = this.c.models.indexOf(artwork);
-      return this.setState('current', index);
+    ArtworkListVC.prototype.setCurrent = function(m) {
+      var artwork, artworkId, filter, index;
+      artworkId = m.get('id');
+      filter = {
+        id: artworkId
+      };
+      artwork = this.c.findWhere(filter);
+      if (artwork) {
+        index = this.c.models.indexOf(artwork);
+        return this.setState('current', index);
+      } else {
+        return console.error(m);
+      }
     };
 
     ArtworkListVC.prototype.loop = function() {
