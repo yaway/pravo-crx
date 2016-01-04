@@ -64,7 +64,7 @@ define [
 
           if dones.length is total
             clearTimeout timeout
-            console.log 'All Artworks Loaded'
+            console.log "#{@getState 'done'} Artworks Loaded'"
             @setState 'isDone',true
             @setState 'isLoading',false
 

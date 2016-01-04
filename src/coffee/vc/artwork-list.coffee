@@ -31,6 +31,7 @@ define [
 
       @on
         'didChangeState:current':(vc,v)=>
+          console.error v
           if @vc.length > 0
             artworkVC = @vc[v]
             artworkVC.setState 'isCurrent'

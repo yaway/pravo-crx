@@ -29,14 +29,13 @@
           return function(m, v) {
             if (v) {
               _this.boothVC.artworkListVC.add(m);
-              return m.vc.artworkVC.setState('isCurrent', true);
+              return _this.boothVC.artworkListVC.setCurrent(m);
             }
           };
         })(this));
         this.listenTo(this.receiptVC, 'didChangeState:hasArtworks', (function(_this) {
           return function(vc, v) {
             var artworks, predicate, rawArtworks;
-            console.error(v);
             if (_this.boothVC.getState('hasArtworks')) {
               return;
             }
@@ -46,7 +45,6 @@
             rawArtworks = _this.receiptVC.c.filter(predicate);
             artworks = new Artworks(rawArtworks);
             _this.boothVC.artworkListVC.add(artworks);
-            console.error(_this.boothVC.artworkListVC.getState('current'));
             if (artworks.length > 0) {
               _this.boothVC.setState('hasArtworks');
               return _this.boothVC.artworkListVC.random();

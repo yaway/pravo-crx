@@ -48,6 +48,7 @@
           'didChangeState:current': (function(_this) {
             return function(vc, v) {
               var artworkVC;
+              console.error(v);
               if (_this.vc.length > 0) {
                 artworkVC = _this.vc[v];
                 artworkVC.setState('isCurrent');

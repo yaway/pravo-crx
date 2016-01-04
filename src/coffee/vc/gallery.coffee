@@ -24,10 +24,9 @@ define [
       @listenTo @receiptVC.c,'didChange:isChosen',(m,v)=>
         if v
           @boothVC.artworkListVC.add m
-          m.vc.artworkVC.setState 'isCurrent',true
+          @boothVC.artworkListVC.setCurrent m
 
       @listenTo @receiptVC,'didChangeState:hasArtworks',(vc,v)=>
-        console.error v
         if @boothVC.getState 'hasArtworks'
           return
 
@@ -37,8 +36,6 @@ define [
         rawArtworks = @receiptVC.c.filter predicate
         artworks = new Artworks rawArtworks
         @boothVC.artworkListVC.add artworks
-
-        console.error @boothVC.artworkListVC.getState 'current'
 
         if artworks.length > 0
           @boothVC.setState 'hasArtworks'
