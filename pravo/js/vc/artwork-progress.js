@@ -82,7 +82,7 @@
               _this.setState('done', dones.length);
               if (dones.length === total) {
                 clearTimeout(timeout);
-                console.log((_this.getState('done')) + " Artworks Loaded'");
+                console.log((_this.getState('done')) + " Artworks Loaded");
                 _this.setState('isDone', true);
                 return _this.setState('isLoading', false);
               }

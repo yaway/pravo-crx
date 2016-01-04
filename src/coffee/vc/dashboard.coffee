@@ -5,32 +5,35 @@ define [
   'background-check'
 ],(VC,GalleryVC,ClockVC,BC)->
   class DashboardVC extends VC
+    evnets:
+      'mouseover': 'onMouseOver'
+    onMouseOver: ()=>
+      console.debug 'Dashboard Actived'
 
     initialize: (opt)->
       super(opt)
       @render()
-      
+
     render: ()->
       super()
       console.log 'Dashboard Rendered'
+      
       @galleryVC = new GalleryVC
         $root: @ui.$gallery
         template: 'gallery'
 
-      @clockVC = new ClockVC
-        $root: @ui.$clock
-        template: 'clock'
+      # @clockVC = new ClockVC
+      #   $root: @ui.$clock
+      #   template: 'clock'
 
-
-      @galleryVC.on 
-        'didRenderArtworks': ()=>
-          @initBC()
-        'didChangeCurrentArtwork': ()=>
-          @updateBC()
-        'didUpdateGallery': ()=>
-          @initBC()
-          @updateBC()
-
+      # @galleryVC.on 
+      #   'didRenderArtworks': ()=>
+      #     @initBC()
+      #   'didChangeCurrentArtwork': ()=>
+      #     @updateBC()
+      #   'didUpdateGallery': ()=>
+      #     @initBC()
+      #     @updateBC()
 
     initBC: ()->
       BC.init
