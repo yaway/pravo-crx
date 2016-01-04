@@ -50,6 +50,13 @@ module.exports = (grunt)->
         files: ["<%= srcRoot %>coffee/**/*.coffee"]
         tasks: ["coffee"]
 
+    clean: 
+      src: [
+        "<%= srcRoot %>coffee/**/*.js"
+        "<%= srcRoot %>jade/**/*.html"
+        "<%= srcRoot %>stylus/**/*.css"
+      ]
+
   grunt.loadNpmTasks 'grunt-contrib-jade'
   grunt.loadNpmTasks 'grunt-contrib-stylus'
   grunt.loadNpmTasks 'grunt-contrib-coffee'
@@ -57,6 +64,7 @@ module.exports = (grunt)->
   grunt.loadNpmTasks 'grunt-contrib-copy'
   grunt.loadNpmTasks 'grunt-contrib-clean'
 
+  grunt.registerTask 'clear',['clean']
   grunt.registerTask 'build',['jade','stylus','coffee']
   grunt.registerTask 'dev',['build','watch']
   grunt.registerTask 'default',['dev']

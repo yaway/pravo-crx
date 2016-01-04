@@ -57,6 +57,9 @@ module.exports = function(grunt) {
         files: ["<%= srcRoot %>coffee/**/*.coffee"],
         tasks: ["coffee"]
       }
+    },
+    clean: {
+      src: ["<%= srcRoot %>coffee/**/*.js", "<%= srcRoot %>jade/**/*.html", "<%= srcRoot %>stylus/**/*.css"]
     }
   });
   grunt.loadNpmTasks('grunt-contrib-jade');
@@ -65,6 +68,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.registerTask('clear', ['clean']);
   grunt.registerTask('build', ['jade', 'stylus', 'coffee']);
   grunt.registerTask('dev', ['build', 'watch']);
   return grunt.registerTask('default', ['dev']);
