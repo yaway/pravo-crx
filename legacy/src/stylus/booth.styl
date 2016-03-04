@@ -1,0 +1,62 @@
+.layer-booth
+  overflow hidden
+
+  .layer-artworks
+    layer(1)
+  
+  .artwork
+    display none
+    position relative
+    align-items(center)
+    justify-content(center)
+    // position absolute
+    // top -50%
+    // left -50%
+    // width 200%
+    // height 200%
+    height 100%
+    width 100%
+    overflow hidden
+    .img
+      display block
+      // min-height 50%
+      // max-width 100%
+      // margin auto
+    &.cover
+      &.landscape
+        flex-direction(row)
+        .img
+          width 100%
+          height auto
+    &.is-current
+      display(flex)
+
+  .layer-btns
+    layer(2)
+    flex-direction(column)
+    align-items(center)
+    justify-content(flex-end)
+    margin-bottom 10px
+
+  &.has-artworks
+    .m-fa-btn
+      pointer-events auto
+      transition(all,0.2s)
+      opacity(1)
+      transform(scale(1))
+      .m-ico
+        transition(all,0.2s,0.1s)
+        opacity(1)
+  &,
+  &.blur
+    .m-fa-btn
+      pointer-events none
+      transition(all,0.2s)
+      opacity(0)
+      transform(scale(0.6))
+      .m-ico
+        opacity(0)
+    
+
+
+      
